@@ -196,8 +196,8 @@ const PaymentForm: React.FC = () => {
                 <p className="font-medium mb-2">Steps to complete payment:</p>
                 <ol className="list-decimal list-inside space-y-1">
                   <li>Open your M-Pesa menu on your phone</li>
-                  <li>Select "Lipa na M-Pesa"</li>
-                  <li>Choose "Pay Bill"</li>
+                  <li>Select &ldquo;Lipa na M-Pesa&rdquo;</li>
+                  <li>Choose &ldquo;Pay Bill&rdquo;</li>
                   <li>Enter Paybill Number: <strong>522533</strong></li>
                   <li>Enter Account Number: <strong>8011202</strong></li>
                   <li>Enter the exact amount: <strong>KSh {order.totalAmount.toLocaleString()}</strong></li>
@@ -224,7 +224,7 @@ const PaymentForm: React.FC = () => {
                 required
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
-                placeholder="e.g., "+254712345678 or 0712345678""
+                placeholder="e.g., +254712345678 or 0712345678"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
               />
               <p className="text-xs text-gray-500 mt-1">Enter the phone number you used to make the M-Pesa payment</p>

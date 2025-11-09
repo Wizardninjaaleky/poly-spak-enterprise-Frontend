@@ -200,7 +200,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4 animate-fade-in-up">Why Choose Polyspack?</h2>
             <p className="text-lg text-gray-600 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
-              We're committed to providing exceptional products and services
+              We&apos;re committed to providing exceptional products and services
             </p>
           </div>
 
