@@ -28,7 +28,7 @@ try {
   console.log('Error loading routes:', err.message);
 }
 
-// Default route
+// Default route - must be before catch-all
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// Handle undefined routes
+// Handle undefined routes - must be last
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
