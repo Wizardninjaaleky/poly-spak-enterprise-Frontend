@@ -25,7 +25,6 @@ try {
   app.use('/api/products', require('./src/routes/products'));
   app.use('/api/orders', require('./src/routes/orders'));
   app.use('/api/payments', require('./src/routes/payments'));
-  app.use('/api/admin', require('./src/routes/admin'));
   app.use('/api/website', require('./src/routes/website'));
 } catch (err) {
   console.log('⚠️ Error loading routes:', err.message);
@@ -41,7 +40,7 @@ app.get('/', (req, res) => {
 
 // Start server
 const server = app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ Server running successfully`);
 });
 
 // Handle unhandled promise rejections
