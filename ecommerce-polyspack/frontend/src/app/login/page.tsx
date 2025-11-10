@@ -14,7 +14,7 @@ const LoginPage: React.FC = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
-  const [error] = useState('');
+  const [error, setError] = useState('');
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -32,28 +32,21 @@ const LoginPage: React.FC = () => {
     setError('');
 
     try {
-      // Mock login - replace with actual API call
-      if (formData.email && formData.password) {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      const { authAPI } = await import('@/services/api');
+      const response = await authAPI.login({
+        email: formData.email,
+        password: formData.password
+      });
 
-        // Mock successful login
-        dispatch(setCredentials({
-          user: {
-            id: '1',
-            name: 'John Doe',
-            email: formData.email,
-            role: 'customer'
-          },
-          token: 'mock-token'
-        }));
+      // Login successful
+      dispatch(setCredentials({
+        user: response.data.user,
+        token: response.data.token
+      }));
 
-        router.push('/');
-      } else {
-        setError('Please fill in all fields');
-      }
-    } catch (err) {
-      setError('Login failed. Please try again.');
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

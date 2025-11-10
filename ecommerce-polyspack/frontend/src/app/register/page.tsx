@@ -17,7 +17,7 @@ const RegisterPage: React.FC = () => {
     phone: ''
   });
   const [loading, setLoading] = useState(false);
-  const [error] = useState('');
+  const [error, setError] = useState('');
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -41,28 +41,23 @@ const RegisterPage: React.FC = () => {
     }
 
     try {
-      // Mock registration - replace with actual API call
-      if (formData.name && formData.email && formData.password && formData.phone) {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+      const { authAPI } = await import('@/services/api');
+      const response = await authAPI.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone
+      });
 
-        // Mock successful registration and auto-login
-        dispatch(setCredentials({
-          user: {
-            id: '1',
-            name: formData.name,
-            email: formData.email,
-            role: 'customer'
-          },
-          token: 'mock-token'
-        }));
+      // Registration successful, auto-login the user
+      dispatch(setCredentials({
+        user: response.data.user,
+        token: response.data.token
+      }));
 
-        router.push('/');
-      } else {
-        setError('Please fill in all fields');
-      }
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }

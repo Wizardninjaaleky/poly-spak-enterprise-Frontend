@@ -291,8 +291,8 @@ const CheckoutPage: React.FC = () => {
                           <p className="font-medium mb-2">Follow these steps to complete your payment:</p>
                           <ol className="list-decimal list-inside space-y-1 text-xs">
                             <li>Open your M-Pesa menu on your phone</li>
-                            <li>Select &ldquo;Lipa na M-Pesa&rdquo;</li>
-                            <li>Choose &ldquo;Pay Bill&rdquo;</li>
+                            <li>Select{"\u201C"}Lipa na M-Pesa{"\u201D"}</li>
+                            <li>Choose{"\u201C"}Pay Bill{"\u201D"}</li>
                             <li>Enter Paybill Number: <strong>522533</strong></li>
                             <li>Enter Account Number: <strong>8011202</strong></li>
                             <li>Enter the exact amount to pay</li>
