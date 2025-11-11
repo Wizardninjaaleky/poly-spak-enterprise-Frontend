@@ -16,7 +16,7 @@ exports.submitPayment = async (req, res) => {
     });
   }
 
-  const { orderId, amount, phoneNumber, mpesaCode, recaptchaToken } = req.body;
+  const { orderId, amount, phoneNumber, mpesaCode } = req.body;
 
   try {
     // Check if order exists and belongs to user

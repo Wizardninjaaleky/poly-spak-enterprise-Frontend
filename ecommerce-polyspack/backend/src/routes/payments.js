@@ -1,6 +1,5 @@
 const express = require('express');
 const { body, param } = require('express-validator');
-const recaptcha = require('express-recaptcha').RecaptchaV2;
 const {
   submitPayment,
   getOrderPayment,
@@ -15,12 +14,6 @@ const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
 const { paymentRateLimit } = require('../middleware/rateLimit');
 
-// Initialize reCAPTCHA
-const recaptchaInstance = new recaptcha(
-  process.env.RECAPTCHA_SITE_KEY || 'your_site_key',
-  process.env.RECAPTCHA_SECRET_KEY || 'your_secret_key'
-);
-
 // All payment routes require authentication
 router.use(protect);
 
@@ -28,13 +21,11 @@ router.use(protect);
 router.post(
   '/submit',
   paymentRateLimit,
-  recaptchaInstance.middleware.verify,
   [
     body('orderId', 'Order ID is required').isMongoId(),
     body('amount', 'Amount is required').isFloat({ min: 0 }),
     body('phoneNumber', 'Phone number is required').isMobilePhone('any'),
     body('mpesaCode', 'M-Pesa code is required').not().isEmpty().isLength({ min: 10, max: 15 }),
-    body('recaptchaToken', 'reCAPTCHA token is required').not().isEmpty(),
   ],
   submitPayment
 );
