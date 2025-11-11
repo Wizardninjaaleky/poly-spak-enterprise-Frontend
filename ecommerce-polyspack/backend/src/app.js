@@ -31,14 +31,6 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Backend is running'
-  });
-});
-
 // Health check
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Polyspack API is running' });
@@ -50,6 +42,14 @@ app.use('/api/products', products);
 app.use('/api/orders', orders);
 app.use('/api/payments', payments);
 app.use('/api/website', website);
+
+// Root route - must be after API routes but before catch-all
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Backend is running'
+  });
+});
 
 // Handle undefined routes
 app.use('*', (req, res) => {
