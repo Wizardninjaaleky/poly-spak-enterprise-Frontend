@@ -1,19 +1,19 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 // Load env vars
 dotenv.config();
 
 // Route files
-const auth = require('./routes/auth');
-const products = require('./routes/products');
-const orders = require('./routes/orders');
-const payments = require('./routes/payments');
-const website = require('./routes/website');
+import auth from './routes/auth.js';
+import products from './routes/products.js';
+import orders from './routes/orders.js';
+import payments from './routes/payments.js';
+import website from './routes/website.js';
 
 // Security middleware
-const securityMiddleware = require('./middleware/security');
+import securityMiddleware from './middleware/security.js';
 
 const app = express();
 
@@ -69,4 +69,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-module.exports = app;
+export default app;
