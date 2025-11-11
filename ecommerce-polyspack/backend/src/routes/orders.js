@@ -18,7 +18,7 @@ router.use(protect); // All order routes require authentication
 router.get('/me', getMyOrders);
 
 router
-  .route('/')
+  .route('/orders')
   .get(authorize('admin'), getOrders)
   .post(
     [

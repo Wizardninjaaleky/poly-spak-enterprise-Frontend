@@ -54,7 +54,7 @@ router.put('/verify/:orderId', [
   body('rejectionReason').optional().isString().isLength({ max: 500 }),
 ], verifyPayment);
 
-router.get('/', getPayments);
-router.get('/stats', getPaymentStats);
+router.get('/payments', getPayments);
+router.get('/payments/stats', getPaymentStats);
 
 module.exports = router;

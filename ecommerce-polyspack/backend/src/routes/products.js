@@ -13,7 +13,7 @@ const router = express.Router();
 const { protect, authorize } = require('../middleware/auth');
 
 router
-  .route('/')
+  .route('/products')
   .get(getProducts)
   .post(
     protect,
