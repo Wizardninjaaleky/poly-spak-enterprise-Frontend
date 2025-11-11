@@ -31,13 +31,6 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Mount routers
-app.use('/api/auth', auth);
-app.use('/api/products', products);
-app.use('/api/orders', orders);
-app.use('/api/payments', payments);
-app.use('/api/website', website);
-
 // Root route
 app.get('/', (req, res) => {
   res.json({
@@ -50,6 +43,13 @@ app.get('/', (req, res) => {
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Polyspack API is running' });
 });
+
+// Mount routers
+app.use('/api/auth', auth);
+app.use('/api/products', products);
+app.use('/api/orders', orders);
+app.use('/api/payments', payments);
+app.use('/api/website', website);
 
 // Handle undefined routes
 app.use('*', (req, res) => {
