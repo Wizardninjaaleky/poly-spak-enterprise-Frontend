@@ -51,4 +51,4 @@ orderSchema.pre('save', function(next) {
 // Ensure virtual fields are serialized
 orderSchema.set('toJSON', { virtuals: true });
 
-export default mongoose.model('Order', orderSchema);
+module.exports = mongoose.model('Order', orderSchema);
