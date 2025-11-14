@@ -1,8 +1,8 @@
 // MPESA service for handling payment verification
-const Payment = require('../models/Payment');
-const Order = require('../models/Order');
-const User = require('../models/User');
-const { sendPaymentVerified } = require('./emailService');
+import Payment from '../models/Payment.js';
+import Order from '../models/Order.js';
+import User from '../models/User.js';
+// import { sendPaymentVerified } from './emailService.js';
 
 // Verify MPESA payment (manual verification by admin)
 const verifyPayment = async (orderId, transactionCode, verifiedBy) => {
@@ -124,7 +124,7 @@ const getPaymentStats = async () => {
   }
 };
 
-module.exports = {
+export default {
   verifyPayment,
   getPaymentDetails,
   getAllPayments,
