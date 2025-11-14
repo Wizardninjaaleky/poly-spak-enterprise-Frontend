@@ -31,6 +31,23 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Polyspack API is running' });
 });
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to Polyspack Enterprises API',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      products: '/api/products',
+      orders: '/api/orders',
+      payments: '/api/payments',
+      admin: '/api/admin',
+      health: '/api/health'
+    }
+  });
+});
+
 // Handle undefined routes
 app.use((req, res) => {
   res.status(404).json({
