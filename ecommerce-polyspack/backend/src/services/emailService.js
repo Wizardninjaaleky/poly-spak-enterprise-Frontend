@@ -125,7 +125,7 @@ const sendOrderStatusUpdate = async (order, user) => {
   }
 };
 
-module.exports = {
+export default {
   sendOrderConfirmation,
   sendPaymentVerified,
   sendOrderStatusUpdate,

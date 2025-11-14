@@ -24,7 +24,7 @@ export const getProducts = async (req, res) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // Finding resource
-    query = Product.find(JSON.parse(queryStr));
+    query = Product.find(JSON.parse(queryStr)).populate('flashSale');
 
     // Select Fields
     if (req.query.select) {
@@ -76,11 +76,9 @@ export const getProducts = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    console.error('Product fetch error:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Server error - Database connection issue',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: 'Server error',
     });
   }
 };
@@ -182,7 +180,7 @@ export const deleteProduct = async (req, res) => {
       });
     }
 
-    await product.deleteOne();
+    await product.remove();
 
     res.status(200).json({
       success: true,

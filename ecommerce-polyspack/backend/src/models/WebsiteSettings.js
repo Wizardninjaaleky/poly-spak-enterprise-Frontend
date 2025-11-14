@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const websiteSettingsSchema = new mongoose.Schema({
   logoUrl: {

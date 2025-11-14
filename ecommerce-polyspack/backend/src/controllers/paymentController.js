@@ -1,7 +1,7 @@
 import Payment from '../models/Payment.js';
 import Order from '../models/Order.js';
 import { validationResult } from 'express-validator';
-import mpesaService from '../services/mpesaService.js';
+import { verifyPayment, getPaymentDetails, getAllPayments, getPaymentStats } from '../services/mpesaService.js';
 
 // @desc    Submit M-Pesa payment for verification
 // @route   POST /api/payments/submit
@@ -115,7 +115,7 @@ export const getOrderPayment = async (req, res) => {
       });
     }
 
-    const payment = await mpesaService.getPaymentDetails(req.params.orderId);
+    const payment = await getPaymentDetails(req.params.orderId);
 
     res.status(200).json({
       success: true,
@@ -254,7 +254,7 @@ export const getPayments = async (req, res) => {
       endDate: req.query.endDate,
     };
 
-    const payments = await mpesaService.getAllPayments(filters);
+    const payments = await getAllPayments(filters);
 
     res.status(200).json({
       success: true,
@@ -274,7 +274,7 @@ export const getPayments = async (req, res) => {
 // @access  Private/Admin
 export const getPaymentStatsAdmin = async (req, res) => {
   try {
-    const stats = await mpesaService.getPaymentStats();
+    const stats = await getPaymentStats();
 
     res.status(200).json({
       success: true,

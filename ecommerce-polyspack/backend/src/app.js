@@ -29,24 +29,14 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Root route
+// Root route - THIS IS WHAT'S MISSING
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Polyspack Enterprise Backend Server is running!',
+    message: 'Poly Spark Enterprise Backend Server is running!',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development',
-    version: '1.0.0',
-    endpoints: {
-      health: '/health',
-      test: '/test',
-      auth: '/api/auth',
-      admin: '/api/admin',
-      products: '/api/products',
-      orders: '/api/orders',
-      payments: '/api/payments',
-      website: '/api/website'
-    }
+    version: '1.0.0'
   });
 });
 
@@ -55,9 +45,7 @@ app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Server is healthy',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    memory: process.memoryUsage()
+    timestamp: new Date().toISOString()
   });
 });
 
@@ -66,47 +54,43 @@ app.get('/test', (req, res) => {
   res.json({
     success: true,
     message: 'Test route working!',
-    timestamp: new Date().toISOString(),
-    server: 'Polyspack Backend API v1.0.0'
+    timestamp: new Date().toISOString()
   });
 });
 
-// API Routes - Mount AFTER root routes
+
+
+// Add your other routes here when ready
 import auth from './routes/auth.js';
 app.use('/api/auth', auth);
 
+// Import and use admin routes
 import admin from './routes/admin.js';
 app.use('/api/admin', admin);
 
+// Import and use product routes
 import products from './routes/products.js';
-app.use('/api/products', products);
+app.use('/api', products);
 
+// Import and use order routes
 import orders from './routes/orders.js';
-app.use('/api/orders', orders);
+app.use('/api', orders);
 
+// Import and use payment routes
 import payments from './routes/payments.js';
-app.use('/api/payments', payments);
+app.use('/api', payments);
 
+// Import and use website routes
 import website from './routes/website.js';
-app.use('/api/website', website);
+app.use('/api', website);
 
-// 404 handler for undefined routes - MUST be last
+// app.use('/api/users', userRoutes);
+
+// 404 handler for undefined routes
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: `Route ${req.originalUrl} not found`,
-    availableRoutes: [
-      'GET /',
-      'GET /health',
-      'GET /test',
-      'POST /api/auth/login',
-      'POST /api/auth/register',
-      'GET /api/products',
-      'GET /api/orders',
-      'POST /api/payments',
-      'GET /api/admin',
-      'GET /api/website/settings'
-    ]
+    message: `Route ${req.originalUrl} not found`
   });
 });
 

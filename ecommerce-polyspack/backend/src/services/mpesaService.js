@@ -2,7 +2,7 @@
 import Payment from '../models/Payment.js';
 import Order from '../models/Order.js';
 import User from '../models/User.js';
-// import { sendPaymentVerified } from './emailService.js';
+import { sendPaymentVerified } from './emailService.js';
 
 // Verify MPESA payment (manual verification by admin)
 const verifyPayment = async (orderId, transactionCode, verifiedBy) => {
