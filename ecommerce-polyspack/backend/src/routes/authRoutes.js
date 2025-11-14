@@ -7,13 +7,11 @@ import {
   updateDetails,
   updatePassword,
   logout,
-  forgotPassword,
-  resetPassword,
 } from '../controllers/authController.js';
 
 const router = express.Router();
 
-import { protect } from '../middleware/auth.js';
+const { protect } = await import('../middleware/auth.js');
 
 router.post(
   '/register',
@@ -31,7 +29,5 @@ router.get('/logout', logout);
 router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
 router.put('/updatepassword', protect, updatePassword);
-router.post('/forgot-password', forgotPassword);
-router.put('/reset-password/:resettoken', resetPassword);
 
 export default router;

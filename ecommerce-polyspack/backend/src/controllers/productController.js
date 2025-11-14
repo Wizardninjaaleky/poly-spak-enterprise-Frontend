@@ -1,10 +1,10 @@
-const Product = require('../models/Product');
-const { validationResult } = require('express-validator');
+import Product from '../models/Product.js';
+import { validationResult } from 'express-validator';
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
-exports.getProducts = async (req, res) => {
+export const getProducts = async (req, res) => {
   try {
     let query;
 
@@ -24,7 +24,7 @@ exports.getProducts = async (req, res) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // Finding resource
-    query = Product.find(JSON.parse(queryStr)).populate('flashSale');
+    query = Product.find(JSON.parse(queryStr));
 
     // Select Fields
     if (req.query.select) {
@@ -76,9 +76,11 @@ exports.getProducts = async (req, res) => {
       data: products,
     });
   } catch (error) {
+    console.error('Product fetch error:', error.message);
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: 'Server error - Database connection issue',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
@@ -86,7 +88,7 @@ exports.getProducts = async (req, res) => {
 // @desc    Get single product
 // @route   GET /api/products/:id
 // @access  Public
-exports.getProduct = async (req, res) => {
+export const getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('flashSale');
 
@@ -112,7 +114,7 @@ exports.getProduct = async (req, res) => {
 // @desc    Create new product
 // @route   POST /api/products
 // @access  Private/Admin
-exports.createProduct = async (req, res) => {
+export const createProduct = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -140,7 +142,7 @@ exports.createProduct = async (req, res) => {
 // @desc    Update product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
-exports.updateProduct = async (req, res) => {
+export const updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -169,7 +171,7 @@ exports.updateProduct = async (req, res) => {
 // @desc    Delete product
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
-exports.deleteProduct = async (req, res) => {
+export const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
@@ -180,7 +182,7 @@ exports.deleteProduct = async (req, res) => {
       });
     }
 
-    await product.remove();
+    await product.deleteOne();
 
     res.status(200).json({
       success: true,

@@ -32,17 +32,20 @@
      ```
      NODE_ENV=production
      PORT=10000
-     MONGO_URI=your_mongodb_atlas_connection_string
-     JWT_SECRET=your_secure_jwt_secret
-     EMAIL_USER=your_email@gmail.com
-     EMAIL_PASS=your_app_password
-     CLOUDINARY_CLOUD_NAME=your_cloudinary_name
-     CLOUDINARY_API_KEY=your_cloudinary_key
-     CLOUDINARY_API_SECRET=your_cloudinary_secret
-     MPESA_CONSUMER_KEY=your_mpesa_consumer_key
-     MPESA_CONSUMER_SECRET=your_mpesa_consumer_secret
-     MPESA_SHORTCODE=522533
-     MPESA_PASSKEY=your_mpesa_passkey
+     MONGO_URI=mongodb+srv://alexnyakundi56_db_user:Admin@cluster0.lgqojwx.mongodb.net/polyspack-ecommerce
+     JWT_SECRET=a1b2c3d4e5f67890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+     JWT_EXPIRE=30d
+     EMAIL_USER=your-email@gmail.com
+     EMAIL_PASS=your-app-password
+     CLOUDINARY_CLOUD_NAME=your-cloud-name
+     CLOUDINARY_API_KEY=your-api-key
+     CLOUDINARY_API_SECRET=your-api-secret
+     MPESA_CONSUMER_KEY=your-consumer-key
+     MPESA_CONSUMER_SECRET=your-consumer-secret
+     MPESA_SHORTCODE=174379
+     MPESA_PASSKEY=your-passkey
+     PAYBILL_NUMBER=522533
+     ACCOUNT_NUMBER=8011202
      ```
 
 ### Frontend Deployment

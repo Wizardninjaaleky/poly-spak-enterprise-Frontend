@@ -49,4 +49,5 @@ flashSaleSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('FlashSale', flashSaleSchema);
+const FlashSale = mongoose.model('FlashSale', flashSaleSchema);
+export default FlashSale;

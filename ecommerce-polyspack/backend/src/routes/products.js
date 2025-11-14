@@ -1,16 +1,16 @@
-const express = require('express');
-const { body } = require('express-validator');
-const {
+import express from 'express';
+import { body } from 'express-validator';
+import {
   getProducts,
   getProduct,
   createProduct,
   updateProduct,
   deleteProduct,
-} = require('../controllers/productController');
+} from '../controllers/productController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
+import { protect, authorize } from '../middleware/auth.js';
 
 router
   .route('/products')
@@ -33,4 +33,4 @@ router
   .put(protect, authorize('admin'), updateProduct)
   .delete(protect, authorize('admin'), deleteProduct);
 
-module.exports = router;
+export default router;

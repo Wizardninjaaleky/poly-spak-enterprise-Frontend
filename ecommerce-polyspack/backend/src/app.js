@@ -1,71 +1,122 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 
-// Load env vars
+// Load environment variables
 dotenv.config();
 
-// Route files
-import auth from './routes/auth.js';
-import products from './routes/products.js';
-import orders from './routes/orders.js';
-import payments from './routes/payments.js';
-import website from './routes/website.js';
-
-// Security middleware
-import securityMiddleware from './middleware/security.js';
+console.log('✅ app.js is loading...');
 
 const app = express();
 
-// Apply security middleware
-securityMiddleware(app);
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000', // Local development
+    'https://poly-spak-enterprise-fronted-0sde.onrender.com', // Production frontend
+    'https://your-frontend-domain.vercel.app' // If using Vercel
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+};
 
-// CORS configuration
-app.use(cors({
-  origin: "https://poly-spak-enterprise-fronted-0sde.onrender.com",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(cors(corsOptions));
 
-// Body parsing middleware
-app.use(express.json({ limit: '10mb' }));
+// Middleware
+app.use(helmet());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Polyspack API is running' });
-});
-
-// Mount routers
-app.use('/api/auth', auth);
-app.use('/api/products', products);
-app.use('/api/orders', orders);
-app.use('/api/payments', payments);
-app.use('/api/website', website);
-
-// Root route - must be after API routes but before catch-all
+// Root route
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Backend is running'
+    message: 'Polyspack Enterprise Backend Server is running!',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      test: '/test',
+      auth: '/api/auth',
+      admin: '/api/admin',
+      products: '/api/products',
+      orders: '/api/orders',
+      payments: '/api/payments',
+      website: '/api/website'
+    }
   });
 });
 
-// Handle undefined routes
+// Health check route
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Server is healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    memory: process.memoryUsage()
+  });
+});
+
+// Test route
+app.get('/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Test route working!',
+    timestamp: new Date().toISOString(),
+    server: 'Polyspack Backend API v1.0.0'
+  });
+});
+
+// API Routes - Mount AFTER root routes
+import auth from './routes/auth.js';
+app.use('/api/auth', auth);
+
+import admin from './routes/admin.js';
+app.use('/api/admin', admin);
+
+import products from './routes/products.js';
+app.use('/api/products', products);
+
+import orders from './routes/orders.js';
+app.use('/api/orders', orders);
+
+import payments from './routes/payments.js';
+app.use('/api/payments', payments);
+
+import website from './routes/website.js';
+app.use('/api/website', website);
+
+// 404 handler for undefined routes - MUST be last
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found'
+    message: `Route ${req.originalUrl} not found`,
+    availableRoutes: [
+      'GET /',
+      'GET /health',
+      'GET /test',
+      'POST /api/auth/login',
+      'POST /api/auth/register',
+      'GET /api/products',
+      'GET /api/orders',
+      'POST /api/payments',
+      'GET /api/admin',
+      'GET /api/website/settings'
+    ]
   });
 });
 
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error('Global error:', err);
-
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error(error.stack);
   res.status(500).json({
     success: false,
-    message: 'Internal server error'
+    message: 'Something went wrong!',
+    error: process.env.NODE_ENV === 'production' ? {} : error.message
   });
 });
 

@@ -1,17 +1,17 @@
-const express = require('express');
-const { body } = require('express-validator');
-const {
+import express from 'express';
+import { body } from 'express-validator';
+import {
   getOrders,
   getOrder,
   getMyOrders,
   createOrder,
   updateOrderStatus,
   downloadInvoice,
-} = require('../controllers/orderController');
+} from '../controllers/orderController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
+import { protect, authorize } from '../middleware/auth.js';
 
 router.use(protect); // All order routes require authentication
 
@@ -35,4 +35,4 @@ router.get('/:id', getOrder);
 router.get('/:id/invoice', downloadInvoice);
 router.put('/:id/status', authorize('admin'), updateOrderStatus);
 
-module.exports = router;
+export default router;

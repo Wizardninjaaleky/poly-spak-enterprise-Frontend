@@ -1,14 +1,14 @@
-const Order = require('../models/Order');
-const Product = require('../models/Product');
-const Coupon = require('../models/Coupon');
-const User = require('../models/User');
-const { validationResult } = require('express-validator');
-const { generateInvoice } = require('../services/invoiceService');
+import Order from '../models/Order.js';
+import Product from '../models/Product.js';
+import Coupon from '../models/Coupon.js';
+import User from '../models/User.js';
+import { validationResult } from 'express-validator';
+import { generateInvoice } from '../services/invoiceService.js';
 
 // @desc    Get all orders
 // @route   GET /api/orders
 // @access  Private/Admin
-exports.getOrders = async (req, res) => {
+export const getOrders = async (req, res) => {
   try {
     const orders = await Order.find()
       .populate('user', 'name email')
@@ -31,7 +31,7 @@ exports.getOrders = async (req, res) => {
 // @desc    Get single order
 // @route   GET /api/orders/:id
 // @access  Private
-exports.getOrder = async (req, res) => {
+export const getOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email')
@@ -68,7 +68,7 @@ exports.getOrder = async (req, res) => {
 // @desc    Get current user's orders
 // @route   GET /api/orders/me
 // @access  Private
-exports.getMyOrders = async (req, res) => {
+export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .populate('products.product', 'name price images')
@@ -90,7 +90,7 @@ exports.getMyOrders = async (req, res) => {
 // @desc    Create new order
 // @route   POST /api/orders
 // @access  Private
-exports.createOrder = async (req, res) => {
+export const createOrder = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -184,7 +184,7 @@ exports.createOrder = async (req, res) => {
 // @desc    Update order status
 // @route   PUT /api/orders/:id/status
 // @access  Private/Admin
-exports.updateOrderStatus = async (req, res) => {
+export const updateOrderStatus = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
       req.params.id,
@@ -217,7 +217,7 @@ exports.updateOrderStatus = async (req, res) => {
 // @desc    Download invoice for order
 // @route   GET /api/orders/:id/invoice
 // @access  Private
-exports.downloadInvoice = async (req, res) => {
+export const downloadInvoice = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('userId', 'name email')

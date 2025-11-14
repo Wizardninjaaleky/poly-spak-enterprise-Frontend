@@ -1,9 +1,9 @@
-const express = require('express');
-const { getWebsiteSettings } = require('../controllers/websiteController');
+import express from 'express';
+import { getWebsiteSettings } from '../controllers/websiteController.js';
 
 const router = express.Router();
 
 // Public route to get website settings
 router.route('/settings').get(getWebsiteSettings);
 
-module.exports = router;
+export default router;

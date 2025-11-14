@@ -1,13 +1,15 @@
-const User = require('../models/User');
-const Coupon = require('../models/Coupon');
-const FlashSale = require('../models/FlashSale');
-const WebsiteSettings = require('../models/WebsiteSettings');
-const { validationResult } = require('express-validator');
+import User from '../models/User.js';
+import Coupon from '../models/Coupon.js';
+import FlashSale from '../models/FlashSale.js';
+import WebsiteSettings from '../models/WebsiteSettings.js';
+import Product from '../models/Product.js';
+import Order from '../models/Order.js';
+import { validationResult } from 'express-validator';
 
 // @desc    Get all users
 // @route   GET /api/admin/users
 // @access  Private/Admin
-exports.getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     const users = await User.find();
 
@@ -27,7 +29,7 @@ exports.getUsers = async (req, res) => {
 // @desc    Get single user
 // @route   GET /api/admin/users/:id
 // @access  Private/Admin
-exports.getUser = async (req, res) => {
+export const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -53,7 +55,7 @@ exports.getUser = async (req, res) => {
 // @desc    Update user
 // @route   PUT /api/admin/users/:id
 // @access  Private/Admin
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -82,7 +84,7 @@ exports.updateUser = async (req, res) => {
 // @desc    Delete user
 // @route   DELETE /api/admin/users/:id
 // @access  Private/Admin
-exports.deleteUser = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -110,7 +112,7 @@ exports.deleteUser = async (req, res) => {
 // @desc    Create coupon
 // @route   POST /api/admin/coupons
 // @access  Private/Admin
-exports.createCoupon = async (req, res) => {
+export const createCoupon = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -138,7 +140,7 @@ exports.createCoupon = async (req, res) => {
 // @desc    Get all coupons
 // @route   GET /api/admin/coupons
 // @access  Private/Admin
-exports.getCoupons = async (req, res) => {
+export const getCoupons = async (req, res) => {
   try {
     const coupons = await Coupon.find();
 
@@ -158,7 +160,7 @@ exports.getCoupons = async (req, res) => {
 // @desc    Update coupon
 // @route   PUT /api/admin/coupons/:id
 // @access  Private/Admin
-exports.updateCoupon = async (req, res) => {
+export const updateCoupon = async (req, res) => {
   try {
     const coupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -187,7 +189,7 @@ exports.updateCoupon = async (req, res) => {
 // @desc    Delete coupon
 // @route   DELETE /api/admin/coupons/:id
 // @access  Private/Admin
-exports.deleteCoupon = async (req, res) => {
+export const deleteCoupon = async (req, res) => {
   try {
     const coupon = await Coupon.findById(req.params.id);
 
@@ -215,7 +217,7 @@ exports.deleteCoupon = async (req, res) => {
 // @desc    Create flash sale
 // @route   POST /api/admin/flashsales
 // @access  Private/Admin
-exports.createFlashSale = async (req, res) => {
+export const createFlashSale = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -243,7 +245,7 @@ exports.createFlashSale = async (req, res) => {
 // @desc    Get all flash sales
 // @route   GET /api/admin/flashsales
 // @access  Private/Admin
-exports.getFlashSales = async (req, res) => {
+export const getFlashSales = async (req, res) => {
   try {
     const flashSales = await FlashSale.find().populate('products');
 
@@ -263,7 +265,7 @@ exports.getFlashSales = async (req, res) => {
 // @desc    Update flash sale
 // @route   PUT /api/admin/flashsales/:id
 // @access  Private/Admin
-exports.updateFlashSale = async (req, res) => {
+export const updateFlashSale = async (req, res) => {
   try {
     const flashSale = await FlashSale.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -292,7 +294,7 @@ exports.updateFlashSale = async (req, res) => {
 // @desc    Delete flash sale
 // @route   DELETE /api/admin/flashsales/:id
 // @access  Private/Admin
-exports.deleteFlashSale = async (req, res) => {
+export const deleteFlashSale = async (req, res) => {
   try {
     const flashSale = await FlashSale.findById(req.params.id);
 
@@ -320,7 +322,7 @@ exports.deleteFlashSale = async (req, res) => {
 // @desc    Get analytics data
 // @route   GET /api/admin/analytics
 // @access  Private/Admin
-exports.getAnalytics = async (req, res) => {
+export const getAnalytics = async (req, res) => {
   try {
     // Get total users count
     const totalUsers = await User.countDocuments();

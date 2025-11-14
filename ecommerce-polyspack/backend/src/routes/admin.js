@@ -1,6 +1,6 @@
-const express = require('express');
-const { body } = require('express-validator');
-const {
+import express from 'express';
+import { body } from 'express-validator';
+import {
   getUsers,
   getUser,
   updateUser,
@@ -14,11 +14,11 @@ const {
   updateFlashSale,
   deleteFlashSale,
   getAnalytics,
-} = require('../controllers/adminController');
+} from '../controllers/adminController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
+import { protect, authorize } from '../middleware/auth.js';
 
 // All admin routes require admin authorization
 router.use(protect);
@@ -60,4 +60,4 @@ router.route('/flashsales/:id').put(updateFlashSale).delete(deleteFlashSale);
 // Analytics
 router.route('/analytics').get(getAnalytics);
 
-module.exports = router;
+export default router;

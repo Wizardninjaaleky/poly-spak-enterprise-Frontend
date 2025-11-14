@@ -1,18 +1,18 @@
-const express = require('express');
-const { body, param } = require('express-validator');
-const {
+import express from 'express';
+import { body, param } from 'express-validator';
+import {
   submitPayment,
   getOrderPayment,
   getPaymentHistory,
-  verifyPayment,
+  verifyPaymentAdmin,
   getPayments,
-  getPaymentStats,
-} = require('../controllers/paymentController');
+  getPaymentStatsAdmin,
+} from '../controllers/paymentController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
-const { paymentRateLimit } = require('../middleware/rateLimit');
+import { protect, authorize } from '../middleware/auth.js';
+import { paymentRateLimit } from '../middleware/rateLimit.js';
 
 // All payment routes require authentication
 router.use(protect);
@@ -43,9 +43,9 @@ router.put('/verify/:orderId', [
   param('orderId', 'Invalid order ID').isMongoId(),
   body('action', 'Action is required').isIn(['confirm', 'reject']),
   body('rejectionReason').optional().isString().isLength({ max: 500 }),
-], verifyPayment);
+], verifyPaymentAdmin);
 
 router.get('/payments', getPayments);
-router.get('/payments/stats', getPaymentStats);
+router.get('/payments/stats', getPaymentStatsAdmin);
 
-module.exports = router;
+export default router;

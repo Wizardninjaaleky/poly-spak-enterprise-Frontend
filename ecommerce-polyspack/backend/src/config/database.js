@@ -4,14 +4,16 @@ import mongoose from 'mongoose';
 const connectDB = async () => {
   try {
     const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/polyspack-ecommerce';
-    const conn = await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const conn = await mongoose.connect(mongoUri);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('Database connection error:', error.message);
-    process.exit(1);
+    // Don't exit in production, let the app handle gracefully
+    if (process.env.NODE_ENV === 'production') {
+      console.error('Continuing without database connection in production');
+    } else {
+      process.exit(1);
+    }
   }
 };
 
