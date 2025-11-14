@@ -49,9 +49,10 @@ exports.register = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: 'Registration failed. Please try again.',
     });
   }
 };
