@@ -18,7 +18,7 @@ const corsOptions = {
     'https://polyspackenterprises.co.ke', // Current live frontend
     'https://your-frontend-domain.vercel.app' // If using Vercel
   ],
-  credentials: true,
+  credentials: false, // Disable credentials to avoid CORS preflight issues
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
