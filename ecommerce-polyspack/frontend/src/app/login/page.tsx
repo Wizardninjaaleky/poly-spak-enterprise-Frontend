@@ -10,8 +10,8 @@ import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: 'polyspackenterprise@gmail.com',
+    password: 'Thamanda@2025'
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -46,6 +46,9 @@ const LoginPage: React.FC = () => {
 
       router.push('/');
     } catch (err: any) {
+      console.error('Login error:', err);
+      console.error('Error response:', err.response);
+      console.error('Error data:', err.response?.data);
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);

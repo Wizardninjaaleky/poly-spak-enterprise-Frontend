@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const Product = require('../models/Product');
+const Order = require('../models/Order');
 const Coupon = require('../models/Coupon');
 const FlashSale = require('../models/FlashSale');
 const WebsiteSettings = require('../models/WebsiteSettings');

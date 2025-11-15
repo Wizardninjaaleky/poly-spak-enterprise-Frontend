@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2-1.onrender.com/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },

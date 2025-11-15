@@ -23,6 +23,7 @@ router.post(
     body('password', 'Please enter a password with 6 or more characters').isLength({
       min: 6,
     }),
+    body('phone', 'Phone number is required').not().isEmpty(),
   ],
   register
 );

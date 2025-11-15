@@ -15,7 +15,7 @@ export const register = async (req, res) => {
     });
   }
 
-  const { name, email, password, phone, address } = req.body;
+  const { name, email, password, phone, address, role } = req.body;
 
   try {
     // Check if user exists
@@ -33,6 +33,7 @@ export const register = async (req, res) => {
       email,
       passwordHash: password,
       phone,
+      role: role || 'customer', // Allow role to be set, default to customer
       addresses: address ? [{ street: address }] : [],
     });
 

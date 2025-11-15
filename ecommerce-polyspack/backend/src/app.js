@@ -15,6 +15,7 @@ const corsOptions = {
   origin: [
     'http://localhost:3000', // Local development
     'https://poly-spak-enterprise-fronted-0sde.onrender.com', // Production frontend
+    'https://polyspackenterprises.co.ke', // Current live frontend
     'https://your-frontend-domain.vercel.app' // If using Vercel
   ],
   credentials: true,

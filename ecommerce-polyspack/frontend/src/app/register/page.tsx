@@ -57,6 +57,7 @@ const RegisterPage: React.FC = () => {
 
       router.push('/');
     } catch (err: any) {
+      console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
