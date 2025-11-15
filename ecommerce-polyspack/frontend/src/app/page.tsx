@@ -22,7 +22,7 @@ export default function HomePage() {
       category: 'Seedling Bags',
       price: 2500,
       salePrice: 2200,
-      images: ['/placeholder-seedling.jpg'],
+      images: ['https://via.placeholder.com/400x300/4CAF50/white?text=Seedling+Bags'],
       sku: 'SB-100-PREM',
       stockQty: 50,
       attributes: { size: 'Medium', material: 'Biodegradable' },
@@ -34,7 +34,7 @@ export default function HomePage() {
       slug: 'solar-powered-led-light',
       category: 'Electronics',
       price: 1500,
-      images: ['/placeholder-electronics.jpg'],
+      images: ['https://via.placeholder.com/400x300/2196F3/white?text=Solar+LED+Light'],
       sku: 'EL-SOLAR-LED',
       stockQty: 25,
       attributes: { power: '5W', battery: '2000mAh' },
@@ -46,7 +46,7 @@ export default function HomePage() {
       slug: 'agricultural-consulting-service',
       category: 'Services',
       price: 5000,
-      images: ['/placeholder-service.jpg'],
+      images: ['https://via.placeholder.com/400x300/FF9800/white?text=Agricultural+Service'],
       sku: 'SVC-AGRI-CONSULT',
       stockQty: 10,
       attributes: { duration: 'Full Day', type: 'On-site' },
@@ -57,19 +57,19 @@ export default function HomePage() {
   const categories = [
     {
       name: 'Seedling Bags',
-      image: '/placeholder-seedling.jpg',
+      image: 'https://via.placeholder.com/400x300/4CAF50/white?text=Seedling+Bags',
       description: 'High-quality biodegradable seedling bags for nurseries',
       productCount: 25
     },
     {
       name: 'Electronics',
-      image: '/placeholder-electronics.jpg',
+      image: 'https://via.placeholder.com/400x300/2196F3/white?text=Electronics',
       description: 'Energy-efficient electronic solutions',
       productCount: 18
     },
     {
       name: 'Services',
-      image: '/placeholder-service.jpg',
+      image: 'https://via.placeholder.com/400x300/FF9800/white?text=Services',
       description: 'Professional agricultural and technical services',
       productCount: 12
     }
