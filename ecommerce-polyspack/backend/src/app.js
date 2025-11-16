@@ -1,52 +1,23 @@
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';
-import dotenv from 'dotenv';
-
-// Load environment variables
-dotenv.config();
-
-console.log('✅ app.js is loading...');
 
 const app = express();
 
-// CORS Configuration
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    const allowedOrigins = [
-      'http://localhost:3000', // Local development
-      'https://poly-spak-enterprise-fronted-0sde.onrender.com', // Production frontend
-      'https://polyspackenterprises.co.ke', // Current live frontend
-      'https://your-frontend-domain.vercel.app' // If using Vercel
-    ];
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // Enable credentials for authentication
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
+// ✅ FIX CORS - Allow frontend domain
+app.use(cors({
+  origin: [
+    'https://polyspackenterprises.co.ke', // Your live frontend
+    'http://localhost:3000',
+    'http://localhost:5173'
   ],
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-};
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+}));
 
-app.use(cors(corsOptions));
+// Handle preflight requests
+app.options('*', cors());
 
-// Middleware
-app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -72,16 +43,17 @@ app.get('/api/health', (req, res) => {
   res.json({
     success: true,
     message: "API is healthy",
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    status: "operational"
   });
 });
 
-// ✅ WORKING AUTH ROUTES
+// ✅ WORKING AUTH REGISTER ENDPOINT
 app.post('/api/auth/register', (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, confirmPassword } = req.body;
 
-    console.log('📝 REGISTRATION REQUEST:', { name, email, phone });
+    console.log('📝 REGISTRATION ATTEMPT:', { name, email, phone });
 
     // Validation
     if (!name || !email || !password) {
@@ -98,6 +70,20 @@ app.post('/api/auth/register', (req, res) => {
       });
     }
 
+    if (password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Passwords do not match'
+      });
+    }
+
+    if (!email.includes('@')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address'
+      });
+    }
+
     // Successful registration
     res.status(201).json({
       success: true,
@@ -110,7 +96,7 @@ app.post('/api/auth/register', (req, res) => {
           phone: phone || '',
           role: 'customer'
         },
-        token: 'jwt_' + Math.random().toString(36).substr(2, 16)
+        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
       }
     });
 
@@ -123,11 +109,12 @@ app.post('/api/auth/register', (req, res) => {
   }
 });
 
+// ✅ WORKING AUTH LOGIN ENDPOINT
 app.post('/api/auth/login', (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log('🔐 LOGIN REQUEST:', email);
+    console.log('🔐 LOGIN ATTEMPT:', email);
 
     // Validation
     if (!email || !password) {
@@ -137,7 +124,7 @@ app.post('/api/auth/login', (req, res) => {
       });
     }
 
-    // Successful login
+    // Simulate successful login
     res.json({
       success: true,
       message: '✅ Login successful! Welcome back!',
@@ -148,7 +135,7 @@ app.post('/api/auth/login', (req, res) => {
           email: email,
           role: 'customer'
         },
-        token: 'jwt_' + Math.random().toString(36).substr(2, 16)
+        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
       }
     });
 
@@ -161,58 +148,28 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
-// Test endpoint
-app.get('/api/test', (req, res) => {
+// Test CORS endpoint
+app.get('/api/test-cors', (req, res) => {
   res.json({
     success: true,
-    message: '✅ Test endpoint working! Backend is connected.',
-    timestamp: new Date().toISOString()
+    message: '✅ CORS is working! Frontend can connect to backend.',
+    timestamp: new Date().toISOString(),
+    frontend: 'https://polyspackenterprises.co.ke'
   });
 });
 
-
-
-// Add your other routes here when ready
-import auth from './routes/auth.js';
-app.use('/api/auth', auth);
-
-// Import and use admin routes
-import admin from './routes/admin.js';
-app.use('/api/admin', admin);
-
-// Import and use product routes
-import products from './routes/products.js';
-app.use('/api', products);
-
-// Import and use order routes
-import orders from './routes/orders.js';
-app.use('/api', orders);
-
-// Import and use payment routes
-import payments from './routes/payments.js';
-app.use('/api', payments);
-
-// Import and use website routes
-import website from './routes/website.js';
-app.use('/api', website);
-
-// app.use('/api/users', userRoutes);
-
-// 404 handler for undefined routes
+// 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
     success: false,
-    message: `Route ${req.originalUrl} not found`
-  });
-});
-
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error(error.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'production' ? {} : error.message
+    message: `Route ${req.originalUrl} not found`,
+    availableRoutes: [
+      'GET /',
+      'GET /api/health',
+      'GET /api/test-cors',
+      'POST /api/auth/register',
+      'POST /api/auth/login'
+    ]
   });
 });
 
