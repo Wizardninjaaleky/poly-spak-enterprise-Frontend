@@ -1,3 +1,11 @@
+import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service - Polyspack Enterprises',
+  description: 'Read our terms of service and conditions for using Polyspack Enterprises website and services.',
+};
+
 export default function Terms() {
   return (
     <div className="container mx-auto px-4 py-8">

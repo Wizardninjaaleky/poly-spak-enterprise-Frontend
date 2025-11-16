@@ -1,3 +1,11 @@
+import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy - Polyspack Enterprises',
+  description: 'Learn about how Polyspack Enterprises protects your privacy and handles your personal information.',
+};
+
 export default function Privacy() {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -30,7 +38,7 @@ export default function Privacy() {
         <h2 className="text-2xl font-semibold mt-6 mb-3">6. Your Rights</h2>
         <p className="mb-4">You have the right to access, update, or delete your personal information. You may also opt out of marketing communications at any time.</p>
 
-        <h2 className="text-2xl font-semibold mt-6 mb-3">7. Children's Privacy</h2>
+        <h2 className="text-2xl font-semibold mt-6 mb-3">7. Children&apos;s Privacy</h2>
         <p className="mb-4">Our services are not intended for children under 13. We do not knowingly collect personal information from children under 13.</p>
 
         <h2 className="text-2xl font-semibold mt-6 mb-3">8. Changes to This Policy</h2>
