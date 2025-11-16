@@ -57,7 +57,7 @@ export default function HomePage() {
   const categories = [
     {
       name: 'Seedling Bags',
-      image: 'https://via.placeholder.com/400x300/4CAF50/white?text=Seedling+Bags',
+      image: 'https://via.placeholder.com/400x300/4CAF50/white?text=Agriculture',
       description: 'High-quality biodegradable seedling bags for nurseries',
       productCount: 25
     },
@@ -69,7 +69,7 @@ export default function HomePage() {
     },
     {
       name: 'Services',
-      image: 'https://via.placeholder.com/400x300/FF9800/white?text=Services',
+      image: 'https://via.placeholder.com/400x300/FF9800/white?text=Seedlings',
       description: 'Professional agricultural and technical services',
       productCount: 12
     }
