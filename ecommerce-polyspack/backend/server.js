@@ -1,6 +1,8 @@
-import dotenv from 'dotenv';
-import connectDB from './src/config/database.js';
-import app from './src/app.js';
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const connectDB = require('./src/config/database.js');
+const app = require('./src/app.js');
 
 // Load environment variables
 dotenv.config();
@@ -12,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
   console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  console.log(`📱 Frontend URL: https://poly-spak-enterprise-fronted-0sde.onrender.com`);
+  console.log(`📱 Frontend URL: https://polyspackenterprises.co.ke`);
   console.log(`🔗 API Base URL: ${process.env.NODE_ENV === 'production' ? 'https://your-backend-url.onrender.com' : `http://localhost:${PORT}`}`);
 });
 
@@ -34,3 +36,4 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
+module.exports = server;

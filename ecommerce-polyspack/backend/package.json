@@ -2,7 +2,6 @@
   "name": "polyspack-backend",
   "version": "1.0.0",
   "description": "Backend for Polyspack Enterprises E-commerce",
-  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
