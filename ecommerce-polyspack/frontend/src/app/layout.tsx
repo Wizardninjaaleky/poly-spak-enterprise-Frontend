@@ -2,6 +2,8 @@ import React from 'react';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ReduxProvider from '@/components/ReduxProvider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -21,7 +23,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          {children}
+          <Header />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Footer />
         </ReduxProvider>
       </body>
     </html>
