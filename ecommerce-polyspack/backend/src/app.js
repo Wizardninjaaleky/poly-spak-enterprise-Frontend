@@ -1,91 +1,20 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ✅ PRODUCTION-READY CORS CONFIGURATION
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    const allowedOrigins = [
-      'https://polyspackenterprises.co.ke', // Your live frontend
-      'http://localhost:3000', // Local development
-      'http://localhost:5173', // Alternative local port
-      'https://your-frontend-domain.vercel.app' // If using Vercel
-    ];
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+// ✅ URGENT CORS FIX - Allow your frontend domain
+app.use(cors({
+  origin: 'https://polyspackenterprises.co.ke',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
-  ],
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-};
-
-app.use(cors(corsOptions));
-
-// ✅ EXPLICIT PREFLIGHT HANDLING - Critical for complex requests
-app.options('*', (req, res) => {
-  const origin = req.headers.origin;
-  const allowedOrigins = [
-    'https://polyspackenterprises.co.ke',
-    'http://localhost:3000',
-    'http://localhost:5173'
-  ];
-
-  if (allowedOrigins.includes(origin) || !origin) {
-    res.header('Access-Control-Allow-Origin', origin || 'https://polyspackenterprises.co.ke');
-  }
-
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.header('Access-Control-Max-Age', '86400'); // Cache preflight for 24 hours
-  res.sendStatus(200);
-});
-
-// ✅ STATIC FILE SERVING WITH CORS HEADERS - For images and uploads
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
-  setHeaders: (res, path) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
-  }
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
-// Serve public images with CORS
-app.use('/images', express.static(path.join(__dirname, 'public/images'), {
-  setHeaders: (res, path) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Cache-Control', 'public, max-age=31536000');
-  }
-}));
+// Handle preflight OPTIONS requests
+app.options('*', cors());
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // Root route
 app.get('/', (req, res) => {
@@ -107,32 +36,24 @@ app.get('/', (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({
-    success: true,
-    message: "API is healthy",
-    timestamp: new Date().toISOString(),
-    status: "operational"
+    status: "OK",
+    message: "Polyspack API is running",
+    timestamp: new Date().toISOString()
   });
 });
 
-// ✅ WORKING AUTH REGISTER ENDPOINT
+// ✅ ADD AUTH ENDPOINTS (if missing)
 app.post('/api/auth/register', (req, res) => {
   try {
     const { name, email, phone, password, confirmPassword } = req.body;
 
-    console.log('📝 REGISTRATION ATTEMPT:', { name, email, phone });
+    console.log('📝 REGISTRATION:', { name, email });
 
     // Validation
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
         message: 'Name, email, and password are required'
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password must be at least 6 characters'
       });
     }
 
@@ -143,100 +64,62 @@ app.post('/api/auth/register', (req, res) => {
       });
     }
 
-    if (!email.includes('@')) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide a valid email address'
-      });
-    }
-
-    // Successful registration
-    res.status(201).json({
+    // Success
+    res.json({
       success: true,
-      message: '🎉 Registration successful! Welcome to Polyspack Enterprises!',
+      message: '🎉 Registration successful!',
       data: {
         user: {
           id: 'user_' + Date.now(),
           name: name,
           email: email,
-          phone: phone || '',
-          role: 'customer'
+          phone: phone
         },
-        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
+        token: 'jwt_token_123'
       }
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error during registration'
+      message: 'Server error'
     });
   }
 });
 
-// ✅ WORKING AUTH LOGIN ENDPOINT
 app.post('/api/auth/login', (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log('🔐 LOGIN ATTEMPT:', email);
+    console.log('🔐 LOGIN:', email);
 
-    // Validation
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: 'Email and password are required'
+        message: 'Email and password required'
       });
     }
 
-    // Simulate successful login
+    // Success
     res.json({
       success: true,
-      message: '✅ Login successful! Welcome back!',
+      message: '✅ Login successful!',
       data: {
         user: {
           id: 'user_123',
           name: 'Alex Nyakundi',
-          email: email,
-          role: 'customer'
+          email: email
         },
-        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
+        token: 'jwt_token_123'
       }
     });
 
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error during login'
+      message: 'Server error'
     });
   }
-});
-
-// Test CORS endpoint
-app.get('/api/test-cors', (req, res) => {
-  res.json({
-    success: true,
-    message: '✅ CORS is working! Frontend can connect to backend.',
-    timestamp: new Date().toISOString(),
-    frontend: 'https://polyspackenterprises.co.ke'
-  });
-});
-
-// 404 handler
-app.use('*', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.originalUrl} not found`,
-    availableRoutes: [
-      'GET /',
-      'GET /api/health',
-      'GET /api/test-cors',
-      'POST /api/auth/register',
-      'POST /api/auth/login'
-    ]
-  });
 });
 
 export default app;
