@@ -1,9 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ✅ ENHANCED CORS FIX - More explicit configuration
+// ✅ PRODUCTION-READY CORS CONFIGURATION
 const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
@@ -12,7 +17,8 @@ const corsOptions = {
     const allowedOrigins = [
       'https://polyspackenterprises.co.ke', // Your live frontend
       'http://localhost:3000', // Local development
-      'http://localhost:5173' // Alternative local port
+      'http://localhost:5173', // Alternative local port
+      'https://your-frontend-domain.vercel.app' // If using Vercel
     ];
 
     if (allowedOrigins.indexOf(origin) !== -1) {
@@ -38,14 +44,45 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Explicitly handle preflight requests for all routes
+// ✅ EXPLICIT PREFLIGHT HANDLING - Critical for complex requests
 app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', req.headers.origin || 'https://polyspackenterprises.co.ke');
+  const origin = req.headers.origin;
+  const allowedOrigins = [
+    'https://polyspackenterprises.co.ke',
+    'http://localhost:3000',
+    'http://localhost:5173'
+  ];
+
+  if (allowedOrigins.includes(origin) || !origin) {
+    res.header('Access-Control-Allow-Origin', origin || 'https://polyspackenterprises.co.ke');
+  }
+
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers');
   res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Max-Age', '86400'); // Cache preflight for 24 hours
   res.sendStatus(200);
 });
+
+// ✅ STATIC FILE SERVING WITH CORS HEADERS - For images and uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+  setHeaders: (res, path) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+  }
+}));
+
+// Serve public images with CORS
+app.use('/images', express.static(path.join(__dirname, 'public/images'), {
+  setHeaders: (res, path) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Cache-Control', 'public, max-age=31536000');
+  }
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
