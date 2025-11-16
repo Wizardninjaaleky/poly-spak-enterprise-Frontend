@@ -122,4 +122,14 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+// ✅ ADD CORS TEST ENDPOINT
+app.get('/api/test-cors', (req, res) => {
+  res.json({
+    success: true,
+    message: '✅ CORS is working! Frontend can connect to backend.',
+    timestamp: new Date().toISOString(),
+    frontend: 'https://polyspackenterprises.co.ke'
+  });
+});
+
 export default app;
