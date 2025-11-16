@@ -10,9 +10,10 @@ console.log('✅ app.js is loading...');
 
 const app = express();
 
-// CORS Configuration (Recommended)
+// CORS Configuration
 app.use(cors({
-  origin: 'https://polyspackenterprises.co.ke'
+  origin: 'https://polyspackenterprises.co.ke',
+  credentials: true
 }));
 
 // Middleware
