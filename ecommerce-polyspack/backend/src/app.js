@@ -12,12 +12,23 @@ const app = express();
 
 // CORS Configuration
 const corsOptions = {
-  origin: [
-    'http://localhost:3000', // Local development
-    'https://poly-spak-enterprise-fronted-0sde.onrender.com', // Production frontend
-    'https://polyspackenterprises.co.ke', // Current live frontend
-    'https://your-frontend-domain.vercel.app' // If using Vercel
-  ],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'http://localhost:3000', // Local development
+      'https://poly-spak-enterprise-fronted-0sde.onrender.com', // Production frontend
+      'https://polyspackenterprises.co.ke', // Current live frontend
+      'https://your-frontend-domain.vercel.app' // If using Vercel
+    ];
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true, // Enable credentials for authentication
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
