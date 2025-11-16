@@ -229,32 +229,6 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// Add your other routes here when ready
-const auth = require('./routes/auth.js');
-app.use('/api/auth', auth);
-
-// Import and use admin routes
-const admin = require('./routes/admin.js');
-app.use('/api/admin', admin);
-
-// Import and use product routes
-const products = require('./routes/products.js');
-app.use('/api', products);
-
-// Import and use order routes
-const orders = require('./routes/orders.js');
-app.use('/api', orders);
-
-// Import and use payment routes
-const payments = require('./routes/payments.js');
-app.use('/api', payments);
-
-// Import and use website routes
-const website = require('./routes/website.js');
-app.use('/api', website);
-
-// app.use('/api/users', userRoutes);
-
 // 404 handler for undefined routes
 app.use('*', (req, res) => {
   res.status(404).json({
