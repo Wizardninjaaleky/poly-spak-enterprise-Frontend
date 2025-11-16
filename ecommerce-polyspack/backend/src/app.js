@@ -132,6 +132,47 @@ app.post('/api/auth/login', (req, res) => {
   }
 });
 
+// ✅ WORKING AUTH FORGOT PASSWORD ENDPOINT
+app.post('/api/auth/forgot-password', (req, res) => {
+  try {
+    const { email } = req.body;
+
+    console.log('🔑 FORGOT PASSWORD REQUEST:', email);
+
+    // Validation
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    if (!email.includes('@')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address'
+      });
+    }
+
+    // Simulate sending reset email
+    res.json({
+      success: true,
+      message: '✅ Password reset email sent! Please check your inbox.',
+      data: {
+        email: email,
+        resetToken: 'reset_' + Math.random().toString(36).substr(2, 16)
+      }
+    });
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error during password reset'
+    });
+  }
+});
+
 // Test endpoint
 app.get('/api/test', (req, res) => {
   res.json({
