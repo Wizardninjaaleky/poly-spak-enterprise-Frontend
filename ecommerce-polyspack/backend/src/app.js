@@ -10,39 +10,10 @@ console.log('✅ app.js is loading...');
 
 const app = express();
 
-// CORS Configuration - FIXED FOR YOUR FRONTEND
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-
-    const allowedOrigins = [
-      'http://localhost:3000', // Local development
-      'https://polyspackenterprises.co.ke', // Your live frontend - FIXED!
-      'https://your-frontend-domain.vercel.app' // If using Vercel
-    ];
-
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // Enable credentials for authentication
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type',
-    'Authorization',
-    'X-Requested-With',
-    'Accept',
-    'Origin',
-    'Access-Control-Request-Method',
-    'Access-Control-Request-Headers'
-  ],
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
-};
-
-app.use(cors(corsOptions));
+// CORS Configuration (Recommended)
+app.use(cors({
+  origin: 'https://polyspackenterprises.co.ke'
+}));
 
 // Middleware
 app.use(helmet());
