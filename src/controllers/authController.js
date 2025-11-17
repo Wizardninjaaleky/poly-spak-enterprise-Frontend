@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 // Register Controller
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -22,13 +22,14 @@ const registerUser = async (req, res) => {
       name,
       email,
       passwordHash,
+      role: role || 'user', // Default to 'user' if no role specified
     });
 
-    console.log(`User registered: ${email}`);
+    console.log(`User registered: ${email} with role: ${user.role}`);
 
     res.status(201).json({
       message: 'User registered successfully',
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
     console.error('Registration error:', error.message);
@@ -65,7 +66,7 @@ const loginUser = async (req, res) => {
     res.json({
       message: 'Login successful',
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
     console.error('Login error:', error.message);
