@@ -22,7 +22,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       passwordHash,
-      role: role || 'user', // Default to 'user' if no role specified
+      role: role || 'customer', // Default to 'customer' if no role specified
     });
 
     console.log(`User registered: ${email} with role: ${user.role}`);
