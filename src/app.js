@@ -1,6 +1,6 @@
-const express = require("express");
-const cors = require("cors");
-const authRoutes = require("./routes/authRoutes.js");
+import express from 'express';
+import cors from 'cors';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 
@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -24,10 +24,6 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     endpoints: {
       auth: '/api/auth',
-      products: '/api/products',
-      orders: '/api/orders',
-      payments: '/api/payments',
-      admin: '/api/admin',
       health: '/api/health'
     }
   });
@@ -44,11 +40,10 @@ app.use((req, res) => {
 // Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-
   res.status(500).json({
     success: false,
     message: 'Something went wrong!',
   });
 });
 
-module.exports = app;
+export default app;
