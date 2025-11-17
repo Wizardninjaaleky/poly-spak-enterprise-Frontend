@@ -14,13 +14,13 @@ export const protect = async (req, res, next) => {
     }
     return res.status(401).json({ message: 'Not authorized, token missing' });
   } catch (err) {
-    console.error('AUTH ERROR:', err.message);
+    console.error('AUTH ERROR', err.message);
     return res.status(401).json({ message: 'Not authorized' });
   }
 };
 
-export const admin = (req, res, next) => {
+export const adminOnly = (req, res, next) => {
   if (!req.user) return res.status(401).json({ message: 'Not authorized' });
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin resource. Access denied.' });
+  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin access required' });
   next();
 };
