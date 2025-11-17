@@ -74,4 +74,33 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Create Admin Controller (temporary)
+export const createAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({ message: "Email already exists" });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name: 'Admin',
+      email,
+      passwordHash: hashedPassword,
+      role: 'admin',
+    });
+
+    res.status(201).json({
+      message: "Admin created successfully",
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 export { registerUser, loginUser };
+
+

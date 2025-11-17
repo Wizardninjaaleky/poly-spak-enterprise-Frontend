@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser } from '../controllers/authController.js';
+import { registerUser, loginUser, createAdmin } from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -8,5 +8,8 @@ router.post('/register', registerUser);
 
 // Login route
 router.post('/login', loginUser);
+
+// Create admin route (temporary, remove after first admin is created)
+router.post('/create-admin', createAdmin);
 
 export default router;
