@@ -1,7 +1,11 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const connectDB = require("./config/database.js");
+const authRoutes = require("./routes/authRoutes.js");
 
-const authRoutes = require('./routes/authRoutes.js');
+dotenv.config();
+connectDB();
 
 const app = express();
 
@@ -9,12 +13,47 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ROUTES — FIXED
-app.use('/api/auth', authRoutes);
+// Routes
+app.use("/api/auth", authRoutes);
 
-// Test endpoint
+// Health check
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'Polyspack API is running' });
+});
+
+// Root endpoint
 app.get('/', (req, res) => {
-  res.send('API is running...');
+  res.status(200).json({
+    success: true,
+    message: 'Welcome to Polyspack Enterprises API',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      products: '/api/products',
+      orders: '/api/orders',
+      payments: '/api/payments',
+      admin: '/api/admin',
+      health: '/api/health'
+    }
+  });
+});
+
+// Handle undefined routes
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+  });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong!',
+  });
 });
 
 module.exports = app;
