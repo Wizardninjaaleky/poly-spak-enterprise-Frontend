@@ -46,7 +46,8 @@ const RegisterPage: React.FC = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        phone: formData.phone
+        phone: formData.phone,
+        role: formData.role || 'user' // Allow role selection for admin registration
       });
 
       // Registration successful, auto-login the user

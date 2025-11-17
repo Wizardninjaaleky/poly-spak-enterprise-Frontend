@@ -9,7 +9,6 @@ const AdminDashboardPage: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Mock admin check - in real app, check user.role === 'admin'
   const isAdmin = user?.role === 'admin';
 
   if (!user || !isAdmin) {
