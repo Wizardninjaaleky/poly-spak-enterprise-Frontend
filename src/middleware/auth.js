@@ -1,8 +1,8 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
 
 // Protect routes - require authentication
-exports.protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   let token;
 
   if (
@@ -37,7 +37,7 @@ exports.protect = async (req, res, next) => {
 };
 
 // Grant access to specific roles
-exports.authorize = (...roles) => {
+export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
@@ -47,4 +47,16 @@ exports.authorize = (...roles) => {
     }
     next();
   };
+};
+
+// Admin only middleware
+export const adminOnly = (req, res, next) => {
+  if (req.user && req.user.role === 'admin') {
+    next();
+  } else {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. Admin role required.',
+    });
+  }
 };

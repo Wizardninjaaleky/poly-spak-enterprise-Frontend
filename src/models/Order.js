@@ -2,11 +2,10 @@ import mongoose from 'mongoose';
 
 // Order Schema
 const orderSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  items: [{
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  products: [{
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-    qty: { type: Number, required: true, min: 1 },
-    price: { type: Number, required: true, min: 0 } // Price at time of order
+    qty: { type: Number, required: true, min: 1 }
   }],
   totalAmount: { type: Number, required: true, min: 0 },
   shippingAmount: { type: Number, default: 0 },
@@ -32,7 +31,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Indexes for efficient queries
-orderSchema.index({ userId: 1 });
+orderSchema.index({ user: 1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ paymentStatus: 1 });
 orderSchema.index({ createdAt: -1 });

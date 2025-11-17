@@ -1,5 +1,5 @@
-const multer = require('multer');
-const path = require('path');
+import multer from 'multer';
+import path from 'path';
 
 // Configure multer for memory storage (for Cloudinary upload)
 const storage = multer.memoryStorage();
@@ -32,7 +32,7 @@ const uploadSingle = (fieldName) => upload.single(fieldName);
 // Multiple files upload
 const uploadMultiple = (fieldName, maxCount = 5) => upload.array(fieldName, maxCount);
 
-module.exports = {
+export {
   upload,
   uploadSingle,
   uploadMultiple,

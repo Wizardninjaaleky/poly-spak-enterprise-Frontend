@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const websiteSettingsSchema = new mongoose.Schema({
   logoUrl: {
@@ -38,4 +38,4 @@ websiteSettingsSchema.pre('save', async function(next) {
   next();
 });
 
-module.exports = mongoose.model('WebsiteSettings', websiteSettingsSchema);
+export default mongoose.model('WebsiteSettings', websiteSettingsSchema);

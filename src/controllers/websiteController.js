@@ -1,9 +1,9 @@
-const WebsiteSettings = require('../models/WebsiteSettings');
+import WebsiteSettings from '../models/WebsiteSettings.js';
 
 // @desc    Get website settings
 // @route   GET /api/website/settings
 // @access  Public
-exports.getWebsiteSettings = async (req, res) => {
+export const getWebsiteSettings = async (req, res) => {
   try {
     let settings = await WebsiteSettings.findOne();
 
