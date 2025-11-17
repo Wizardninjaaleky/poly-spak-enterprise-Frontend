@@ -1,13 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store/store';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '@/store/store';
+import { setCredentials } from '@/store/slices/authSlice';
 
 const AdminDashboardPage: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user, token } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
   const [activeTab, setActiveTab] = useState('overview');
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const isAdmin = user?.role === 'admin';
 
@@ -27,6 +34,50 @@ const AdminDashboardPage: React.FC = () => {
       </div>
     );
   }
+
+  // Fetch data based on active tab
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!token) return;
+
+      setLoading(true);
+      setError('');
+
+      try {
+        const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+
+        if (activeTab === 'products') {
+          const response = await fetch('http://localhost:5000/api/products', { headers });
+          if (response.ok) {
+            const data = await response.json();
+            setProducts(data.data || []);
+          }
+        } else if (activeTab === 'orders') {
+          const response = await fetch('http://localhost:5000/api/orders', { headers });
+          if (response.ok) {
+            const data = await response.json();
+            setOrders(data.data || []);
+          }
+        } else if (activeTab === 'users') {
+          const response = await fetch('http://localhost:5000/api/admin/users', { headers });
+          if (response.ok) {
+            const data = await response.json();
+            setUsers(data.data || []);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [activeTab, token]);
 
   const adminTabs = [
     { id: 'overview', label: 'Dashboard', icon: '📊' },

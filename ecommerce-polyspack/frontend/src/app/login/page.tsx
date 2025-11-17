@@ -44,7 +44,12 @@ const LoginPage: React.FC = () => {
         token: response.data.token
       }));
 
-      router.push('/');
+      // Redirect based on user role
+      if (response.data.user.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/');
+      }
     } catch (err: any) {
       console.error('Login error:', err);
       console.error('Error response:', err.response);
