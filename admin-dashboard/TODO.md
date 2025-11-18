@@ -1,10 +1,12 @@
-# Admin Dashboard Payments Tab Implementation
+# Admin Login Fix TODO
 
-## Tasks
-- [x] Update Sidebar.jsx to include Payments menu item
-- [x] Create new Payments.jsx page component with table showing pending payments
-- [x] Add confirm/reject buttons for each payment
-- [x] Update App.jsx to include /payments route
-- [x] Implement API calls to fetch payments and verify them
-- [x] Test the Payments tab functionality
-- [x] Verify API integration works correctly
+## Current Issue
+- Admin dashboard login returns "unauthorized" because backend uses mock auth instead of real JWT with roles
+- No admin user exists in database
+- Admin routes not properly mounted
+
+## Steps to Fix
+- [x] Update app.js to use proper auth routes instead of mock handlers
+- [x] Mount admin routes in app.js
+- [x] Create admin user in database (polyspackenterprise@gmail.com / Thamanda@2025)
+- [ ] Test admin login functionality

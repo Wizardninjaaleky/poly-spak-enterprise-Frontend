@@ -88,131 +88,13 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// ✅ WORKING AUTH ROUTES
-app.post('/api/auth/register', (req, res) => {
-  try {
-    const { name, email, phone, password } = req.body;
+// Import routes
+import authRoutes from './routes/authRoutes.js';
+import adminRoutes from './routes/admin.js';
 
-    console.log('📝 REGISTRATION REQUEST:', { name, email, phone });
-
-    // Validation
-    if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Name, email, and password are required'
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password must be at least 6 characters'
-      });
-    }
-
-    // Successful registration
-    res.status(201).json({
-      success: true,
-      message: '🎉 Registration successful! Welcome to Polyspack Enterprises!',
-      data: {
-        user: {
-          id: 'user_' + Date.now(),
-          name: name,
-          email: email,
-          phone: phone || '',
-          role: 'customer'
-        },
-        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
-      }
-    });
-
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during registration'
-    });
-  }
-});
-
-app.post('/api/auth/login', (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    console.log('🔐 LOGIN REQUEST:', email);
-
-    // Validation
-    if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required'
-      });
-    }
-
-    // Successful login
-    res.json({
-      success: true,
-      message: '✅ Login successful! Welcome back!',
-      data: {
-        user: {
-          id: 'user_123',
-          name: 'Alex Nyakundi',
-          email: email,
-          role: 'customer'
-        },
-        token: 'jwt_token_' + Math.random().toString(36).substr(2, 16)
-      }
-    });
-
-  } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during login'
-    });
-  }
-});
-
-// ✅ WORKING AUTH FORGOT PASSWORD ENDPOINT
-app.post('/api/auth/forgot-password', (req, res) => {
-  try {
-    const { email } = req.body;
-
-    console.log('🔑 FORGOT PASSWORD REQUEST:', email);
-
-    // Validation
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email is required'
-      });
-    }
-
-    if (!email.includes('@')) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide a valid email address'
-      });
-    }
-
-    // Simulate sending reset email
-    res.json({
-      success: true,
-      message: '✅ Password reset email sent! Please check your inbox.',
-      data: {
-        email: email,
-        resetToken: 'reset_' + Math.random().toString(36).substr(2, 16)
-      }
-    });
-
-  } catch (error) {
-    console.error('Forgot password error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error during password reset'
-    });
-  }
-});
+// Mount routes
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
