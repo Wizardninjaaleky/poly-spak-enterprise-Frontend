@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Products from './pages/Products';
 import AddEditProduct from './pages/AddEditProduct';
 import Orders from './pages/Orders';
+import Payments from './pages/Payments';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Unauthorized from './pages/Unauthorized';
@@ -33,6 +34,7 @@ const AppRoutes = () => {
                 <Route path="/products/new" element={<AddEditProduct />} />
                 <Route path="/products/:id/edit" element={<AddEditProduct />} />
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/payments" element={<Payments />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="/settings" element={<Settings />} />
               </Routes>

@@ -7,6 +7,7 @@ import {
   UsersIcon,
   CogIcon,
   ArrowRightOnRectangleIcon,
+  CreditCardIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../context/AuthContext';
 
@@ -18,6 +19,7 @@ const Sidebar = () => {
     { path: '/', icon: HomeIcon, label: 'Dashboard' },
     { path: '/products', icon: CubeIcon, label: 'Products' },
     { path: '/orders', icon: ShoppingBagIcon, label: 'Orders' },
+    { path: '/payments', icon: CreditCardIcon, label: 'Payments' },
     { path: '/users', icon: UsersIcon, label: 'Users' },
     { path: '/settings', icon: CogIcon, label: 'Settings' },
   ];
