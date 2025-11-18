@@ -1,34 +1,26 @@
-const express = require('express');
-const { body, param } = require('express-validator');
-const recaptcha = require('express-recaptcha').RecaptchaV2;
-const {
+import express from 'express';
+import { body, param } from 'express-validator';
+import {
   submitPayment,
   getOrderPayment,
   getPaymentHistory,
   verifyPayment,
   getPayments,
-  getPaymentStats,
-} = require('../controllers/paymentController');
+  getPaymentStatsController,
+} from '../controllers/paymentController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
-const { paymentRateLimit } = require('../middleware/rateLimit');
-
-// Initialize reCAPTCHA
-const recaptchaInstance = new recaptcha(
-  process.env.RECAPTCHA_SITE_KEY || 'your_site_key',
-  process.env.RECAPTCHA_SECRET_KEY || 'your_secret_key'
-);
+import { protect, authorize } from '../middleware/auth.js';
+import { paymentRateLimit } from '../middleware/rateLimit.js';
 
 // All payment routes require authentication
 router.use(protect);
 
 // User payment routes
 router.post(
-  '/submit',
+  '/payments/submit',
   paymentRateLimit,
-  recaptchaInstance.middleware.verify,
   [
     body('orderId', 'Order ID is required').isMongoId(),
     body('amount', 'Amount is required').isFloat({ min: 0 }),
@@ -39,22 +31,22 @@ router.post(
   submitPayment
 );
 
-router.get('/order/:orderId', [
+router.get('/payments/order/:orderId', [
   param('orderId', 'Invalid order ID').isMongoId(),
 ], getOrderPayment);
 
-router.get('/history', getPaymentHistory);
+router.get('/payments/history', getPaymentHistory);
 
 // Admin only routes
 router.use(authorize('admin'));
 
-router.put('/verify/:orderId', [
+router.put('/payments/verify/:orderId', [
   param('orderId', 'Invalid order ID').isMongoId(),
   body('action', 'Action is required').isIn(['confirm', 'reject']),
   body('rejectionReason').optional().isString().isLength({ max: 500 }),
 ], verifyPayment);
 
-router.get('/', getPayments);
-router.get('/stats', getPaymentStats);
+router.get('/payments', getPayments);
+router.get('/payments/stats', getPaymentStatsController);
 
-module.exports = router;
+export default router;

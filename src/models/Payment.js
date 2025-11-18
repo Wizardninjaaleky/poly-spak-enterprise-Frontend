@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // Payment Schema for manual M-Pesa verification
 const paymentSchema = new mongoose.Schema({
@@ -31,4 +31,4 @@ paymentSchema.pre('save', function(next) {
   next();
 });
 
-module.exports = mongoose.model('Payment', paymentSchema);
+export default mongoose.model('Payment', paymentSchema);

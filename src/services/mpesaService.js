@@ -1,8 +1,7 @@
 // MPESA service for handling payment verification
-const Payment = require('../models/Payment');
-const Order = require('../models/Order');
-const User = require('../models/User');
-const { sendPaymentVerified } = require('./emailService');
+import Payment from '../models/Payment.js';
+import Order from '../models/Order.js';
+import User from '../models/User.js';
 
 // Verify MPESA payment (manual verification by admin)
 const verifyPayment = async (orderId, transactionCode, verifiedBy) => {
@@ -41,9 +40,6 @@ const verifyPayment = async (orderId, transactionCode, verifiedBy) => {
     order.paymentStatus = 'paid';
     order.status = 'confirmed';
     await order.save();
-
-    // Send confirmation email
-    await sendPaymentVerified(order, order.userId);
 
     return {
       success: true,
@@ -124,7 +120,7 @@ const getPaymentStats = async () => {
   }
 };
 
-module.exports = {
+export {
   verifyPayment,
   getPaymentDetails,
   getAllPayments,

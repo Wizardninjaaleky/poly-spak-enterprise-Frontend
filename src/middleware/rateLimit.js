@@ -1,7 +1,7 @@
-const rateLimit = require('express-rate-limit');
+import rateLimit from 'express-rate-limit';
 
 // Rate limiter for payment submissions
-const paymentRateLimit = rateLimit({
+export const paymentRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Limit each IP to 5 payment submissions per windowMs
   message: {
@@ -25,7 +25,7 @@ const paymentRateLimit = rateLimit({
 });
 
 // General API rate limiter
-const generalRateLimit = rateLimit({
+export const generalRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
   message: {
@@ -37,7 +37,7 @@ const generalRateLimit = rateLimit({
 });
 
 // Stricter rate limiter for sensitive operations
-const strictRateLimit = rateLimit({
+export const strictRateLimit = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 10, // Limit each IP to 10 requests per hour
   message: {
@@ -47,9 +47,3 @@ const strictRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false
 });
-
-module.exports = {
-  paymentRateLimit,
-  generalRateLimit,
-  strictRateLimit
-};
