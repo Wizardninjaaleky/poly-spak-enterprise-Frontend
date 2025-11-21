@@ -5,6 +5,13 @@ import {
   getUser,
   updateUser,
   deleteUser,
+  getCategories,
+  getCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  getAdminProducts,
+  updateProfile,
   createCoupon,
   getCoupons,
   updateCoupon,
@@ -14,6 +21,8 @@ import {
   updateFlashSale,
   deleteFlashSale,
   getAnalytics,
+  getOrders,
+  updateOrderStatus,
 } from '../controllers/adminController.js';
 
 const router = express.Router();
@@ -27,6 +36,25 @@ router.use(authorize('admin'));
 // User management
 router.route('/users').get(getUsers);
 router.route('/users/:id').get(getUser).put(updateUser).delete(deleteUser);
+
+// Category management
+router
+  .route('/categories')
+  .get(getCategories)
+  .post(
+    [
+      body('name', 'Category name is required').not().isEmpty(),
+      body('description', 'Category description is required').not().isEmpty(),
+    ],
+    createCategory
+  );
+router.route('/categories/:id').get(getCategory).put(updateCategory).delete(deleteCategory);
+
+// Product management
+router.route('/products').get(getAdminProducts);
+
+// Profile management
+router.route('/profile').put(updateProfile);
 
 // Coupon management
 router
@@ -59,5 +87,14 @@ router.route('/flashsales/:id').put(updateFlashSale).delete(deleteFlashSale);
 
 // Analytics
 router.route('/analytics').get(getAnalytics);
+
+// Order management
+router.route('/orders').get(getOrders);
+router.route('/orders/:id').put(
+  [
+    body('status', 'Status must be one of: pending, processing, shipped, delivered, cancelled').isIn(['pending', 'processing', 'shipped', 'delivered', 'cancelled']),
+  ],
+  updateOrderStatus
+);
 
 export default router;

@@ -8,8 +8,7 @@ dotenv.config();
 // Connect to database
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || process.env.DATABASE_URL || 'mongodb+srv://alexnyakundi56_db_user:Admin@cluster0.lgqojwx.mongodb.net/?appName=Cluster0';
-    const conn = await mongoose.connect(mongoURI);
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/polyspack');
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error('Database connection error:', error);
@@ -17,23 +16,23 @@ const connectDB = async () => {
   }
 };
 
-const createAdminUser = async () => {
+const createJaneAdminUser = async () => {
   try {
     await connectDB();
 
     // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'polyspackenterprise@gmail.com' });
+    const existingAdmin = await User.findOne({ email: 'janemunge4@gmail.com' });
     if (existingAdmin) {
-      console.log('Admin user already exists');
+      console.log('Jane admin user already exists');
       process.exit(0);
     }
 
     // Create admin user
     const adminUser = await User.create({
-      name: 'Polyspack Admin',
-      email: 'polyspackenterprise@gmail.com',
-      phone: '+254700000000',
-      passwordHash: 'Thamanda@2025', // Will be hashed by pre-save middleware
+      name: 'Jane Mumbi',
+      email: 'janemunge4@gmail.com',
+      phone: '+254768756569',
+      passwordHash: 'jane@2025', // Will be hashed by pre-save middleware
       role: 'admin',
       addresses: [{
         street: 'Nairobi, Kenya',
@@ -44,16 +43,18 @@ const createAdminUser = async () => {
       isActive: true
     });
 
-    console.log('✅ Admin user created successfully!');
-    console.log('Email: polyspackenterprise@gmail.com');
-    console.log('Password: Thamanda@2025');
+    console.log('✅ Jane admin user created successfully!');
+    console.log('Name: Jane Mumbi');
+    console.log('Email: janemunge4@gmail.com');
+    console.log('Phone: +254768756569');
+    console.log('Password: jane@2025');
     console.log('Role: admin');
 
     process.exit(0);
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('Error creating Jane admin user:', error);
     process.exit(1);
   }
 };
 
-createAdminUser();
+createJaneAdminUser();
