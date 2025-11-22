@@ -1,25 +1,16 @@
-import app from '../src/app.js';
-import http from 'http';
+const http = require('http');
+const express = require('express');
+const app = require('../src/app');
+const securityMiddleware = require('../src/middleware/security');
 
-let server;
+const testApp = express();
 
-export function startServer() {
-  return new Promise((resolve) => {
-    server = http.createServer(app);
-    server.listen(() => {
-      resolve(server);
-    });
-  });
-}
+// Apply security middleware
+securityMiddleware(testApp);
 
-export function stopServer() {
-  return new Promise((resolve) => {
-    if (server) {
-      server.close(() => {
-        resolve();
-      });
-    } else {
-      resolve();
-    }
-  });
-}
+// Use the main app as a sub-app mounted at /api to match route mounting in app.js
+testApp.use('/api', app);
+
+const server = http.createServer(testApp);
+
+module.exports = server;
