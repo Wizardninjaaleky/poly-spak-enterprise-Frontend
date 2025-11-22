@@ -1,14 +1,28 @@
-# Admin Login Fix TODO
+# Admin Dashboard Update TODO
 
-## Current Issue
-- Admin dashboard login returns "unauthorized" because backend uses mock auth instead of real JWT with roles
-- No admin user exists in database
-- Admin routes not properly mounted
+## Overview
+Plan to update and improve the admin dashboard frontend and backend APIs.
 
-## Steps to Fix
-- [x] Update app.js to use proper auth routes instead of mock handlers
-- [x] Mount admin routes in app.js
-- [x] Create admin user in database (polyspackenterprise@gmail.com / Thamanda@2025)
-- [x] Push changes to repository for deployment
-- [x] Verify admin user exists in database
-- [ ] Test admin login functionality after deployment
+## Tasks
+
+### Frontend (admin-dashboard/src)
+- [ ] Enhance Dashboard.jsx to load real sales data dynamically from orders API.
+- [ ] Add filtering, sorting, and search functionalities for Users, Products, Orders pages.
+- [ ] Implement Add/Edit/Delete for categories and products where missing.
+- [ ] Improve UI/UX responsiveness and error handling.
+- [ ] Review and improve API service integration and error management.
+
+### Backend (backend/src/controllers and routes)
+- [ ] Add or improve APIs to support frontend functionalities (filtering, pagination, CRUD).
+- [ ] Add validation and error handling to backend controllers.
+- [ ] Ensure middleware roles and authentication are properly applied.
+
+### Testing
+- [ ] Add unit and integration tests for new API endpoints.
+- [ ] Test UI updates manually and with automated tests if possible.
+
+## Next Steps
+- Confirm specific features or improvements desired by user.
+- Prioritize tasks based on user needs.
+- Implement frontend and backend updates incrementally.
+- Test and deploy updates systematically.
