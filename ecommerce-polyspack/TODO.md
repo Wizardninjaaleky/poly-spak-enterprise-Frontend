@@ -13,7 +13,7 @@
 - [x] Create Payment page (/payment) with form
 - [x] Create PaymentStatus page (/payment/status) for checking verification
 - [x] Update checkout page to redirect to payment form after order creation
-- [ ] Add Payments tab to admin dashboard with verification interface
+- [x] Add Payments tab to admin dashboard with verification interface
 - [ ] Update API service calls for new endpoints
 - [ ] Integrate reCAPTCHA in payment form
 

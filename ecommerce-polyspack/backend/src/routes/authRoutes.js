@@ -1,17 +1,17 @@
-import express from 'express';
-import { body } from 'express-validator';
-import {
+const express = require('express');
+const { body } = require('express-validator');
+const {
   register,
   login,
   getMe,
   updateDetails,
   updatePassword,
   logout,
-} from '../controllers/authController.js';
+} = require('../controllers/authController.js');
 
 const router = express.Router();
 
-const { protect } = await import('../middleware/auth.js');
+const { protect } = require('../middleware/auth.js');
 
 router.post(
   '/register',
@@ -30,4 +30,4 @@ router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
 router.put('/updatepassword', protect, updatePassword);
 
-export default router;
+module.exports = router;

@@ -89,8 +89,8 @@ app.get('/api/health', (req, res) => {
 });
 
 // Import routes
-import authRoutes from './routes/authRoutes.js';
-import adminRoutes from './routes/admin.js';
+const authRoutes = require('./routes/authRoutes.js');
+const adminRoutes = require('./routes/admin.js');
 
 // Mount routes
 app.use('/api/auth', authRoutes);

@@ -91,6 +91,67 @@ const sendPaymentVerified = async (order, user) => {
   }
 };
 
+// Send registration confirmation email
+const sendRegistrationConfirmation = async (user) => {
+  try {
+    const transporter = createTransporter();
+
+    const mailOptions = {
+      from: `"Polyspack Enterprises" <${process.env.EMAIL_USER}>`,
+      to: user.email,
+      subject: 'Welcome to Polyspack Enterprises - Registration Confirmed',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background-color: #2d5a27; color: white; padding: 20px; text-align: center;">
+            <h1>Welcome to Polyspack Enterprises!</h1>
+          </div>
+
+          <div style="padding: 30px 20px;">
+            <h2 style="color: #2d5a27;">Hello ${user.name}!</h2>
+            <p>Thank you for registering with Polyspack Enterprises. Your account has been successfully created and you can now:</p>
+
+            <ul style="background-color: #f9f9f9; padding: 20px; margin: 20px 0;">
+              <li style="margin-bottom: 10px;">Browse our wide range of agricultural products</li>
+              <li style="margin-bottom: 10px;">Place orders for seedlings, bags, electronics, and services</li>
+              <li style="margin-bottom: 10px;">Track your order status in real-time</li>
+              <li style="margin-bottom: 10px;">Manage your account and preferences</li>
+              <li>Receive exclusive offers and updates</li>
+            </ul>
+
+            <div style="background-color: #fff3cd; padding: 15px; margin: 20px 0; border-left: 4px solid #ffc107;">
+              <h4>Getting Started</h4>
+              <p><strong>Login Email:</strong> ${user.email}</p>
+              <p>You can now log in to your account and start shopping!</p>
+            </div>
+
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL || 'https://polyspackenterprises.co.ke'}/login"
+                 style="background-color: #2d5a27; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block;">
+                Start Shopping Now
+              </a>
+            </div>
+
+            <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+
+            <p style="margin-top: 30px;">Best regards,<br><strong>Polyspack Enterprises Team</strong></p>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 12px;">
+              <p>This is an automated message. Please do not reply to this email.</p>
+              <p>© ${new Date().getFullYear()} Polyspack Enterprises. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log(`Registration confirmation email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Error sending registration confirmation email:', error);
+    // Don't throw error to avoid breaking registration
+  }
+};
+
 // Send order status update email
 const sendOrderStatusUpdate = async (order, user) => {
   try {
@@ -128,5 +189,6 @@ const sendOrderStatusUpdate = async (order, user) => {
 export default {
   sendOrderConfirmation,
   sendPaymentVerified,
+  sendRegistrationConfirmation,
   sendOrderStatusUpdate,
 };

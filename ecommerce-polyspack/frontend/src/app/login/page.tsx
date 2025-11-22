@@ -4,9 +4,11 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
+import { signIn, getSession } from 'next-auth/react';
 import { AppDispatch } from '@/store/store';
 import { setCredentials } from '@/store/slices/authSlice';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
+import { useSession } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,14 @@ const LoginPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  // Redirect if already authenticated
+  React.useEffect(() => {
+    if (session) {
+      router.push('/admin');
+    }
+  }, [session, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -50,11 +60,12 @@ const LoginPage: React.FC = () => {
       } else {
         router.push('/');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Login error:', err);
-      console.error('Error response:', err.response);
-      console.error('Error data:', err.response?.data);
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      const error = err as any;
+      console.error('Error response:', error.response);
+      console.error('Error data:', error.response?.data);
+      setError(error.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -162,9 +173,16 @@ const LoginPage: React.FC = () => {
 
             <div className="mt-6 grid grid-cols-1 gap-3">
               <GoogleSignInButton
-                onClick={() => {
-                  // TODO: Implement Google OAuth
-                  console.log('Google sign-in clicked');
+                onClick={async () => {
+                  try {
+                    const result = await signIn('google', { callbackUrl: '/admin' });
+                    if (result?.error) {
+                      setError('Google sign-in failed. Please try again.');
+                    }
+                  } catch (err) {
+                    console.error('Google sign-in error:', err);
+                    setError('Google sign-in failed. Please try again.');
+                  }
                 }}
                 text="Continue with Google"
               />

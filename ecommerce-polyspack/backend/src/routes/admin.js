@@ -1,100 +1,56 @@
-import express from 'express';
-import { body } from 'express-validator';
-import {
+const express = require('express');
+const router = express.Router();
+const { authenticate, authorize } = require('../middleware/auth');
+
+const {
   getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
-  getCategories,
-  getCategory,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-  getAdminProducts,
-  updateProfile,
-  createCoupon,
-  getCoupons,
-  updateCoupon,
-  deleteCoupon,
-  createFlashSale,
-  getFlashSales,
-  updateFlashSale,
-  deleteFlashSale,
-  getAnalytics,
+  updateUserRole,
+  updateUserStatus,
+  getProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
   getOrders,
   updateOrderStatus,
-} from '../controllers/adminController.js';
+  getPayments,
+  verifyPayment,
+  getAnalytics,
+  getCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory
+} = require('../controllers/adminController');
 
-const router = express.Router();
+// Apply authentication and admin authorization to all routes
+router.use(authenticate);
+router.use(authorize(['admin']));
 
-import { protect, authorize } from '../middleware/auth.js';
+// User management routes
+router.get('/users', getUsers);
+router.put('/users/:id/role', updateUserRole);
+router.put('/users/:id/status', updateUserStatus);
 
-// All admin routes require admin authorization
-router.use(protect);
-router.use(authorize('admin'));
+// Product management routes
+router.get('/products', getProducts);
+router.post('/products', createProduct);
+router.put('/products/:id', updateProduct);
+router.delete('/products/:id', deleteProduct);
 
-// User management
-router.route('/users').get(getUsers);
-router.route('/users/:id').get(getUser).put(updateUser).delete(deleteUser);
+// Order management routes
+router.get('/orders', getOrders);
+router.put('/orders/:id/status', updateOrderStatus);
 
-// Category management
-router
-  .route('/categories')
-  .get(getCategories)
-  .post(
-    [
-      body('name', 'Category name is required').not().isEmpty(),
-      body('description', 'Category description is required').not().isEmpty(),
-    ],
-    createCategory
-  );
-router.route('/categories/:id').get(getCategory).put(updateCategory).delete(deleteCategory);
+// Payment management routes
+router.get('/payments', getPayments);
+router.put('/payments/:id/verify', verifyPayment);
 
-// Product management
-router.route('/products').get(getAdminProducts);
+// Category management routes
+router.get('/categories', getCategories);
+router.post('/categories', createCategory);
+router.put('/categories/:id', updateCategory);
+router.delete('/categories/:id', deleteCategory);
 
-// Profile management
-router.route('/profile').put(updateProfile);
+// Analytics routes
+router.get('/analytics', getAnalytics);
 
-// Coupon management
-router
-  .route('/coupons')
-  .get(getCoupons)
-  .post(
-    [
-      body('code', 'Coupon code is required').not().isEmpty(),
-      body('type', 'Type must be percentage or fixed').isIn(['percentage', 'fixed']),
-      body('value', 'Value must be a positive number').isFloat({ min: 0 }),
-    ],
-    createCoupon
-  );
-router.route('/coupons/:id').put(updateCoupon).delete(deleteCoupon);
-
-// Flash sale management
-router
-  .route('/flashsales')
-  .get(getFlashSales)
-  .post(
-    [
-      body('title', 'Title is required').not().isEmpty(),
-      body('discount', 'Discount must be between 0 and 100').isFloat({ min: 0, max: 100 }),
-      body('startDate', 'Start date is required').isISO8601(),
-      body('endDate', 'End date is required').isISO8601(),
-    ],
-    createFlashSale
-  );
-router.route('/flashsales/:id').put(updateFlashSale).delete(deleteFlashSale);
-
-// Analytics
-router.route('/analytics').get(getAnalytics);
-
-// Order management
-router.route('/orders').get(getOrders);
-router.route('/orders/:id').put(
-  [
-    body('status', 'Status must be one of: pending, processing, shipped, delivered, cancelled').isIn(['pending', 'processing', 'shipped', 'delivered', 'cancelled']),
-  ],
-  updateOrderStatus
-);
-
-export default router;
+module.exports = router;

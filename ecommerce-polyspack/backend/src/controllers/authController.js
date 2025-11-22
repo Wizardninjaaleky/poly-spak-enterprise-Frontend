@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import User from '../models/User.js';
 import { validationResult } from 'express-validator';
+import emailService from '../services/emailService.js';
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -36,6 +37,14 @@ export const register = async (req, res) => {
       role: role || 'customer', // Allow role to be set, default to customer
       addresses: address ? [{ street: address }] : [],
     });
+
+    // Send registration confirmation email
+    try {
+      await emailService.sendRegistrationConfirmation(user);
+    } catch (emailError) {
+      console.error('Failed to send registration email:', emailError);
+      // Continue with registration even if email fails
+    }
 
     // Get token
     const token = user.getSignedJwtToken();
@@ -263,6 +272,29 @@ export const resetPassword = async (req, res) => {
     res.status(200).json({
       success: true,
       token,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Update user avatar
+// @route   PUT /api/auth/update-avatar
+// @access  Private
+export const updateAvatar = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { avatar: req.body.avatar },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      data: user,
     });
   } catch (error) {
     res.status(500).json({
