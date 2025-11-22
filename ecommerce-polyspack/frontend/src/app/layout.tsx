@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { SessionProvider } from 'next-auth/react';
 import ReduxProvider from '@/components/ReduxProvider';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -22,13 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <ReduxProvider>
-          <Header />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-        </ReduxProvider>
+        <SessionProvider>
+          <ReduxProvider>
+            <Header />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+          </ReduxProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -38,6 +38,15 @@ const AdminDashboardPage: React.FC = () => {
     email: 'info@polyspackenterprises.co.ke',
     phone: '+254 700 000 000'
   });
+  const [showCreateCouponModal, setShowCreateCouponModal] = useState(false);
+  const [couponData, setCouponData] = useState({
+    code: '',
+    discountType: 'percentage',
+    discountValue: '',
+    minimumAmount: '',
+    expiryDate: '',
+    description: ''
+  });
 
   const isAdmin = user?.role === 'admin';
 
@@ -461,6 +470,35 @@ const AdminDashboardPage: React.FC = () => {
     }
   };
 
+  const handleCreateAdmin = async (adminData: { name: string; email: string; role: string }) => {
+    try {
+      const response = await fetch('https://polyspackenterprises.co.ke/api/admin/users', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(adminData)
+      });
+
+      if (response.ok) {
+        setSuccess('Admin created successfully!');
+        // Refresh users list
+        const usersResponse = await fetch('https://polyspackenterprises.co.ke/api/admin/users', { headers: { 'Authorization': `Bearer ${token}` } });
+        if (usersResponse.ok) {
+          const data = await usersResponse.json();
+          setUsers(data.data || []);
+        }
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to create admin');
+      }
+    } catch (error) {
+      setError('Failed to create admin');
+    }
+  };
+
   if (!user || !isAdmin) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -869,6 +907,7 @@ const AdminDashboardPage: React.FC = () => {
                                 <option value="sales">Sales</option>
                                 <option value="content">Content</option>
                                 <option value="support">Support</option>
+                                <option value="manager">Manager</option>
                                 <option value="admin">Admin</option>
                               </select>
                             </td>
@@ -903,15 +942,22 @@ const AdminDashboardPage: React.FC = () => {
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                       <div className="bg-white p-6 rounded-lg w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4">Add New Admin</h2>
-                        <form onSubmit={(e) => {
+                        <form onSubmit={async (e) => {
                           e.preventDefault();
-                          // Handle form submission
+                          const formData = new FormData(e.target as HTMLFormElement);
+                          const adminData = {
+                            name: formData.get('name') as string,
+                            email: formData.get('email') as string,
+                            role: formData.get('role') as string
+                          };
+                          await handleCreateAdmin(adminData);
                           setShowAddAdminModal(false);
                         }}>
                           <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                             <input
                               type="text"
+                              name="name"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md"
                               required
                             />
@@ -920,16 +966,18 @@ const AdminDashboardPage: React.FC = () => {
                             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
                             <input
                               type="email"
+                              name="email"
                               className="w-full px-3 py-2 border border-gray-300 rounded-md"
                               required
                             />
                           </div>
                           <div className="mb-4">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                            <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <select name="role" className="w-full px-3 py-2 border border-gray-300 rounded-md" required>
                               <option value="sales">Sales</option>
                               <option value="content">Content</option>
                               <option value="support">Support</option>
+                              <option value="manager">Manager</option>
                               <option value="admin">Admin</option>
                             </select>
                           </div>
@@ -1046,10 +1094,17 @@ const AdminDashboardPage: React.FC = () => {
                 <div>
                   <div className="flex justify-between items-center mb-6">
                     <h1 className="text-3xl font-bold text-gray-900">Coupon Management</h1>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    <button
+                      onClick={() => setShowCreateCouponModal(true)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
                       + Create Coupon
                     </button>
                   </div>
+
+                  {loading && <p className="text-gray-600">Loading coupons...</p>}
+                  {error && <p className="text-red-600 mb-4">{error}</p>}
+                  {success && <p className="text-green-600 mb-4">{success}</p>}
 
                   <div className="space-y-4">
                     <div className="border border-gray-200 rounded-lg p-4">
@@ -1069,6 +1124,110 @@ const AdminDashboardPage: React.FC = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* Create Coupon Modal */}
+                  {showCreateCouponModal && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                      <div className="bg-white p-6 rounded-lg w-full max-w-md">
+                        <h2 className="text-xl font-bold mb-4">Create New Coupon</h2>
+                        <form onSubmit={(e) => {
+                          e.preventDefault();
+                          handleCreateCoupon();
+                        }}>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Coupon Code</label>
+                            <input
+                              type="text"
+                              value={couponData.code}
+                              onChange={(e) => setCouponData({...couponData, code: e.target.value.toUpperCase()})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                              placeholder="e.g., WELCOME20"
+                              required
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Discount Type</label>
+                            <select
+                              value={couponData.discountType}
+                              onChange={(e) => setCouponData({...couponData, discountType: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="percentage">Percentage (%)</option>
+                              <option value="fixed">Fixed Amount (KSh)</option>
+                            </select>
+                          </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                              {couponData.discountType === 'percentage' ? 'Discount Percentage (%)' : 'Discount Amount (KSh)'}
+                            </label>
+                            <input
+                              type="number"
+                              value={couponData.discountValue}
+                              onChange={(e) => setCouponData({...couponData, discountValue: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                              placeholder={couponData.discountType === 'percentage' ? '20' : '500'}
+                              required
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Minimum Order Amount (KSh)</label>
+                            <input
+                              type="number"
+                              value={couponData.minimumAmount}
+                              onChange={(e) => setCouponData({...couponData, minimumAmount: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                              placeholder="5000"
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                            <input
+                              type="date"
+                              value={couponData.expiryDate}
+                              onChange={(e) => setCouponData({...couponData, expiryDate: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                              required
+                            />
+                          </div>
+                          <div className="mb-4">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                            <textarea
+                              value={couponData.description}
+                              onChange={(e) => setCouponData({...couponData, description: e.target.value})}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                              rows={3}
+                              placeholder="Brief description of the coupon"
+                            />
+                          </div>
+                          <div className="flex justify-end space-x-3">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowCreateCouponModal(false);
+                                setCouponData({
+                                  code: '',
+                                  discountType: 'percentage',
+                                  discountValue: '',
+                                  minimumAmount: '',
+                                  expiryDate: '',
+                                  description: ''
+                                });
+                              }}
+                              className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            >
+                              Create Coupon
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
