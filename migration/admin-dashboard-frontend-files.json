@@ -1,0 +1,25 @@
+{
+  "files": [
+    "admin-dashboard/src/api/api.js",
+    "admin-dashboard/src/components/NavBar.jsx",
+    "admin-dashboard/src/components/OrderDetailsModal.jsx",
+    "admin-dashboard/src/components/ProtectedRoute.jsx",
+    "admin-dashboard/src/components/Layout.jsx",
+    "admin-dashboard/src/components/Sidebar.jsx",
+    "admin-dashboard/src/context/AuthContext.jsx",
+    "admin-dashboard/src/pages/Login.jsx",
+    "admin-dashboard/src/pages/Unauthorized.jsx",
+    "admin-dashboard/src/pages/Dashboard.jsx",
+    "admin-dashboard/src/pages/Products.jsx",
+    "admin-dashboard/src/pages/AddEditProduct.jsx",
+    "admin-dashboard/src/pages/Orders.jsx",
+    "admin-dashboard/src/pages/Users.jsx",
+    "admin-dashboard/src/pages/Payments.jsx",
+    "admin-dashboard/src/App.jsx",
+    "admin-dashboard/src/index.css",
+    "admin-dashboard/src/main.jsx",
+    "admin-dashboard/vite.config.js",
+    "admin-dashboard/postcss.config.cjs",
+    "admin-dashboard/tailwind.config.cjs"
+  ]
+}

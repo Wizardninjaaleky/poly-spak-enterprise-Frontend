@@ -1,0 +1,22 @@
+{
+  "files": [
+    "backend/src/routes/adminRoutes.js",
+    "backend/src/controllers/adminController.js",
+    "backend/src/middleware/auth.js",
+    "backend/src/models/User.js",
+    "backend/src/controllers/authController.js",
+    "backend/src/routes/admin.js",
+    "backend/src/routes/authRoutes.js",
+    "backend/src/models/Order.js",
+    "backend/src/models/Product.js",
+    "backend/src/models/Category.js",
+    "backend/src/controllers/productController.js",
+    "backend/src/routes/productRoutes.js",
+    "backend/src/middleware/upload.js",
+    "backend/src/middleware/validation.js",
+    "backend/src/config/cloudinary.js",
+    "backend/src/services/mpesaService.js",
+    "backend/src/services/invoiceService.js",
+    "backend/src/services/discountService.js"
+  ]
+}
