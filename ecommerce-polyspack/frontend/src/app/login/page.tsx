@@ -4,30 +4,20 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
-import { signIn, getSession } from 'next-auth/react';
 import { AppDispatch } from '@/store/store';
 import { setCredentials } from '@/store/slices/authSlice';
 import GoogleSignInButton from '@/components/GoogleSignInButton';
-import { useSession } from 'next-auth/react';
 
 const LoginPage: React.FC = () => {
   const [formData, setFormData] = useState({
-    email: 'polyspackenterprise@gmail.com',
-    password: 'Thamanda@2025'
+    email: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { data: session } = useSession();
-
-  // Redirect if already authenticated
-  React.useEffect(() => {
-    if (session) {
-      router.push('/admin');
-    }
-  }, [session, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -54,18 +44,9 @@ const LoginPage: React.FC = () => {
         token: response.data.token
       }));
 
-      // Redirect based on user role
-      if (response.data.user.role === 'admin') {
-        router.push('/admin');
-      } else {
-        router.push('/');
-      }
-    } catch (err: unknown) {
-      console.error('Login error:', err);
-      const error = err as any;
-      console.error('Error response:', error.response);
-      console.error('Error data:', error.response?.data);
-      setError(error.response?.data?.message || 'Login failed. Please try again.');
+      router.push('/');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -173,16 +154,9 @@ const LoginPage: React.FC = () => {
 
             <div className="mt-6 grid grid-cols-1 gap-3">
               <GoogleSignInButton
-                onClick={async () => {
-                  try {
-                    const result = await signIn('google', { callbackUrl: '/admin' });
-                    if (result?.error) {
-                      setError('Google sign-in failed. Please try again.');
-                    }
-                  } catch (err) {
-                    console.error('Google sign-in error:', err);
-                    setError('Google sign-in failed. Please try again.');
-                  }
+                onClick={() => {
+                  // TODO: Implement Google OAuth
+                  console.log('Google sign-in clicked');
                 }}
                 text="Continue with Google"
               />

@@ -1,6 +1,6 @@
-import Coupon from '../models/Coupon.js';
-import FlashSale from '../models/FlashSale.js';
-import Product from '../models/Product.js';
+const Coupon = require('../models/Coupon');
+const FlashSale = require('../models/FlashSale');
+const Product = require('../models/Product');
 
 // Calculate discount for an order
 const calculateOrderDiscount = async (items, couponCode = null) => {
@@ -177,7 +177,7 @@ const getDiscountedProductPrice = async (productId) => {
   }
 };
 
-export default {
+module.exports = {
   calculateOrderDiscount,
   getApplicableCoupons,
   getActiveFlashSales,

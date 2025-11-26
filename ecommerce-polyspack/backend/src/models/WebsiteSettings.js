@@ -38,4 +38,4 @@ websiteSettingsSchema.pre('save', async function(next) {
   next();
 });
 
-export default mongoose.model('WebsiteSettings', websiteSettingsSchema);
+module.exports = mongoose.model('WebsiteSettings', websiteSettingsSchema);

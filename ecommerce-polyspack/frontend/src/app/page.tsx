@@ -22,7 +22,7 @@ export default function HomePage() {
       category: 'Seedling Bags',
       price: 2500,
       salePrice: 2200,
-      images: ['https://via.placeholder.com/400x300/4CAF50/white?text=Seedling+Bags'],
+      images: ['/placeholder-seedling.jpg'],
       sku: 'SB-100-PREM',
       stockQty: 50,
       attributes: { size: 'Medium', material: 'Biodegradable' },
@@ -34,7 +34,7 @@ export default function HomePage() {
       slug: 'solar-powered-led-light',
       category: 'Electronics',
       price: 1500,
-      images: ['https://via.placeholder.com/400x300/2196F3/white?text=Solar+LED+Light'],
+      images: ['/placeholder-electronics.jpg'],
       sku: 'EL-SOLAR-LED',
       stockQty: 25,
       attributes: { power: '5W', battery: '2000mAh' },
@@ -46,7 +46,7 @@ export default function HomePage() {
       slug: 'agricultural-consulting-service',
       category: 'Services',
       price: 5000,
-      images: ['https://via.placeholder.com/400x300/FF9800/white?text=Agricultural+Service'],
+      images: ['/placeholder-service.jpg'],
       sku: 'SVC-AGRI-CONSULT',
       stockQty: 10,
       attributes: { duration: 'Full Day', type: 'On-site' },
@@ -57,19 +57,19 @@ export default function HomePage() {
   const categories = [
     {
       name: 'Seedling Bags',
-      image: 'https://via.placeholder.com/400x300/4CAF50/white?text=Agriculture',
+      image: '/placeholder-seedling.jpg',
       description: 'High-quality biodegradable seedling bags for nurseries',
       productCount: 25
     },
     {
       name: 'Electronics',
-      image: 'https://via.placeholder.com/400x300/2196F3/white?text=Electronics',
+      image: '/placeholder-electronics.jpg',
       description: 'Energy-efficient electronic solutions',
       productCount: 18
     },
     {
       name: 'Services',
-      image: 'https://via.placeholder.com/400x300/FF9800/white?text=Seedlings',
+      image: '/placeholder-service.jpg',
       description: 'Professional agricultural and technical services',
       productCount: 12
     }

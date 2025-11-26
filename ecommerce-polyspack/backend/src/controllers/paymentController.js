@@ -1,12 +1,12 @@
-import Payment from '../models/Payment.js';
-import Order from '../models/Order.js';
-import { validationResult } from 'express-validator';
-import { verifyPayment, getPaymentDetails, getAllPayments, getPaymentStats } from '../services/mpesaService.js';
+const Payment = require('../models/Payment');
+const Order = require('../models/Order');
+const { validationResult } = require('express-validator');
+const { verifyPayment, getPaymentDetails, getAllPayments, getPaymentStats } = require('../services/mpesaService');
 
 // @desc    Submit M-Pesa payment for verification
 // @route   POST /api/payments/submit
 // @access  Private
-export const submitPayment = async (req, res) => {
+exports.submitPayment = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -16,7 +16,7 @@ export const submitPayment = async (req, res) => {
     });
   }
 
-  const { orderId, amount, phoneNumber, mpesaCode } = req.body;
+  const { orderId, amount, phoneNumber, mpesaCode, recaptchaToken } = req.body;
 
   try {
     // Check if order exists and belongs to user
@@ -97,7 +97,7 @@ export const submitPayment = async (req, res) => {
 // @desc    Get payment details for user's order
 // @route   GET /api/payments/order/:orderId
 // @access  Private
-export const getOrderPayment = async (req, res) => {
+exports.getOrderPayment = async (req, res) => {
   try {
     const order = await Order.findById(req.params.orderId);
     if (!order) {
@@ -142,7 +142,7 @@ export const getOrderPayment = async (req, res) => {
 // @desc    Get user's payment history
 // @route   GET /api/payments/history
 // @access  Private
-export const getPaymentHistory = async (req, res) => {
+exports.getPaymentHistory = async (req, res) => {
   try {
     const orders = await Order.find({ user: req.user.id })
       .select('orderNumber totalAmount paymentStatus paymentMethod mpesaCode createdAt')
@@ -171,7 +171,7 @@ export const getPaymentHistory = async (req, res) => {
 // @desc    Verify payment (Admin only)
 // @route   PUT /api/payments/verify/:orderId
 // @access  Private/Admin
-export const verifyPaymentAdmin = async (req, res) => {
+exports.verifyPayment = async (req, res) => {
   const { action, rejectionReason } = req.body; // action: 'confirm' or 'reject'
 
   try {
@@ -246,7 +246,7 @@ export const verifyPaymentAdmin = async (req, res) => {
 // @desc    Get all payments (Admin only)
 // @route   GET /api/payments
 // @access  Private/Admin
-export const getPayments = async (req, res) => {
+exports.getPayments = async (req, res) => {
   try {
     const filters = {
       verified: req.query.verified === 'true' ? true : req.query.verified === 'false' ? false : undefined,
@@ -272,7 +272,7 @@ export const getPayments = async (req, res) => {
 // @desc    Get payment statistics (Admin only)
 // @route   GET /api/payments/stats
 // @access  Private/Admin
-export const getPaymentStatsAdmin = async (req, res) => {
+exports.getPaymentStats = async (req, res) => {
   try {
     const stats = await getPaymentStats();
 

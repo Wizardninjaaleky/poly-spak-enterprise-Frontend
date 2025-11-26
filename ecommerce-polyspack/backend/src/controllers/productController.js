@@ -1,10 +1,10 @@
-import Product from '../models/Product.js';
-import { validationResult } from 'express-validator';
+const Product = require('../models/Product');
+const { validationResult } = require('express-validator');
 
 // @desc    Get all products
 // @route   GET /api/products
 // @access  Public
-export const getProducts = async (req, res) => {
+exports.getProducts = async (req, res) => {
   try {
     let query;
 
@@ -76,6 +76,7 @@ export const getProducts = async (req, res) => {
       data: products,
     });
   } catch (error) {
+    console.error('createProduct error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',
@@ -86,7 +87,7 @@ export const getProducts = async (req, res) => {
 // @desc    Get single product
 // @route   GET /api/products/:id
 // @access  Public
-export const getProduct = async (req, res) => {
+exports.getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('flashSale');
 
@@ -102,9 +103,11 @@ export const getProduct = async (req, res) => {
       data: product,
     });
   } catch (error) {
+    console.error('Create product error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',
+      error: error.message,
     });
   }
 };
@@ -112,7 +115,7 @@ export const getProduct = async (req, res) => {
 // @desc    Create new product
 // @route   POST /api/products
 // @access  Private/Admin
-export const createProduct = async (req, res) => {
+exports.createProduct = async (req, res) => {
   // Check for validation errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -123,6 +126,11 @@ export const createProduct = async (req, res) => {
   }
 
   try {
+    // Ensure required fields that have unique indexes are present
+    if (!req.body.sku) {
+      req.body.sku = `SKU-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    }
+
     const product = await Product.create(req.body);
 
     res.status(201).json({
@@ -130,9 +138,11 @@ export const createProduct = async (req, res) => {
       data: product,
     });
   } catch (error) {
+    console.error('createProduct error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error',
+      error: error.message,
     });
   }
 };
@@ -140,7 +150,7 @@ export const createProduct = async (req, res) => {
 // @desc    Update product
 // @route   PUT /api/products/:id
 // @access  Private/Admin
-export const updateProduct = async (req, res) => {
+exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -169,7 +179,7 @@ export const updateProduct = async (req, res) => {
 // @desc    Delete product
 // @route   DELETE /api/products/:id
 // @access  Private/Admin
-export const deleteProduct = async (req, res) => {
+exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 

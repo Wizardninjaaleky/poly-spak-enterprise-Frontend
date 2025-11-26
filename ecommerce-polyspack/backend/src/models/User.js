@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ['customer', 'admin'], default: 'customer' },
-  avatar: { type: String, default: null }, // Cloudinary URL for profile image
   addresses: [{
     type: { type: String, enum: ['home', 'work'], default: 'home' },
     street: String,
@@ -52,4 +51,4 @@ userSchema.methods.updateLastLogin = function() {
   return this.save({ validateBeforeSave: false });
 };
 
-export default mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

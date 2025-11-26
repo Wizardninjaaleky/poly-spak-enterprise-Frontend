@@ -1,11 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+// Utility to set cookie in browser
+function setCookie(name: string, value: string, days = 7) {
+  if (typeof document === 'undefined') return;
+  const expires = new Date(Date.now() + days * 864e5).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
 interface User {
   id: string;
   name: string;
   email: string;
-  role: 'user' | 'admin';
+  role: 'customer' | 'admin';
 }
 
 interface AuthState {
@@ -27,6 +34,8 @@ export const login = createAsyncThunk(
   'auth/login',
   async ({ email, password }: { email: string; password: string }) => {
     const response = await axios.post('/api/auth/login', { email, password });
+    // Set token as cookie for SSR/middleware
+    if (response.data?.token) setCookie('token', response.data.token);
     return response.data;
   }
 );
@@ -35,6 +44,7 @@ export const register = createAsyncThunk(
   'auth/register',
   async (userData: { name: string; email: string; password: string; phone: string }) => {
     const response = await axios.post('/api/auth/register', userData);
+    if (response.data?.token) setCookie('token', response.data.token);
     return response.data;
   }
 );
@@ -91,6 +101,8 @@ const authSlice = createSlice({
         state.token = null;
         localStorage.removeItem('token');
       });
+      // Remove token cookie on logout
+      if (typeof document !== 'undefined') setCookie('token', '', -1);
   },
 });
 

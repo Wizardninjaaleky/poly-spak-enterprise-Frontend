@@ -1,19 +1,17 @@
-import express from 'express';
-import { body } from 'express-validator';
-import {
+const express = require('express');
+const { body } = require('express-validator');
+const {
   register,
   login,
   getMe,
   updateDetails,
   updatePassword,
   logout,
-  forgotPassword,
-  resetPassword,
-} from '../controllers/authController.js';
+} = require('../controllers/authController');
 
 const router = express.Router();
 
-import { protect } from '../middleware/auth.js';
+const { protect } = require('../middleware/auth');
 
 router.post(
   '/register',
@@ -23,7 +21,6 @@ router.post(
     body('password', 'Please enter a password with 6 or more characters').isLength({
       min: 6,
     }),
-    body('phone', 'Phone number is required').not().isEmpty(),
   ],
   register
 );
@@ -32,7 +29,5 @@ router.get('/logout', logout);
 router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
 router.put('/updatepassword', protect, updatePassword);
-router.post('/forgot-password', forgotPassword);
-router.put('/reset-password/:resettoken', resetPassword);
 
-export default router;
+module.exports = router;

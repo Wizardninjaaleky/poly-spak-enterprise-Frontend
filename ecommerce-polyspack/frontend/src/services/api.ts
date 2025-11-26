@@ -2,11 +2,10 @@ import axios from 'axios';
 
 // Create axios instance with base configuration
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: false, // Temporarily disable credentials to fix CORS preflight
 });
 
 // Request interceptor to add auth token
@@ -43,7 +42,7 @@ export const authAPI = {
   login: (credentials: { email: string; password: string }) =>
     api.post('/auth/login', credentials),
 
-  register: (userData: { name: string; email: string; password: string; phone: string; role?: string }) =>
+  register: (userData: { name: string; email: string; password: string; phone: string }) =>
     api.post('/auth/register', userData),
 
   logout: () => api.post('/auth/logout'),

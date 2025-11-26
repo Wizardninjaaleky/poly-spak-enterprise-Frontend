@@ -1,56 +1,63 @@
 const express = require('express');
-const router = express.Router();
-const { authenticate, authorize } = require('../middleware/auth');
-
+const { body } = require('express-validator');
 const {
   getUsers,
-  updateUserRole,
-  updateUserStatus,
-  getProducts,
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  getOrders,
-  updateOrderStatus,
-  getPayments,
-  verifyPayment,
+  getUser,
+  updateUser,
+  deleteUser,
+  createCoupon,
+  getCoupons,
+  updateCoupon,
+  deleteCoupon,
+  createFlashSale,
+  getFlashSales,
+  updateFlashSale,
+  deleteFlashSale,
   getAnalytics,
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory
 } = require('../controllers/adminController');
 
-// Apply authentication and admin authorization to all routes
-router.use(authenticate);
-router.use(authorize(['admin']));
+const router = express.Router();
 
-// User management routes
-router.get('/users', getUsers);
-router.put('/users/:id/role', updateUserRole);
-router.put('/users/:id/status', updateUserStatus);
+const { protect, authorize } = require('../middleware/auth');
 
-// Product management routes
-router.get('/products', getProducts);
-router.post('/products', createProduct);
-router.put('/products/:id', updateProduct);
-router.delete('/products/:id', deleteProduct);
+// All admin routes require admin authorization
+router.use(protect);
+router.use(authorize('admin'));
 
-// Order management routes
-router.get('/orders', getOrders);
-router.put('/orders/:id/status', updateOrderStatus);
+// User management
+router.route('/users').get(getUsers);
+router.route('/users/:id').get(getUser).put(updateUser).delete(deleteUser);
 
-// Payment management routes
-router.get('/payments', getPayments);
-router.put('/payments/:id/verify', verifyPayment);
+// Coupon management
+router
+  .route('/coupons')
+  .get(getCoupons)
+  .post(
+    [
+      body('code', 'Coupon code is required').not().isEmpty(),
+      body('type', 'Type must be percentage or fixed').isIn(['percentage', 'fixed']),
+      body('value', 'Value must be a positive number').isFloat({ min: 0 }),
+    ],
+    createCoupon
+  );
+router.route('/coupons/:id').put(updateCoupon).delete(deleteCoupon);
 
-// Category management routes
-router.get('/categories', getCategories);
-router.post('/categories', createCategory);
-router.put('/categories/:id', updateCategory);
-router.delete('/categories/:id', deleteCategory);
+// Flash sale management
+router
+  .route('/flashsales')
+  .get(getFlashSales)
+  .post(
+    [
+      body('title', 'Title is required').not().isEmpty(),
+      body('discount', 'Discount must be between 0 and 100').isFloat({ min: 0, max: 100 }),
+      body('startDate', 'Start date is required').isISO8601(),
+      body('endDate', 'End date is required').isISO8601(),
+    ],
+    createFlashSale
+  );
+router.route('/flashsales/:id').put(updateFlashSale).delete(deleteFlashSale);
 
-// Analytics routes
-router.get('/analytics', getAnalytics);
+// Analytics
+router.route('/analytics').get(getAnalytics);
 
 module.exports = router;

@@ -1,28 +1,22 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Protect /admin routes
 export function middleware(request: NextRequest) {
-  // Get the pathname of the request (e.g. /admin, /admin/products)
-  const path = request.nextUrl.pathname;
+  const token = request.cookies.get('token')?.value;
+  const url = request.nextUrl.clone();
 
-  // Check if the path starts with /admin
-  if (path.startsWith('/admin')) {
-    // Get the token from cookies
-    const token = request.cookies.get('token')?.value;
-
+  // Only protect /admin routes
+  if (url.pathname.startsWith('/admin')) {
     if (!token) {
-      // Redirect to login if no token
-      return NextResponse.redirect(new URL('/login?redirect=/admin', request.url));
+      url.pathname = '/admin/vite_pages/Login';
+      return NextResponse.redirect(url);
     }
-
-    // For now, we'll let the component handle the role check
-    // In a production app, you might want to verify the token here
-    // and check the user role from the database
+    // Optionally: decode and check role here
   }
-
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: '/admin/:path*',
+  matcher: ['/admin/:path*'],
 };

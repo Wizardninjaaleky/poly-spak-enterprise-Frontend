@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
   price: { type: Number, required: true, min: 0 },
   salePrice: { type: Number, min: 0 },
   images: [{ type: String }], // Cloudinary URLs
-  sku: { type: String, unique: true },
+  sku: { type: String, unique: true, sparse: true },
   weight: { type: Number, min: 0 }, // For shipping calculations
   stockQty: { type: Number, required: true, min: 0, default: 0 },
   attributes: { type: Map, of: String }, // Flexible attributes (color, size, etc.)
@@ -25,6 +25,9 @@ productSchema.index({ isActive: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ title: 'text', description: 'text' }); // Text search
 
+// Ensure unique sku index is sparse to avoid duplicate-null issues
+productSchema.index({ sku: 1 }, { unique: true, sparse: true });
+
 // Virtual for current price (sale price if available, otherwise regular price)
 productSchema.virtual('currentPrice').get(function() {
   return this.salePrice || this.price;
@@ -36,10 +39,15 @@ productSchema.pre('save', function(next) {
     this.slug = this.title.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g, '-');
   }
   this.updatedAt = Date.now();
+  // Generate SKU if missing
+  if (!this.sku) {
+    const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+    this.sku = `SKU-${Date.now()}-${rand}`;
+  }
   next();
 });
 
 // Ensure virtual fields are serialized
 productSchema.set('toJSON', { virtuals: true });
 
-export default mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Product', productSchema);

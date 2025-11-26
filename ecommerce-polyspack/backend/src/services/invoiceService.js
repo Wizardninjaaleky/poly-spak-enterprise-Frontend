@@ -140,6 +140,6 @@ const generateInvoice = async (order, user) => {
   });
 };
 
-export default {
+module.exports = {
   generateInvoice
 };

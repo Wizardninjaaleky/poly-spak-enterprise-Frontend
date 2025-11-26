@@ -1,532 +1,395 @@
 const User = require('../models/User');
-const Product = require('../models/Product');
-const Order = require('../models/Order');
-const Payment = require('../models/Payment');
-const Category = require('../models/Category');
 const Coupon = require('../models/Coupon');
 const FlashSale = require('../models/FlashSale');
+const WebsiteSettings = require('../models/WebsiteSettings');
+const { validationResult } = require('express-validator');
 
-// Get all users with pagination and filters
+// @desc    Get all users
+// @route   GET /api/admin/users
+// @access  Private/Admin
 exports.getUsers = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const users = await User.find();
 
-    let query = {};
-
-    // Search filter
-    if (req.query.search) {
-      query.$or = [
-        { name: { $regex: req.query.search, $options: 'i' } },
-        { email: { $regex: req.query.search, $options: 'i' } }
-      ];
-    }
-
-    // Role filter
-    if (req.query.role) {
-      query.role = req.query.role;
-    }
-
-    // Status filter
-    if (req.query.status) {
-      query.status = req.query.status;
-    }
-
-    const users = await User.find(query)
-      .select('-password')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    const total = await User.countDocuments(query);
-    const totalPages = Math.ceil(total / limit);
-
-    res.json({
+    res.status(200).json({
       success: true,
+      count: users.length,
       data: users,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
     });
   } catch (error) {
-    console.error('Get users error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch users'
+      message: 'Server error',
     });
   }
 };
 
-// Update user role
-exports.updateUserRole = async (req, res) => {
+// @desc    Get single user
+// @route   GET /api/admin/users/:id
+// @access  Private/Admin
+exports.getUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { role } = req.body;
-
-    const validRoles = ['user', 'support', 'content', 'sales', 'admin'];
-    if (!validRoles.includes(role)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid role'
-      });
-    }
-
-    const user = await User.findByIdAndUpdate(
-      id,
-      { role },
-      { new: true }
-    ).select('-password');
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: user,
-      message: 'User role updated successfully'
     });
   } catch (error) {
-    console.error('Update user role error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update user role'
+      message: 'Server error',
     });
   }
 };
 
-// Update user status
-exports.updateUserStatus = async (req, res) => {
+// @desc    Update user
+// @route   PUT /api/admin/users/:id
+// @access  Private/Admin
+exports.updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    const validStatuses = ['active', 'blocked', 'pending'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid status'
-      });
-    }
-
-    const user = await User.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    ).select('-password');
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       data: user,
-      message: 'User status updated successfully'
     });
   } catch (error) {
-    console.error('Update user status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update user status'
+      message: 'Server error',
     });
   }
 };
 
-// Get all products with pagination and filters
-exports.getProducts = async (req, res) => {
+// @desc    Delete user
+// @route   DELETE /api/admin/users/:id
+// @access  Private/Admin
+exports.deleteUser = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const user = await User.findById(req.params.id);
 
-    let query = {};
-
-    // Search filter
-    if (req.query.search) {
-      query.name = { $regex: req.query.search, $options: 'i' };
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
     }
 
-    // Category filter
-    if (req.query.category) {
-      query.category = req.query.category;
-    }
+    await user.remove();
 
-    // Status filter
-    if (req.query.status) {
-      if (req.query.status === 'active') {
-        query.stock = { $gt: 0 };
-      } else if (req.query.status === 'out-of-stock') {
-        query.stock = 0;
-      }
-    }
-
-    const products = await Product.find(query)
-      .populate('category', 'name')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    const total = await Product.countDocuments(query);
-    const totalPages = Math.ceil(total / limit);
-
-    res.json({
+    res.status(200).json({
       success: true,
-      data: products,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
+      data: {},
     });
   } catch (error) {
-    console.error('Get products error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch products'
+      message: 'Server error',
     });
   }
 };
 
-// Create product
-exports.createProduct = async (req, res) => {
+// @desc    Create coupon
+// @route   POST /api/admin/coupons
+// @access  Private/Admin
+exports.createCoupon = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
   try {
-    const productData = {
-      ...req.body,
-      images: req.files ? req.files.map(file => file.path) : []
-    };
-
-    const product = new Product(productData);
-    await product.save();
-
-    await product.populate('category', 'name');
+    const coupon = await Coupon.create(req.body);
 
     res.status(201).json({
       success: true,
-      data: product,
-      message: 'Product created successfully'
+      data: coupon,
     });
   } catch (error) {
-    console.error('Create product error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create product'
+      message: 'Server error',
     });
   }
 };
 
-// Update product
-exports.updateProduct = async (req, res) => {
+// @desc    Get all coupons
+// @route   GET /api/admin/coupons
+// @access  Private/Admin
+exports.getCoupons = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updateData = { ...req.body };
+    const coupons = await Coupon.find();
 
-    if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map(file => file.path);
-    }
+    res.status(200).json({
+      success: true,
+      count: coupons.length,
+      data: coupons,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
 
-    const product = await Product.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true }
-    ).populate('category', 'name');
+// @desc    Update coupon
+// @route   PUT /api/admin/coupons/:id
+// @access  Private/Admin
+exports.updateCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-    if (!product) {
+    if (!coupon) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Coupon not found',
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
-      data: product,
-      message: 'Product updated successfully'
+      data: coupon,
     });
   } catch (error) {
-    console.error('Update product error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update product'
+      message: 'Server error',
     });
   }
 };
 
-// Delete product
-exports.deleteProduct = async (req, res) => {
+// @desc    Delete coupon
+// @route   DELETE /api/admin/coupons/:id
+// @access  Private/Admin
+exports.deleteCoupon = async (req, res) => {
   try {
-    const { id } = req.params;
+    const coupon = await Coupon.findById(req.params.id);
 
-    const product = await Product.findByIdAndDelete(id);
-
-    if (!product) {
+    if (!coupon) {
       return res.status(404).json({
         success: false,
-        message: 'Product not found'
+        message: 'Coupon not found',
       });
     }
 
-    res.json({
+    await coupon.remove();
+
+    res.status(200).json({
       success: true,
-      message: 'Product deleted successfully'
+      data: {},
     });
   } catch (error) {
-    console.error('Delete product error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to delete product'
+      message: 'Server error',
     });
   }
 };
 
-// Get all orders with pagination and filters
-exports.getOrders = async (req, res) => {
+// @desc    Create flash sale
+// @route   POST /api/admin/flashsales
+// @access  Private/Admin
+exports.createFlashSale = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const flashSale = await FlashSale.create(req.body);
 
-    let query = {};
-
-    // Status filter
-    if (req.query.status) {
-      query.status = req.query.status;
-    }
-
-    // Date range filter
-    if (req.query.startDate && req.query.endDate) {
-      query.createdAt = {
-        $gte: new Date(req.query.startDate),
-        $lte: new Date(req.query.endDate)
-      };
-    }
-
-    const orders = await Order.find(query)
-      .populate('user', 'name email')
-      .populate('items.product', 'name price images')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    const total = await Order.countDocuments(query);
-    const totalPages = Math.ceil(total / limit);
-
-    res.json({
+    res.status(201).json({
       success: true,
-      data: orders,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
+      data: flashSale,
     });
   } catch (error) {
-    console.error('Get orders error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch orders'
+      message: 'Server error',
     });
   }
 };
 
-// Update order status
-exports.updateOrderStatus = async (req, res) => {
+// @desc    Get all flash sales
+// @route   GET /api/admin/flashsales
+// @access  Private/Admin
+exports.getFlashSales = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { status, trackingNumber, courier } = req.body;
+    const flashSales = await FlashSale.find().populate('products');
 
-    const validStatuses = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid status'
-      });
-    }
+    res.status(200).json({
+      success: true,
+      count: flashSales.length,
+      data: flashSales,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
 
-    const updateData = { status };
-    if (trackingNumber) updateData.trackingNumber = trackingNumber;
-    if (courier) updateData.courier = courier;
+// @desc    Update flash sale
+// @route   PUT /api/admin/flashsales/:id
+// @access  Private/Admin
+exports.updateFlashSale = async (req, res) => {
+  try {
+    const flashSale = await FlashSale.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
-    const order = await Order.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true }
-    ).populate('user', 'name email')
-     .populate('items.product', 'name price images');
-
-    if (!order) {
+    if (!flashSale) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found'
+        message: 'Flash sale not found',
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
-      data: order,
-      message: 'Order status updated successfully'
+      data: flashSale,
     });
   } catch (error) {
-    console.error('Update order status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update order status'
+      message: 'Server error',
     });
   }
 };
 
-// Get all payments with pagination and filters
-exports.getPayments = async (req, res) => {
+// @desc    Delete flash sale
+// @route   DELETE /api/admin/flashsales/:id
+// @access  Private/Admin
+exports.deleteFlashSale = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
-    const skip = (page - 1) * limit;
+    const flashSale = await FlashSale.findById(req.params.id);
 
-    let query = {};
-
-    // Status filter
-    if (req.query.status) {
-      query.status = req.query.status;
-    }
-
-    const payments = await Payment.find(query)
-      .populate('order', 'total status')
-      .populate('user', 'name email phone')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    const total = await Payment.countDocuments(query);
-    const totalPages = Math.ceil(total / limit);
-
-    res.json({
-      success: true,
-      data: payments,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
-    });
-  } catch (error) {
-    console.error('Get payments error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch payments'
-    });
-  }
-};
-
-// Verify payment
-exports.verifyPayment = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const payment = await Payment.findByIdAndUpdate(
-      id,
-      { status: 'verified', verifiedAt: new Date(), verifiedBy: req.user._id },
-      { new: true }
-    ).populate('order', 'total status')
-     .populate('user', 'name email phone');
-
-    if (!payment) {
+    if (!flashSale) {
       return res.status(404).json({
         success: false,
-        message: 'Payment not found'
+        message: 'Flash sale not found',
       });
     }
 
-    // Update order status if payment is verified
-    if (payment.order) {
-      await Order.findByIdAndUpdate(payment.order._id, { status: 'confirmed' });
-    }
+    await flashSale.remove();
 
-    res.json({
+    res.status(200).json({
       success: true,
-      data: payment,
-      message: 'Payment verified successfully'
+      data: {},
     });
   } catch (error) {
-    console.error('Verify payment error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to verify payment'
+      message: 'Server error',
     });
   }
 };
 
-// Get analytics data
+// @desc    Get analytics data
+// @route   GET /api/admin/analytics
+// @access  Private/Admin
 exports.getAnalytics = async (req, res) => {
   try {
-    const { range = '30d' } = req.query;
+    // Get total users count
+    const totalUsers = await User.countDocuments();
 
-    // Calculate date range
-    const now = new Date();
-    let startDate;
+    // Get total products count
+    const totalProducts = await Product.countDocuments();
 
-    switch (range) {
-      case '7d':
-        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        break;
-      case '30d':
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        break;
-      case '90d':
-        startDate = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000);
-        break;
-      default:
-        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    }
+    // Get total orders count
+    const totalOrders = await Order.countDocuments();
 
-    // Sales analytics
-    const salesData = await Order.aggregate([
+    // Get total revenue (sum of all order totals)
+    const revenueResult = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$total' }
+        }
+      }
+    ]);
+    const totalRevenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
+
+    // Get recent orders (last 10)
+    const recentOrders = await Order.find()
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    // Get order status distribution
+    const orderStatusStats = await Order.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Get monthly revenue for the last 12 months
+    const monthlyRevenue = await Order.aggregate([
       {
         $match: {
-          createdAt: { $gte: startDate },
-          status: { $in: ['confirmed', 'shipped', 'delivered'] }
+          createdAt: {
+            $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) // Last 12 months
+          }
         }
       },
       {
         $group: {
           _id: {
-            $dateToString: { format: '%Y-%m-%d', date: '$createdAt' }
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
           },
-          total: { $sum: '$total' },
-          count: { $sum: 1 }
+          revenue: { $sum: '$total' },
+          orders: { $sum: 1 }
         }
       },
       {
-        $sort: { '_id': 1 }
+        $sort: { '_id.year': 1, '_id.month': 1 }
       }
     ]);
 
-    // Top products
+    // Get top selling products
     const topProducts = await Order.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: startDate },
-          status: { $in: ['confirmed', 'shipped', 'delivered'] }
-        }
-      },
-      { $unwind: '$items' },
+      { $unwind: '$products' },
       {
         $group: {
-          _id: '$items.product',
-          totalSold: { $sum: '$items.quantity' },
-          totalRevenue: { $sum: { $multiply: ['$items.price', '$items.quantity'] } }
+          _id: '$products.product',
+          totalSold: { $sum: '$products.quantity' },
+          totalRevenue: { $sum: { $multiply: ['$products.quantity', '$total'] } }
         }
       },
       {
@@ -549,144 +412,26 @@ exports.getAnalytics = async (req, res) => {
       { $limit: 10 }
     ]);
 
-    // User stats
-    const userStats = await User.aggregate([
-      {
-        $group: {
-          _id: '$role',
-          count: { $sum: 1 }
-        }
-      }
-    ]);
-
-    // Order stats
-    const orderStats = await Order.aggregate([
-      {
-        $match: { createdAt: { $gte: startDate } }
-      },
-      {
-        $group: {
-          _id: '$status',
-          count: { $sum: 1 }
-        }
-      }
-    ]);
-
-    res.json({
+    res.status(200).json({
       success: true,
       data: {
-        sales: salesData,
-        topProducts,
-        userStats,
-        orderStats,
-        dateRange: {
-          start: startDate,
-          end: now
-        }
+        overview: {
+          totalUsers,
+          totalProducts,
+          totalOrders,
+          totalRevenue
+        },
+        recentOrders,
+        orderStatusStats,
+        monthlyRevenue,
+        topProducts
       }
     });
   } catch (error) {
-    console.error('Get analytics error:', error);
+    console.error('Analytics error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch analytics'
-    });
-  }
-};
-
-// Get categories
-exports.getCategories = async (req, res) => {
-  try {
-    const categories = await Category.find().sort({ name: 1 });
-
-    res.json({
-      success: true,
-      data: categories
-    });
-  } catch (error) {
-    console.error('Get categories error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch categories'
-    });
-  }
-};
-
-// Create category
-exports.createCategory = async (req, res) => {
-  try {
-    const category = new Category(req.body);
-    await category.save();
-
-    res.status(201).json({
-      success: true,
-      data: category,
-      message: 'Category created successfully'
-    });
-  } catch (error) {
-    console.error('Create category error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create category'
-    });
-  }
-};
-
-// Update category
-exports.updateCategory = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const category = await Category.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true }
-    );
-
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: 'Category not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      data: category,
-      message: 'Category updated successfully'
-    });
-  } catch (error) {
-    console.error('Update category error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to update category'
-    });
-  }
-};
-
-// Delete category
-exports.deleteCategory = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const category = await Category.findByIdAndDelete(id);
-
-    if (!category) {
-      return res.status(404).json({
-        success: false,
-        message: 'Category not found'
-      });
-    }
-
-    res.json({
-      success: true,
-      message: 'Category deleted successfully'
-    });
-  } catch (error) {
-    console.error('Delete category error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to delete category'
+      message: 'Server error',
     });
   }
 };

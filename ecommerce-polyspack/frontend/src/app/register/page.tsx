@@ -46,8 +46,7 @@ const RegisterPage: React.FC = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        phone: formData.phone,
-        role: formData.role || 'user' // Allow role selection for admin registration
+        phone: formData.phone
       });
 
       // Registration successful, auto-login the user
@@ -58,7 +57,6 @@ const RegisterPage: React.FC = () => {
 
       router.push('/');
     } catch (err: any) {
-      console.error('Registration error:', err);
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
