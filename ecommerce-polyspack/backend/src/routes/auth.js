@@ -7,6 +7,8 @@ const {
   updateDetails,
   updatePassword,
   logout,
+  forgotPassword,
+  resetPassword,
 } = require('../controllers/authController');
 
 const router = express.Router();
@@ -25,6 +27,8 @@ router.post(
   register
 );
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 router.get('/logout', logout);
 router.get('/me', protect, getMe);
 router.put('/updatedetails', protect, updateDetails);
