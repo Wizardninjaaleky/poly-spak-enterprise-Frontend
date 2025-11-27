@@ -22,7 +22,11 @@ securityMiddleware(app);
 
 // CORS configuration
 app.use(cors({
-  origin: "https://poly-spak-enterprise-fronted-0sde.onrender.com",
+  origin: [
+    "https://polyspackenterprises.co.ke",
+    "https://poly-spak-enterprise-fronted-0sde.onrender.com",
+    "http://localhost:3000"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
