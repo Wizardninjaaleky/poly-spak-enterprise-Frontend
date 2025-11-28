@@ -14,31 +14,67 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/products');
-      // const data = await response.json();
+      const token = localStorage.getItem('token');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
       
-      // Mock data
-      setTimeout(() => {
-        setProducts([
-          { id: 1, name: 'Premium Seedling Bags', category: 'Seedlings', price: 220, stock: 45, status: 'active', image: '/products/seedling.jpg' },
-          { id: 2, name: 'NPK Fertilizer 50kg', category: 'Fertilizers', price: 3500, stock: 12, status: 'low_stock', image: '/products/npk.jpg' },
-          { id: 3, name: 'Organic Compost 25kg', category: 'Fertilizers', price: 1200, stock: 35, status: 'active', image: '/products/compost.jpg' },
-          { id: 4, name: 'Drip Irrigation Kit', category: 'Equipment', price: 4500, stock: 20, status: 'active', image: '/products/drip.jpg' },
-          { id: 5, name: 'Garden Tools Set', category: 'Equipment', price: 2800, stock: 8, status: 'low_stock', image: '/products/tools.jpg' },
-        ]);
-        setLoading(false);
-      }, 800);
+      const response = await fetch(`${API_URL}/api/products`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      
+      const data = await response.json();
+      const productsList = data.data || data;
+      
+      // Format products for display
+      const formattedProducts = productsList.map(p => ({
+        id: p._id,
+        name: p.name,
+        category: p.category || 'Uncategorized',
+        price: p.price,
+        stock: p.stock || 0,
+        status: (p.stock || 0) < 10 ? 'low_stock' : 'active',
+        image: p.image || p.images?.[0] || '/products/placeholder.jpg'
+      }));
+      
+      setProducts(formattedProducts);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching products:', error);
       setLoading(false);
     }
   };
 
-  const handleDelete = (id) => {
-    if (confirm('Are you sure you want to delete this product?')) {
+  const handleDelete = async (id) => {
+    if (!confirm('Are you sure you want to delete this product?')) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
+      
+      const response = await fetch(`${API_URL}/api/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete product');
+      }
+      
+      // Update local state
       setProducts(products.filter(p => p.id !== id));
-      // TODO: API call to delete
+      alert('Product deleted successfully');
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product');
     }
   };
 

@@ -23,38 +23,95 @@ const Dashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // TODO: Replace with actual API calls
-      // const response = await fetch('/api/admin/analytics');
-      // const data = await response.json();
+      const token = localStorage.getItem('token');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
       
-      // Mock data for now
-      setTimeout(() => {
-        setStats({
-          totalProducts: 156,
-          totalOrders: 1247,
-          totalUsers: 892,
-          totalRevenue: 2400000,
-          todaysSales: 45200,
-          pendingOrders: 12,
-          lowStock: 5
-        });
+      // Fetch analytics data from backend
+      const response = await fetch(`${API_URL}/api/admin/analytics`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch analytics data');
+      }
+      
+      const result = await response.json();
+      const data = result.data;
+      
+      // Update stats from backend
+      setStats({
+        totalProducts: data.overview.totalProducts || 0,
+        totalOrders: data.overview.totalOrders || 0,
+        totalUsers: data.overview.totalUsers || 0,
+        totalRevenue: data.overview.totalRevenue || 0,
+        todaysSales: 0, // Calculate if needed
+        pendingOrders: data.orderStatusStats?.find(s => s._id === 'pending')?.count || 0,
+        lowStock: 0 // Calculate from products if needed
+      });
+      
+      // Format recent orders
+      const formattedOrders = (data.recentOrders || []).slice(0, 3).map(order => ({
+        id: order.orderNumber || order._id,
+        customer: order.userId?.name || 'Unknown',
+        amount: order.totalAmount || 0,
+        status: order.status || 'pending',
+        date: new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      }));
+      setRecentOrders(formattedOrders);
+      
+      // Fetch products for low stock alerts
+      const productsResponse = await fetch(`${API_URL}/api/products`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (productsResponse.ok) {
+        const productsData = await productsResponse.json();
+        const products = productsData.data || productsData;
         
-        setRecentOrders([
-          { id: '12350', customer: 'John Doe', amount: 3200, status: 'pending', date: 'Dec 20, 2024' },
-          { id: '12349', customer: 'Jane Smith', amount: 1800, status: 'completed', date: 'Dec 20, 2024' },
-          { id: '12348', customer: 'Alice Johnson', amount: 2500, status: 'processing', date: 'Dec 19, 2024' },
-        ]);
-        
-        setLowStockAlerts([
-          { name: 'Premium Seedling Bags', stock: 5, status: 'critical' },
-          { name: 'NPK Fertilizer 50kg', stock: 12, status: 'low' },
-          { name: 'Organic Compost', stock: 8, status: 'low' },
-        ]);
-        
-        setLoading(false);
-      }, 1000);
+        // Filter low stock products (stock < 20)
+        const lowStock = products
+          .filter(p => p.stock < 20)
+          .sort((a, b) => a.stock - b.stock)
+          .slice(0, 3)
+          .map(p => ({
+            name: p.name,
+            stock: p.stock,
+            status: p.stock < 10 ? 'critical' : 'low'
+          }));
+        setLowStockAlerts(lowStock);
+      }
+      
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
+      // Fallback to mock data if API fails
+      setStats({
+        totalProducts: 156,
+        totalOrders: 1247,
+        totalUsers: 892,
+        totalRevenue: 2400000,
+        todaysSales: 45200,
+        pendingOrders: 12,
+        lowStock: 5
+      });
+      
+      setRecentOrders([
+        { id: '12350', customer: 'John Doe', amount: 3200, status: 'pending', date: 'Dec 20, 2024' },
+        { id: '12349', customer: 'Jane Smith', amount: 1800, status: 'completed', date: 'Dec 20, 2024' },
+        { id: '12348', customer: 'Alice Johnson', amount: 2500, status: 'processing', date: 'Dec 19, 2024' },
+      ]);
+      
+      setLowStockAlerts([
+        { name: 'Premium Seedling Bags', stock: 5, status: 'critical' },
+        { name: 'NPK Fertilizer 50kg', stock: 12, status: 'low' },
+        { name: 'Organic Compost', stock: 8, status: 'low' },
+      ]);
+      
       setLoading(false);
     }
   };

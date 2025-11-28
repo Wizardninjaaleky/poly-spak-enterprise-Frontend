@@ -7,22 +7,73 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock data
-    setTimeout(() => {
-      setOrders([
-        { id: '12350', customer: 'John Doe', email: 'john@example.com', total: 3200, status: 'pending', date: 'Dec 20, 2024', items: 3 },
-        { id: '12349', customer: 'Jane Smith', email: 'jane@example.com', total: 1800, status: 'completed', date: 'Dec 20, 2024', items: 2 },
-        { id: '12348', customer: 'Alice Johnson', email: 'alice@example.com', total: 2500, status: 'processing', date: 'Dec 19, 2024', items: 4 },
-        { id: '12347', customer: 'Bob Wilson', email: 'bob@example.com', total: 4200, status: 'shipped', date: 'Dec 18, 2024', items: 5 },
-      ]);
-      setLoading(false);
-    }, 800);
+    fetchOrders();
   }, []);
 
-  const updateStatus = (id, newStatus) => {
-    setOrders(orders.map(order => 
-      order.id === id ? { ...order, status: newStatus } : order
-    ));
+  const fetchOrders = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
+      
+      const response = await fetch(`${API_URL}/api/orders`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+      
+      const data = await response.json();
+      const ordersList = data.data || data;
+      
+      // Format orders for display
+      const formattedOrders = ordersList.map(o => ({
+        id: o.orderNumber || o._id,
+        customer: o.userId?.name || 'Unknown Customer',
+        email: o.userId?.email || 'N/A',
+        total: o.totalAmount || 0,
+        status: o.status || 'pending',
+        date: new Date(o.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        items: o.items?.length || 0
+      }));
+      
+      setOrders(formattedOrders);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem('token');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
+      
+      const response = await fetch(`${API_URL}/api/orders/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update order status');
+      }
+      
+      // Update local state
+      setOrders(orders.map(order => 
+        order.id === id ? { ...order, status: newStatus } : order
+      ));
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      alert('Failed to update order status');
+    }
   };
 
   if (loading) {
