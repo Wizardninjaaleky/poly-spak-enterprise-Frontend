@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import Image from "next/image";
 
 // Import merged admin components
@@ -16,11 +15,11 @@ import Settings from "./vite_pages/Settings";
 import AddEditProduct from "./vite_pages/AddEditProduct";
 import Unauthorized from "./vite_pages/Unauthorized";
 
-const AdminDashboardPage: React.FC = () => {
-  const { user } = useSelector((state: RootState) => state.auth || { user: null });
+const AdminDashboardPage = () => {
+  const { user } = useSelector((state) => state.auth || { user: null });
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   const isAdmin = user?.role === "admin" || user?.role === "super_admin";
 
