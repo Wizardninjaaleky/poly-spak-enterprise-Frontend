@@ -1,72 +1,205 @@
-import Product from '../models/Product.js';
+import Product from '../models/Product.js'; // Assuming this model exists
+import { validationResult } from 'express-validator'; // Assuming express-validator is used
 
-export const createProduct = async (req, res) => {
-  try {
-    const data = req.body;
-    data.createdBy = req.user?.id;
-    const p = await Product.create(data);
-    res.status(201).json(p);
-  } catch (err) {
-    console.error('CREATE PRODUCT ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
+// @desc    Get all products
+// @route   GET /api/products
+// @access  Public
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
-  } catch (err) {
-    console.error('GET PRODUCTS ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    let query;
+
+    // Copy req.query
+    const reqQuery = { ...req.query };
+
+    // Fields to exclude
+    const removeFields = ['select', 'sort', 'page', 'limit'];
+
+    // Loop over removeFields and delete them from reqQuery
+    removeFields.forEach((param) => delete reqQuery[param]);
+
+    // Create query string
+    let queryStr = JSON.stringify(reqQuery);
+
+    // Create operators ($gt, $gte, etc)
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
+
+    // Finding resource
+    query = Product.find(JSON.parse(queryStr)).populate('flashSale');
+
+    // Select Fields
+    if (req.query.select) {
+      const fields = req.query.select.split(',').join(' ');
+      query = query.select(fields);
+    }
+
+    // Sort
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort('-createdAt');
+    }
+
+    // Pagination
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 25;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await Product.countDocuments();
+
+    query = query.skip(startIndex).limit(limit);
+
+    // Executing query
+    const products = await query;
+
+    // Pagination result
+    const pagination = {};
+
+    if (endIndex < total) {
+      pagination.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      pagination.prev = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      pagination,
+      data: products,
+    });
+  } catch (error) {
+    console.error('getProducts error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };
 
+// @desc    Get single product
+// @route   GET /api/products/:id
+// @access  Public
 export const getProduct = async (req, res) => {
   try {
-    const p = await Product.findById(req.params.id);
-    if (!p) return res.status(404).json({ message: 'Not found' });
-    res.json(p);
-  } catch (err) {
-    console.error('GET PRODUCT ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    const product = await Product.findById(req.params.id).populate('flashSale');
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.error('getProduct error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
   }
 };
 
+// @desc    Create new product
+// @route   POST /api/products
+// @access  Private/Admin
+export const createProduct = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
+  try {
+    // Ensure required fields that have unique indexes are present
+    if (!req.body.sku) {
+      req.body.sku = `SKU-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;
+    }
+
+    const product = await Product.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.error('createProduct error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message,
+    });
+  }
+};
+
+// @desc    Update product
+// @route   PUT /api/products/:id
+// @access  Private/Admin
 export const updateProduct = async (req, res) => {
   try {
-    const p = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!p) return res.status(404).json({ message: 'Not found' });
-    res.json(p);
-  } catch (err) {
-    console.error('UPDATE PRODUCT ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };
 
+// @desc    Delete product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
 export const deleteProduct = async (req, res) => {
   try {
-    const p = await Product.findByIdAndDelete(req.params.id);
-    if (!p) return res.status(404).json({ message: 'Not found' });
-    res.json({ message: 'Deleted' });
-  } catch (err) {
-    console.error('DELETE PRODUCT ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
+    const product = await Product.findById(req.params.id);
 
-export const summary = async (req, res) => {
-  try {
-    const totalProducts = await Product.countDocuments();
-    const aggregation = await Product.aggregate([
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } }, count: { $sum: 1 } } },
-      { $sort: { _id: 1 } },
-      { $limit: 30 }
-    ]);
-    const products = aggregation.map(a => ({ date: a._id, count: a.count }));
-    res.json({ totalProducts, products });
-  } catch (err) {
-    console.error('SUMMARY ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found',
+      });
+    }
+
+    await product.deleteOne(); // Use deleteOne() which is the modern Mongoose method
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };

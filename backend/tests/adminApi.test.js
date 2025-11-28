@@ -1,37 +1,30 @@
 // Adding missing closing brace for TypeScript error fix
 import bcrypt from 'bcryptjs';
+import request from 'supertest';
+import mongoose from 'mongoose';
+import { startServer, stopServer } from './serverWrapper.js';
+import User from '../src/models/User.js'; // Correct path
 
 jest.setTimeout(30000);
-
-require('dotenv').config({ path: '.env.test' });
-const request = require('supertest');
-import app from '../src/app.js';
-import http from 'http';
-import mongoose from 'mongoose';
-import User from '../src/models/User.js';
 
 let server;
 let token;
 
 beforeAll(async () => {
-  server = http.createServer(app);
-  server.listen();
-
-  await mongoose.connect(process.env.MONGO_URI_TEST);
+  await mongoose.connect(process.env.MONGO_URI_TEST, { dbName: 'polyspack_test' });
+  server = await startServer();
 
   // Remove any existing test user to avoid duplicates
   await User.deleteMany({ email: 'testadmin@example.com' });
 
   // Hash password before creating user to satisfy model validation
-  const hashedPassword = await bcrypt.hash('Admin123!', 10);
+  const hashedPassword = await bcrypt.hash('Admin123!', 12);
 
   // Create an admin user directly with specific role and hashed password
   const user = new User({ name: 'Test Admin', email: 'testadmin@example.com', passwordHash: hashedPassword, role: 'admin' });
   await user.save();
 
   // Test route accessibility without auth (should get 401 or 200)
-  const healthCheck = await request(server).get('/api/admin/products');
-  console.log('Test server admin products route (no auth) status:', healthCheck.statusCode);
 
   // Login to obtain token for authorization
   const res = await request(server)
@@ -43,7 +36,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  await new Promise(resolve => server.close(resolve));
+  await stopServer();
 });
 
 describe('Admin API Endpoints', () => {
@@ -51,34 +44,34 @@ describe('Admin API Endpoints', () => {
 
   it('creates a product', async () => {
     const res = await request(server)
-      .post('/api/admin/products')
+      .post('/api/products')
       .set('Authorization', `Bearer ${token}`)
       .send({ name: 'Plastic Pellet', description: 'High-quality pellets', category: 'Raw Material', price: 1000, quantity: 500 });
     expect(res.statusCode).toBe(201);
-    expect(res.body).toHaveProperty('_id');
-    productId = res.body._id;
+    expect(res.body.data).toHaveProperty('_id');
+    productId = res.body.data._id;
   });
 
   it('gets products list', async () => {
     const res = await request(server)
-      .get('/api/admin/products')
+      .get('/api/products')
       .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
   });
 
   it('updates product', async () => {
     const res = await request(server)
-      .put(`/api/admin/products/${productId}`)
+      .put(`/api/products/${productId}`)
       .set('Authorization', `Bearer ${token}`)
       .send({ price: 1100 });
     expect(res.statusCode).toBe(200);
-    expect(res.body.price).toBe(1100);
+    expect(res.body.data.price).toBe(1100);
   });
 
   it('deletes product', async () => {
     const res = await request(server)
-      .delete(`/api/admin/products/${productId}`)
+      .delete(`/api/products/${productId}`)
       .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
   });
@@ -88,7 +81,7 @@ describe('Admin API Endpoints', () => {
       .get('/api/admin/users')
       .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
-    expect(Array.isArray(res.body)).toBe(true);
+    expect(Array.isArray(res.body.data)).toBe(true);
   });
 
   it('login with valid credentials', async () => {

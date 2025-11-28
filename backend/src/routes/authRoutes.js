@@ -1,14 +1,20 @@
 import express from 'express';
-import { register, login, getMe, createAdmin } from '../controllers/authController.js';
+import {
+  registerUser, loginUser, getMe, createAdmin,
+  updateDetails, updatePassword, logout, forgotPassword, resetPassword
+} from '../controllers/authController.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
-router.get('/me', protect, getMe);
-
-// TEMP: create admin (once) — after creating admin remove or protect it
-router.post('/create-admin', createAdmin);
+router.post('/register', registerUser);
+router.post('/login', loginUser);
+router.route('/me').get(protect, getMe);
+router.route('/updatedetails').put(protect, updateDetails);
+router.route('/updatepassword').put(protect, updatePassword);
+router.route('/logout').get(protect, logout);
+router.route('/forgot-password').post(forgotPassword);
+router.route('/reset-password').post(resetPassword);
+router.route('/create-admin').post(createAdmin); // TEMP: protect or remove after initial setup
 
 export default router;

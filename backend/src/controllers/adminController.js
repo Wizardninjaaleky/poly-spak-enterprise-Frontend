@@ -1,57 +1,439 @@
-import Category from '../models/Category.js';
 import User from '../models/User.js';
-import Order from '../models/Order.js';
+import Coupon from '../models/Coupon.js'; // Assuming these models exist
+import FlashSale from '../models/FlashSale.js'; // Assuming these models exist
+import WebsiteSettings from '../models/WebsiteSettings.js'; // Assuming these models exist
+import Product from '../models/Product.js'; // Assuming this model exists
+import Order from '../models/Order.js'; // Assuming this model exists
+import { validationResult } from 'express-validator'; // Assuming express-validator is used
 
-export const createCategory = async (req, res) => {
-  try {
-    const c = await Category.create({ name: req.body.name });
-    res.status(201).json(c);
-  } catch (err) {
-    console.error('CREATE CAT ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
-export const getCategories = async (req, res) => {
-  try {
-    const cats = await Category.find().sort({ name: 1 });
-    res.json(cats);
-  } catch (err) {
-    console.error('GET CATS ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
-  }
-};
-
+// @desc    Get all users
+// @route   GET /api/admin/users
+// @access  Private/Admin
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('-passwordHash').sort({ createdAt: -1 });
-    res.json(users);
-  } catch (err) {
-    console.error('GET USERS ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    const users = await User.find();
+
+    res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };
 
-export const getOrders = async (req, res) => {
+// @desc    Get single user
+// @route   GET /api/admin/users/:id
+// @access  Private/Admin
+export const getUser = async (req, res) => {
   try {
-    const orders = await Order.find().populate('user', 'name email').sort({ createdAt: -1 });
-    res.json(orders);
-  } catch (err) {
-    console.error('GET ORDERS ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };
 
-export const updateOrderStatus = async (req, res) => {
+// @desc    Update user
+// @route   PUT /api/admin/users/:id
+// @access  Private/Admin
+export const updateUser = async (req, res) => {
   try {
-    const { status } = req.body;
-    const valid = ['pending','shipped','delivered'];
-    if (!valid.includes(status)) return res.status(400).json({ message: 'Invalid status' });
-    const order = await Order.findByIdAndUpdate(req.params.id, { status }, { new: true });
-    if (!order) return res.status(404).json({ message: 'Not found' });
-    res.json(order);
-  } catch (err) {
-    console.error('UPDATE ORDER ERR:', err.message);
-    res.status(500).json({ message: 'Server error' });
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Delete user
+// @route   DELETE /api/admin/users/:id
+// @access  Private/Admin
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    await user.deleteOne(); // Mongoose v6+: user.deleteOne()
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Create coupon
+// @route   POST /api/admin/coupons
+// @access  Private/Admin
+export const createCoupon = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
+  try {
+    const coupon = await Coupon.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: coupon,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Get all coupons
+// @route   GET /api/admin/coupons
+// @access  Private/Admin
+export const getCoupons = async (req, res) => {
+  try {
+    const coupons = await Coupon.find();
+
+    res.status(200).json({
+      success: true,
+      count: coupons.length,
+      data: coupons,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Update coupon
+// @route   PUT /api/admin/coupons/:id
+// @access  Private/Admin
+export const updateCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!coupon) {
+      return res.status(404).json({
+        success: false,
+        message: 'Coupon not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: coupon,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Delete coupon
+// @route   DELETE /api/admin/coupons/:id
+// @access  Private/Admin
+export const deleteCoupon = async (req, res) => {
+  try {
+    const coupon = await Coupon.findById(req.params.id);
+
+    if (!coupon) {
+      return res.status(404).json({
+        success: false,
+        message: 'Coupon not found',
+      });
+    }
+
+    await coupon.deleteOne(); // Mongoose v6+: coupon.deleteOne()
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Create flash sale
+// @route   POST /api/admin/flashsales
+// @access  Private/Admin
+export const createFlashSale = async (req, res) => {
+  // Check for validation errors
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      errors: errors.array(),
+    });
+  }
+
+  try {
+    const flashSale = await FlashSale.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: flashSale,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Get all flash sales
+// @route   GET /api/admin/flashsales
+// @access  Private/Admin
+export const getFlashSales = async (req, res) => {
+  try {
+    const flashSales = await FlashSale.find().populate('products');
+
+    res.status(200).json({
+      success: true,
+      count: flashSales.length,
+      data: flashSales,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Update flash sale
+// @route   PUT /api/admin/flashsales/:id
+// @access  Private/Admin
+export const updateFlashSale = async (req, res) => {
+  try {
+    const flashSale = await FlashSale.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!flashSale) {
+      return res.status(404).json({
+        success: false,
+        message: 'Flash sale not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: flashSale,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Delete flash sale
+// @route   DELETE /api/admin/flashsales/:id
+// @access  Private/Admin
+export const deleteFlashSale = async (req, res) => {
+  try {
+    const flashSale = await FlashSale.findById(req.params.id);
+
+    if (!flashSale) {
+      return res.status(404).json({
+        success: false,
+        message: 'Flash sale not found',
+      });
+    }
+
+    await flashSale.deleteOne(); // Mongoose v6+: flashSale.deleteOne()
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
+  }
+};
+
+// @desc    Get analytics data
+// @route   GET /api/admin/analytics
+// @access  Private/Admin
+export const getAnalytics = async (req, res) => {
+  try {
+    // Get total users count
+    const totalUsers = await User.countDocuments();
+
+    // Get total products count
+    const totalProducts = await Product.countDocuments();
+
+    // Get total orders count
+    const totalOrders = await Order.countDocuments();
+
+    // Get total revenue (sum of all order totals)
+    const revenueResult = await Order.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: '$totalAmount' } // Assuming totalAmount field in Order model
+        }
+      }
+    ]);
+    const totalRevenue = revenueResult.length > 0 ? revenueResult[0].totalRevenue : 0;
+
+    // Get recent orders (last 10)
+    const recentOrders = await Order.find()
+      .populate('userId', 'name email') // Assuming userId field in Order model
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    // Get order status distribution
+    const orderStatusStats = await Order.aggregate([
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    // Get monthly revenue for the last 12 months
+    const monthlyRevenue = await Order.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) // Last 12 months
+          }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' }
+          },
+          revenue: { $sum: '$totalAmount' }, // Assuming totalAmount field in Order model
+          orders: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      }
+    ]);
+
+    // Get top selling products
+    const topProducts = await Order.aggregate([
+      { $unwind: '$items' }, // Assuming 'items' array in Order model
+      {
+        $group: {
+          _id: '$items.productId',
+          totalSold: { $sum: '$items.qty' },
+          totalRevenue: { $sum: { $multiply: ['$items.qty', '$items.price'] } } // Assuming qty and price in items
+        }
+      },
+      {
+        $lookup: {
+          from: 'products', // Collection name for products
+          localField: '_id',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      { $unwind: '$product' },
+      {
+        $project: {
+          name: '$product.name',
+          totalSold: 1,
+          totalRevenue: 1
+        }
+      },
+      { $sort: { totalSold: -1 } },
+      { $limit: 10 }
+    ]);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        overview: {
+          totalUsers,
+          totalProducts,
+          totalOrders,
+          totalRevenue
+        },
+        recentOrders,
+        orderStatusStats,
+        monthlyRevenue,
+        topProducts
+      }
+    });
+  } catch (error) {
+    console.error('Analytics error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+    });
   }
 };

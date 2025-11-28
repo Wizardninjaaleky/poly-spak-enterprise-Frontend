@@ -1,29 +1,19 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const http = require('http');
-const app = require('../src/app');
+import app from '../src/app.js';
+import http from 'http';
 
-const testApp = express();
+let server;
 
-testApp.use('/api', app);
-
-const server = http.createServer(testApp);
-
-async function clearDatabase() {
-  try {
-    await mongoose.connection.dropDatabase();
-  } catch (error) {
-    console.error('Error clearing test database:', error);
-  }
+export function startServer() {
+  return new Promise((resolve) => {
+    server = http.createServer(app);
+    server.listen(() => resolve(server));
+  });
 }
 
-beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI_TEST);
-  await clearDatabase();
-});
-
-afterAll(async () => {
-  await mongoose.connection.close();
-});
-
-module.exports = server;
+export function stopServer() {
+  return new Promise((resolve) => {
+    if (server) {
+      server.close(() => resolve());
+    } else resolve();
+  });
+}

@@ -1,8 +1,7 @@
 import request from 'supertest';
-import http from 'http';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
-import app from '../src/app.js';
+import { startServer, stopServer } from './serverWrapper.js';
 import User from '../src/models/User.js';
 
 jest.setTimeout(30000);
@@ -11,20 +10,15 @@ let server;
 let token;
 
 beforeAll(async () => {
-  server = http.createServer(app);
-  server.listen();
-
-  // Provide the MONGO_URI_TEST if not set
-  if (!process.env.MONGO_URI_TEST) {
-    process.env.MONGO_URI_TEST = 'mongodb+srv://alexnyakundi56_db_user:Admin@cluster0.lgqojwx.mongodb.net/polyspack-ecommerce';
-  }
-
-  await mongoose.connect(process.env.MONGO_URI_TEST);
+  await mongoose.connect(process.env.MONGO_URI_TEST, { dbName: 'polyspack_test' });
+  server = await startServer();
 
   // Clean previous test user
   await User.deleteMany({ email: 'minimalt@test.com' });
 
-  const hashedPassword = await bcrypt.hash('Test1234!', 10);
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash('Test1234!', salt);
+
   const user = new User({
     name: 'Minimal Test Admin',
     email: 'minimalt@test.com',
@@ -43,14 +37,14 @@ beforeAll(async () => {
 afterAll(async () => {
   await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
-  await new Promise(resolve => server.close(resolve));
+  await stopServer();
 });
 
 describe('Minimal Admin Products API', () => {
-  it('GET /api/admin/products - returns 200 or 404', async () => {
+  it('GET /api/products - returns 200 OK', async () => {
     const res = await request(server)
-      .get('/api/admin/products')
+      .get('/api/products')
       .set('Authorization', `Bearer ${token}`);
-    expect([200, 404]).toContain(res.statusCode);
+    expect(res.statusCode).toBe(200);
   });
 });
