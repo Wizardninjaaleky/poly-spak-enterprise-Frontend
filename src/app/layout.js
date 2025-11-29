@@ -1,4 +1,5 @@
 import './globals.css';
+import ReduxProvider from './ReduxProvider';
 
 export const metadata = {
   title: 'Polyspack Enterprises - Agricultural Solutions',
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ReduxProvider>{children}</ReduxProvider>
+      </body>
     </html>
   );
 }
