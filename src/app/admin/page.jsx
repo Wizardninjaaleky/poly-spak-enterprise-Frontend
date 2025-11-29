@@ -31,12 +31,12 @@ const AdminDashboardPage = () => {
     }
   }, []);
 
-  const handleProfileImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result as string;
+        const result = reader.result;
         setProfileImage(result);
         localStorage.setItem('adminProfileImage', result);
       };
