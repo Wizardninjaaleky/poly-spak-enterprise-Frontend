@@ -208,40 +208,68 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-gray-300 py-12">
+      <footer className="bg-gray-800 text-gray-300 py-12">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+            {/* Need Help */}
             <div>
-              <h3 className="text-white font-bold mb-4">Polyspack Enterprises</h3>
-              <p className="text-sm">Your trusted partner for quality agricultural products and solutions.</p>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+              <h4 className="text-white font-bold mb-4 text-sm uppercase">Need Help?</h4>
               <ul className="space-y-2 text-sm">
-                <li><Link href="/products" className="hover:text-white">Products</Link></li>
-                <li><Link href="/about" className="hover:text-white">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Customer Service</h4>
-              <ul className="space-y-2 text-sm">
+                <li><Link href="/help" className="hover:text-white">Chat with us</Link></li>
                 <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
-                <li><Link href="/returns" className="hover:text-white">Returns</Link></li>
-                <li><Link href="/shipping" className="hover:text-white">Shipping Info</Link></li>
+                <li><Link href="/contact" className="hover:text-white">Contact Us</Link></li>
               </ul>
             </div>
+
+            {/* About Polyspack */}
             <div>
-              <h4 className="text-white font-semibold mb-4">Contact Us</h4>
+              <h4 className="text-white font-bold mb-4 text-sm uppercase">About Polyspack</h4>
               <ul className="space-y-2 text-sm">
-                <li>📞 +254 700 000 000</li>
-                <li>✉️ info@polyspack.co.ke</li>
-                <li>📍 Nairobi, Kenya</li>
+                <li><Link href="/about" className="hover:text-white">About us</Link></li>
+                <li><Link href="/terms" className="hover:text-white">Terms and Conditions</Link></li>
+                <li><Link href="/privacy" className="hover:text-white">Privacy Notice</Link></li>
+                <li><Link href="/cookies" className="hover:text-white">Cookies Notice</Link></li>
               </ul>
+            </div>
+
+            {/* Useful Links */}
+            <div>
+              <h4 className="text-white font-bold mb-4 text-sm uppercase">Useful Links</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/track" className="hover:text-white">Track Your Order</Link></li>
+                <li><Link href="/shipping" className="hover:text-white">Shipping and Delivery</Link></li>
+                <li><Link href="/returns" className="hover:text-white">Return Policy</Link></li>
+                <li><Link href="/how-to-order" className="hover:text-white">How to Order</Link></li>
+              </ul>
+            </div>
+
+            {/* Join Us */}
+            <div>
+              <h4 className="text-white font-bold mb-4 text-sm uppercase">Join Us On</h4>
+              <div className="flex gap-4 mb-6">
+                <a href="#" className="text-2xl hover:text-white">📘</a>
+                <a href="#" className="text-2xl hover:text-white">📷</a>
+                <a href="#" className="text-2xl hover:text-white">🐦</a>
+                <a href="#" className="text-2xl hover:text-white">▶️</a>
+              </div>
+              <h4 className="text-white font-bold mb-3 text-sm uppercase">Payment Methods</h4>
+              <div className="flex flex-wrap gap-2">
+                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">M-PESA</div>
+                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">Bank</div>
+                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">Cash</div>
+              </div>
             </div>
           </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>© 2025 Polyspack Enterprises. All rights reserved.</p>
+
+          {/* Bottom Section */}
+          <div className="border-t border-gray-700 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+              <p className="text-gray-400">© 2025 Polyspack Enterprises</p>
+              <div className="flex gap-4">
+                <span className="text-gray-400">📞 +254 700 000 000</span>
+                <span className="text-gray-400">✉️ info@polyspack.co.ke</span>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
