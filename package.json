@@ -16,6 +16,7 @@
     "postinstall": "cd backend && npm install"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.0.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.0",
     "concurrently": "^8.2.2",
@@ -34,7 +35,8 @@
     "next": "14.2.4",
     "nodemailer": "^6.9.7",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "react-redux": "^9.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
