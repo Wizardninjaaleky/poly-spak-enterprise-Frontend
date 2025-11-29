@@ -25,12 +25,9 @@ export default function HomePage() {
   };
 
   const categories = [
-    { name: 'Seeds', icon: '🌱', color: 'bg-green-100' },
-    { name: 'Fertilizers', icon: '🧪', color: 'bg-blue-100' },
-    { name: 'Tools', icon: '🔧', color: 'bg-yellow-100' },
-    { name: 'Equipment', icon: '🚜', color: 'bg-orange-100' },
-    { name: 'Pesticides', icon: '🦟', color: 'bg-red-100' },
-    { name: 'Irrigation', icon: '💧', color: 'bg-cyan-100' },
+    { name: 'Seedling Bags', icon: '🌱', color: 'bg-green-100' },
+    { name: 'Electronics', icon: '⚡', color: 'bg-blue-100' },
+    { name: 'Services', icon: '🔧', color: 'bg-purple-100' },
   ];
 
   return (
@@ -68,11 +65,11 @@ export default function HomePage() {
 
             {/* Account & Cart */}
             <div className="flex items-center gap-4">
-              <Link href="/login" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
+              <Link href="/profile" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
                 <span className="text-2xl">👤</span>
                 <div className="hidden md:block text-sm">
                   <div className="text-xs text-gray-500">Hello</div>
-                  <div className="font-semibold">Account</div>
+                  <div className="font-semibold">Profile</div>
                 </div>
               </Link>
               <Link href="/cart" className="flex items-center gap-2 text-gray-700 hover:text-green-600 relative">
@@ -95,15 +92,15 @@ export default function HomePage() {
       {/* Categories Bar */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {categories.map((cat) => (
               <Link
                 key={cat.name}
                 href={`/products?category=${cat.name}`}
-                className={`${cat.color} p-4 rounded-lg text-center hover:shadow-md transition`}
+                className={`${cat.color} p-6 rounded-lg text-center hover:shadow-lg transition-all transform hover:scale-105`}
               >
-                <div className="text-3xl mb-2">{cat.icon}</div>
-                <div className="text-sm font-semibold text-gray-800">{cat.name}</div>
+                <div className="text-5xl mb-3">{cat.icon}</div>
+                <div className="text-lg font-bold text-gray-800">{cat.name}</div>
               </Link>
             ))}
           </div>
@@ -116,10 +113,10 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Quality Agricultural Products
+                Quality Products & Services
               </h1>
               <p className="text-xl mb-6 text-green-100">
-                Everything you need for successful farming. Seeds, fertilizers, tools & more!
+                Seedling bags, electronics, and professional services for your needs!
               </p>
               <Link
                 href="/products"
@@ -129,7 +126,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="text-6xl text-center">
-              🌾🚜🌱
+              🌱⚡🔧
             </div>
           </div>
         </div>
