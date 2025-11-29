@@ -242,9 +242,6 @@ export default function HomePage() {
           </div>
           <div className="border-t border-gray-800 pt-8 text-center text-sm">
             <p>© 2025 Polyspack Enterprises. All rights reserved.</p>
-            <Link href="/admin" className="text-xs text-gray-600 hover:text-gray-400 mt-2 inline-block">
-              Admin Access
-            </Link>
           </div>
         </div>
       </footer>
