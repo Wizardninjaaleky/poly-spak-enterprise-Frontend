@@ -3,11 +3,13 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import authRoutes from './routes/authRoutes.js';
+import newAuthRoutes from './routes/newAuthRoutes.js'; // New authentication system
 import productRoutes from './routes/productRoutes.js'; // Assuming this exists
 import adminRoutes from './routes/adminRoutes.js'; // New admin routes
 import orderRoutes from './routes/orderRoutes.js'; // New order routes
 import paymentRoutes from './routes/paymentRoutes.js'; // New payment routes
 import websiteRoutes from './routes/websiteRoutes.js'; // New website routes
+import customSolutionRoutes from './routes/customSolutionRoutes.js'; // Custom solutions workflow
 import {
   apiLimiter,
   authLimiter,
@@ -31,11 +33,13 @@ app.use(requestLogger); // Log all requests
 
 // API routes with rate limiting
 app.use('/api/auth', authLimiter, authRoutes); // Strict rate limit for auth
+app.use('/api/auth-v2', authLimiter, newAuthRoutes); // New authentication system with email/phone
 app.use('/api/products', apiLimiter, productRoutes);
 app.use('/api/admin', authLimiter, adminRoutes); // Strict rate limit for admin
 app.use('/api/orders', apiLimiter, orderRoutes);
 app.use('/api/payments', authLimiter, paymentRoutes); // Strict rate limit for payments
 app.use('/api/website', apiLimiter, websiteRoutes);
+app.use('/api/custom-solutions', authLimiter, customSolutionRoutes); // Custom solutions with strict rate limit
 
 // Health check
 app.get('/api/health', (req, res) => {

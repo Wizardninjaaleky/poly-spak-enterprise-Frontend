@@ -1,7 +1,7 @@
 import Payment from '../models/Payment.js'; // Assuming these models exist
 import Order from '../models/Order.js'; // Assuming these models exist
 import { validationResult } from 'express-validator'; // Assuming express-validator is used
-import { verifyMpesaPayment, getPaymentDetails, getAllPayments, getPaymentStats } from '../services/mpesaService.js'; // Assuming this service exists
+import { verifyMpesaPayment, getPaymentDetails, getAllPayments } from '../services/mpesaService.js'; // Assuming this service exists
 
 // @desc    Submit M-Pesa payment for verification
 // @route   POST /api/payments/submit
