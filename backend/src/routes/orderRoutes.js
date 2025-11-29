@@ -1,12 +1,15 @@
 import express from 'express';
 import { protect, authorize } from '../middleware/auth.js';
 import {
-  getOrders, getOrder, getMyOrders, createOrder, updateOrderStatus, downloadInvoice
+  getOrders, getOrder, getMyOrders, createOrder, updateOrderStatus, downloadInvoice, trackOrder
 } from '../controllers/orderController.js';
 
 const router = express.Router();
 
-router.use(protect); // All order routes require authentication
+// Public route for order tracking (no auth required)
+router.get('/track', trackOrder);
+
+router.use(protect); // All other order routes require authentication
 
 router.route('/').get(authorize('admin'), getOrders).post(createOrder);
 router.route('/me').get(getMyOrders);

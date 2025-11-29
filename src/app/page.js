@@ -215,6 +215,7 @@ export default function HomePage() {
             <div>
               <h4 className="text-white font-bold mb-4 text-sm uppercase">Need Help?</h4>
               <ul className="space-y-2 text-sm">
+                <li><Link href="/track" className="hover:text-white">Track Your Order</Link></li>
                 <li><Link href="/help" className="hover:text-white">Chat with us</Link></li>
                 <li><Link href="/help" className="hover:text-white">Help Center</Link></li>
                 <li><Link href="/contact" className="hover:text-white">Contact Us</Link></li>

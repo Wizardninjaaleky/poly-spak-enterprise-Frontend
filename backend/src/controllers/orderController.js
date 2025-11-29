@@ -271,3 +271,46 @@ export const downloadInvoice = async (req, res) => {
     });
   }
 };
+
+// @desc    Track order with order ID and phone number (public)
+// @route   GET /api/orders/track?orderId=xxx&phone=xxx
+// @access  Public
+export const trackOrder = async (req, res) => {
+  try {
+    const { orderId, phone } = req.query;
+
+    if (!orderId || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide both order ID and phone number',
+      });
+    }
+
+    // Find order by ID and phone number
+    const order = await Order.findOne({
+      _id: orderId,
+      'shippingAddress.phone': phone
+    })
+      .populate('items.product', 'name price images')
+      .select('-userId -__v'); // Don't expose user ID
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found. Please check your order ID and phone number.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      order,
+    });
+
+  } catch (error) {
+    console.error('Track order error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while tracking order',
+    });
+  }
+};
