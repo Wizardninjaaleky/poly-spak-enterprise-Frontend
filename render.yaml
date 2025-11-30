@@ -1,11 +1,12 @@
 services:
+  # Backend API Service
   - type: web
     name: polyspack-backend
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install --prefix backend
-    startCommand: npm start --prefix backend
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_VERSION
         value: 22.16.0
@@ -18,4 +19,18 @@ services:
       - key: EMAIL_APP_PASSWORD
         sync: false
       - key: FRONTEND_URL
-        value: https://polyspack-enterprises.vercel.app
+        sync: false
+
+  # Frontend Next.js Service
+  - type: web
+    name: polyspack-frontend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:frontend
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: NEXT_PUBLIC_API_URL
+        value: https://poly-spak-enterprise-backend-2.onrender.com
