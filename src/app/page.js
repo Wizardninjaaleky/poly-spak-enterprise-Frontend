@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import TypingAnimation from '@/components/TypingAnimation';
+import { API_ENDPOINTS, API_BASE_URL } from '@/config/api';
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -36,7 +37,7 @@ export default function HomePage() {
 
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch(API_ENDPOINTS.PRODUCTS);
       const data = await response.json();
       setFeaturedProducts((data.products || []).slice(0, 8));
     } catch (error) {
@@ -46,7 +47,7 @@ export default function HomePage() {
 
   const fetchHeroSlides = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/hero-slides/active');
+      const response = await fetch(`${API_ENDPOINTS.HERO_SLIDES}/active`);
       const data = await response.json();
       if (data.success && data.slides.length > 0) {
         setHeroSlides(data.slides);
@@ -74,7 +75,7 @@ export default function HomePage() {
 
   const fetchSettings = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/settings');
+      const response = await fetch(API_ENDPOINTS.SETTINGS);
       const data = await response.json();
       if (data.success && data.data) {
         setSettings({

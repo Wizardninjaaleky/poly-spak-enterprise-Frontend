@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_ENDPOINTS } from '@/config/api';
 
 export default function AdminSettings() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function AdminSettings() {
 
   const fetchSettings = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/settings', {
+      const response = await fetch(API_ENDPOINTS.SETTINGS, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -81,8 +82,8 @@ export default function AdminSettings() {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch('http://localhost:5000/api/settings', {
-        method: 'POST',
+      const response = await fetch(API_ENDPOINTS.SETTINGS, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

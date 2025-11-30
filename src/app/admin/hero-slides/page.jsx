@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { API_ENDPOINTS } from '@/config/api';
 
 export default function HeroSlidesManagementPage() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export default function HeroSlidesManagementPage() {
 
   const fetchSlides = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/hero-slides');
+      const response = await fetch(API_ENDPOINTS.HERO_SLIDES);
       const data = await response.json();
       if (data.success) {
         setSlides(data.slides || []);
@@ -52,7 +53,7 @@ export default function HeroSlidesManagementPage() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:5000/api/hero-slides', {
+      const response = await fetch(API_ENDPOINTS.HERO_SLIDES, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +91,7 @@ export default function HeroSlidesManagementPage() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/hero-slides/${slideId}`, {
+      const response = await fetch(`${API_ENDPOINTS.HERO_SLIDES}/${slideId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -113,7 +114,7 @@ export default function HeroSlidesManagementPage() {
   const handleToggleActive = async (slideId, currentStatus) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:5000/api/hero-slides/${slideId}`, {
+      const response = await fetch(`${API_ENDPOINTS.HERO_SLIDES}/${slideId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
