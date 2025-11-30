@@ -140,7 +140,7 @@ export default function CheckoutPage() {
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                        placeholder="+254 700 000 000"
+                        placeholder="+254 742 312306"
                       />
                     </div>
                     <div>
@@ -329,7 +329,7 @@ export default function CheckoutPage() {
                       <li>Enter Amount: <span className="font-bold text-green-600">KSh {total.toLocaleString()}</span></li>
                       <li>Enter your M-PESA PIN and confirm</li>
                       <li>You will receive an M-PESA confirmation message</li>
-                      <li className="text-red-600 font-semibold">Send the M-PESA confirmation code to +254 700 000 000 via WhatsApp or SMS</li>
+                      <li className="text-red-600 font-semibold">Send the M-PESA confirmation code to +254 742 312306 via WhatsApp or SMS</li>
                     </ol>
                   </div>
                 )}
@@ -345,7 +345,7 @@ export default function CheckoutPage() {
                       <div><span className="font-semibold">Amount:</span> <span className="text-green-600 font-bold">KSh {total.toLocaleString()}</span></div>
                     </div>
                     <p className="text-red-600 font-semibold mt-4">
-                      After payment, send transaction slip/receipt to info@polyspack.co.ke or WhatsApp +254 700 000 000
+                      After payment, send transaction slip/receipt to info@polyspack.co.ke or WhatsApp +254 742 312306
                     </p>
                   </div>
                 )}
@@ -368,7 +368,7 @@ export default function CheckoutPage() {
                 <ul className="list-disc list-inside space-y-1 text-gray-700">
                   <li>Your order will be confirmed once admin verifies your payment</li>
                   <li>You will receive a confirmation call/SMS within 24 hours</li>
-                  <li>For urgent orders, contact us at +254 700 000 000</li>
+                  <li>For urgent orders, contact us at +254 742 312306</li>
                 </ul>
               </div>
 

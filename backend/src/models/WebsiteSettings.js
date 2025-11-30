@@ -21,7 +21,7 @@ const websiteSettingsSchema = new mongoose.Schema({
   },
   contactPhone: {
     type: String,
-    default: '+254 700 000 000',
+    default: '+254 742 312306',
   },
   address: {
     street: String,
@@ -33,6 +33,11 @@ const websiteSettingsSchema = new mongoose.Schema({
     twitter: String,
     instagram: String,
     linkedin: String,
+    tiktok: String,
+    whatsapp: {
+      type: String,
+      default: '254742312306',
+    },
   },
   seo: {
     metaTitle: String,

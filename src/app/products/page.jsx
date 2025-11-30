@@ -74,7 +74,7 @@ function ProductsContent() {
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <span>📞 Call: +254 700 000 000</span>
+          <span>📞 Call: +254 742 312306</span>
           <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
         </div>
       </div>

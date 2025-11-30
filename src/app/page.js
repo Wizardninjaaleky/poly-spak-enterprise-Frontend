@@ -35,7 +35,7 @@ export default function HomePage() {
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-          <span>📞 Call: +254 700 000 000</span>
+          <span>📞 Call: +254 742 312306</span>
           <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
         </div>
       </div>
@@ -264,7 +264,7 @@ export default function HomePage() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
               <p className="text-gray-400">© 2025 Polyspack Enterprises</p>
               <div className="flex gap-4">
-                <span className="text-gray-400">📞 +254 700 000 000</span>
+                <span className="text-gray-400">📞 +254 742 312306</span>
                 <span className="text-gray-400">✉️ info@polyspack.co.ke</span>
               </div>
             </div>

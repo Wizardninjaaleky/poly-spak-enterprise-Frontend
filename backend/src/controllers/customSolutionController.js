@@ -307,9 +307,9 @@ async function sendCustomerConfirmationEmail(quoteRequest) {
             </p>
             
             <p><strong>Need immediate assistance?</strong><br>
-            📞 +254 700 000 000<br>
+            📞 +254 742 312306<br>
             ✉️ sales@polyspackenterprises.co.ke<br>
-            💬 <a href="https://wa.me/254700000000">WhatsApp Us</a></p>
+            💬 <a href="https://wa.me/254742312306">WhatsApp Us</a></p>
           </div>
           
           <div class="footer">
@@ -528,9 +528,9 @@ async function sendQuoteEmail(quoteRequest) {
             </ol>
             
             <p><strong>Have questions? Contact us:</strong><br>
-            📞 +254 700 000 000<br>
+            📞 +254 742 312306<br>
             ✉️ sales@polyspackenterprises.co.ke<br>
-            💬 <a href="https://wa.me/254700000000">WhatsApp Us</a></p>
+            💬 <a href="https://wa.me/254742312306">WhatsApp Us</a></p>
             
             <p style="background: #fef3c7; padding: 15px; border-left: 4px solid #f59e0b; margin-top: 20px;">
               <strong>⏰ Quote Valid For:</strong> 30 days from today

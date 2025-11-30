@@ -168,6 +168,14 @@ export const login = async (req, res) => {
     // Get user without password for response
     const user = await User.findById(userWithPassword._id);
 
+    // Send login notification email (optional)
+    try {
+      await sendLoginNotificationEmail(user.email, user.firstName);
+    } catch (emailError) {
+      console.error('Error sending login notification:', emailError);
+      // Don't fail login if email fails
+    }
+
     // Generate token
     const token = generateToken(user._id);
 
@@ -555,7 +563,7 @@ async function sendPasswordChangedEmail(user) {
             <p>Dear ${user.firstName},</p>
             <p>Your password has been successfully changed.</p>
             <p>If you made this change, no further action is needed.</p>
-            <p>If you did NOT make this change, please contact us immediately at sales@polyspackenterprises.co.ke or call +254 700 000 000.</p>
+            <p>If you did NOT make this change, please contact us immediately at sales@polyspackenterprises.co.ke or call +254 742 312306.</p>
             <p style="text-align: center;">
               <a href="${process.env.FRONTEND_URL || 'https://polyspackenterprises.co.ke'}/auth/login" class="button">Sign In Now</a>
             </p>
@@ -574,5 +582,68 @@ async function sendPasswordChangedEmail(user) {
     console.log('Password changed email sent successfully');
   } catch (error) {
     console.error('Error sending password changed email:', error);
+  }
+}
+
+// Helper: Send login notification email
+async function sendLoginNotificationEmail(email, firstName) {
+  const loginTime = new Date().toLocaleString('en-KE', { 
+    timeZone: 'Africa/Nairobi',
+    dateStyle: 'full',
+    timeStyle: 'long'
+  });
+
+  const mailOptions = {
+    from: `"Polyspack Enterprises" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: 'New Login to Your Account - Polyspack',
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #2563eb 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+          .content { background: #f9fafb; padding: 30px; border: 1px solid #e5e7eb; }
+          .info-box { background: white; padding: 15px; border-left: 4px solid #2563eb; margin: 15px 0; }
+          .footer { background: #1f2937; color: white; padding: 20px; text-align: center; border-radius: 0 0 8px 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Welcome Back!</h1>
+          </div>
+          <div class="content">
+            <p>Hello ${firstName},</p>
+            <p>We noticed a successful login to your Polyspack account.</p>
+            <div class="info-box">
+              <p><strong>Login Details:</strong></p>
+              <p>Time: ${loginTime}</p>
+            </div>
+            <p>If this was you, you can safely ignore this email.</p>
+            <p>If you didn't log in, please contact us immediately at:</p>
+            <ul>
+              <li>Email: sales@polyspackenterprises.co.ke</li>
+              <li>Phone: +254 742 312306</li>
+              <li>WhatsApp: <a href="https://wa.me/254742312306">+254 742 312306</a></li>
+            </ul>
+          </div>
+          <div class="footer">
+            <p><strong>Polyspack Enterprises</strong><br>Kenya's Leading Rigid Plastic Packaging Manufacturer</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Login notification email sent successfully');
+  } catch (error) {
+    console.error('Error sending login notification email:', error);
+    throw error;
   }
 }

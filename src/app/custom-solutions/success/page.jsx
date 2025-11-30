@@ -141,11 +141,11 @@ export default function CustomSolutionsSuccessPage() {
             </p>
             <div className="space-y-2">
               <a
-                href="tel:+254700000000"
+                href="tel:+254742312306"
                 className="flex items-center justify-center text-blue-600 font-semibold hover:text-blue-700"
               >
                 <span className="text-2xl mr-2">📞</span>
-                +254 700 000 000
+                +254 742 312306
               </a>
               <a
                 href="mailto:sales@polyspackenterprises.co.ke"
@@ -155,7 +155,7 @@ export default function CustomSolutionsSuccessPage() {
                 sales@polyspackenterprises.co.ke
               </a>
               <a
-                href="https://wa.me/254700000000"
+                href="https://wa.me/254742312306"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center text-blue-600 font-semibold hover:text-blue-700"

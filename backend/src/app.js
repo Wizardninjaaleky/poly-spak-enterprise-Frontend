@@ -10,6 +10,7 @@ import orderRoutes from './routes/orderRoutes.js'; // New order routes
 import paymentRoutes from './routes/paymentRoutes.js'; // New payment routes
 import websiteRoutes from './routes/websiteRoutes.js'; // New website routes
 import customSolutionRoutes from './routes/customSolutionRoutes.js'; // Custom solutions workflow
+import settingsRoutes from './routes/settingsRoutes.js'; // Website settings
 import {
   apiLimiter,
   authLimiter,
@@ -40,6 +41,7 @@ app.use('/api/orders', apiLimiter, orderRoutes);
 app.use('/api/payments', authLimiter, paymentRoutes); // Strict rate limit for payments
 app.use('/api/website', apiLimiter, websiteRoutes);
 app.use('/api/custom-solutions', authLimiter, customSolutionRoutes); // Custom solutions with strict rate limit
+app.use('/api/settings', settingsRoutes); // Website settings management
 
 // Health check
 app.get('/api/health', (req, res) => {
