@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await fetch('https://poly-spak-enterprise-backend-2.onrender.com/api/auth/login', {
+      const response = await fetch('http://localhost:5000/api/auth-v2/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -24,16 +24,13 @@ export default function LoginPage() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('userData', JSON.stringify(data.user));
         
-        // Redirect based on role
-        if (data.user.role === 'admin' || data.user.role === 'super_admin') {
-          router.push('/admin');
-        } else {
-          router.push('/products');
-        }
+        // Redirect to products page (customer login)
+        router.push('/products');
       } else {
         setError(data.message || 'Login failed');
       }

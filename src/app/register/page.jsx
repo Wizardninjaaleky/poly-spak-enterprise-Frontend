@@ -28,22 +28,25 @@ export default function RegisterPage() {
     }
 
     try {
-      const response = await fetch('https://poly-spak-enterprise-backend-2.onrender.com/api/auth/register', {
+      const response = await fetch('http://localhost:5000/api/auth-v2/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
+          firstName: formData.name.split(' ')[0],
+          lastName: formData.name.split(' ').slice(1).join(' ') || formData.name.split(' ')[0],
           email: formData.email,
           phone: formData.phone,
           password: formData.password,
+          accountType: 'personal',
         }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('userData', JSON.stringify(data.user));
         router.push('/products');
       } else {
         setError(data.message || 'Registration failed');

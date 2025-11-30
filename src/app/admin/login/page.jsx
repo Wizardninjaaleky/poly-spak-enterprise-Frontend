@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth-v2/login', {
+      const response = await fetch('http://localhost:5000/api/auth-v2/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export default function AdminLoginPage() {
 
       if (response.ok && data.success) {
         // Check if user is admin or sales
-        if (data.user.role !== 'admin' && data.user.role !== 'sales') {
+        if (data.user.role !== 'admin' && data.user.role !== 'sales' && data.user.role !== 'super_admin') {
           setError('Access denied. Admin or sales privileges required.');
           setIsLoading(false);
           return;
@@ -41,6 +41,7 @@ export default function AdminLoginPage() {
 
         // Store token and user data
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('userData', JSON.stringify(data.user));
 
         // Redirect to admin dashboard
