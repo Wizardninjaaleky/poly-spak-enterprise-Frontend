@@ -1,0 +1,20 @@
+# Frontend files (not needed for backend deployment)
+src/app/
+src/components/
+src/store/
+public/
+.next/
+node_modules/
+.env.local
+
+# Development files
+*.md
+.git/
+.github/
+coverage/
+__tests__/
+
+# Keep these
+!backend/
+!server.js
+!package.json

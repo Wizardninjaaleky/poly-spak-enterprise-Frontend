@@ -7,7 +7,7 @@
   "scripts": {
     "dev:frontend": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "node server.js",
     "start:frontend": "next start",
     "lint": "next lint",
     "start:backend": "node backend/server.js",
