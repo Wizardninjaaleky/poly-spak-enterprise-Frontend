@@ -12,14 +12,15 @@ export default function AdminSettings() {
   
   const [settings, setSettings] = useState({
     contactPhone: '+254 742 312306',
-    contactEmail: 'info@polyspackenterprises.co.ke',
+    contactEmail: 'polyspackenterprise@gmail.com',
+    logo: '',
     socialMedia: {
       facebook: '',
       instagram: '',
       twitter: '',
       linkedin: '',
       tiktok: '',
-      whatsapp: '254742312306', // Without + for WhatsApp API
+      whatsapp: '254742312306',
     },
   });
 
@@ -61,7 +62,8 @@ export default function AdminSettings() {
         if (data.success && data.data) {
           setSettings({
             contactPhone: data.data.contactPhone || '+254 742 312306',
-            contactEmail: data.data.contactEmail || 'info@polyspackenterprises.co.ke',
+            contactEmail: data.data.contactEmail || 'polyspackenterprise@gmail.com',
+            logo: data.data.logo || '',
             socialMedia: data.data.socialMedia || settings.socialMedia,
           });
         }
@@ -203,9 +205,48 @@ export default function AdminSettings() {
                   value={settings.contactEmail}
                   onChange={(e) => handleInputChange('contactEmail', e.target.value)}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="info@polyspackenterprises.co.ke"
+                  placeholder="polyspackenterprise@gmail.com"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Logo Settings */}
+          <div className="bg-white rounded-lg shadow-sm border p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Website Logo</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Logo URL
+                </label>
+                <input
+                  type="url"
+                  value={settings.logo}
+                  onChange={(e) => handleInputChange('logo', e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="https://example.com/logo.png"
+                />
+                <p className="text-xs text-gray-500 mt-1">Enter the URL of your logo image (recommended: 200x60px, PNG with transparent background)</p>
+              </div>
+
+              {/* Logo Preview */}
+              {settings.logo && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Logo Preview:</p>
+                  <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 inline-block">
+                    <img 
+                      src={settings.logo} 
+                      alt="Website Logo" 
+                      className="h-12 object-contain"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.parentElement.innerHTML = '<p class="text-red-600 text-sm">Invalid image URL</p>';
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

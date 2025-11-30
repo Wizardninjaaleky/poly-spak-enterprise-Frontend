@@ -10,10 +10,16 @@ export default function HomePage() {
   const [cart, setCart] = useState([]);
   const [heroSlides, setHeroSlides] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [settings, setSettings] = useState({
+    logo: '',
+    contactPhone: '+254 742 312306',
+    contactEmail: 'polyspackenterprise@gmail.com'
+  });
 
   useEffect(() => {
     fetchFeaturedProducts();
     fetchHeroSlides();
+    fetchSettings();
     const savedCart = localStorage.getItem('cart');
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
@@ -66,6 +72,22 @@ export default function HomePage() {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/settings');
+      const data = await response.json();
+      if (data.success && data.data) {
+        setSettings({
+          logo: data.data.logo || '',
+          contactPhone: data.data.contactPhone || '+254 742 312306',
+          contactEmail: data.data.contactEmail || 'polyspackenterprise@gmail.com'
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+    }
+  };
+
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
   };
@@ -102,8 +124,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
-            <Link href="/" className="text-2xl font-bold text-green-700 whitespace-nowrap">
-              <TypingAnimation text="Polyspack Enterprises" speed={150} className="" />
+            <Link href="/" className="flex items-center gap-2">
+              {settings.logo && (
+                <img 
+                  src={settings.logo} 
+                  alt="Polyspack Enterprises" 
+                  className="h-10 object-contain"
+                />
+              )}
+              <TypingAnimation text="Polyspack Enterprises" speed={150} className="text-2xl font-bold text-green-700 whitespace-nowrap" />
             </Link>
 
             {/* Search Bar */}
@@ -415,8 +444,8 @@ export default function HomePage() {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
               <p className="text-gray-400">© 2025 Polyspack Enterprises</p>
               <div className="flex gap-4">
-                <span className="text-gray-400">📞 +254 742 312306</span>
-                <span className="text-gray-400">✉️ info@polyspack.co.ke</span>
+                <span className="text-gray-400">📞 {settings.contactPhone}</span>
+                <span className="text-gray-400">✉️ {settings.contactEmail}</span>
               </div>
             </div>
           </div>
