@@ -34,8 +34,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50">
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center flex-wrap gap-2">
           <span>📞 Call: +254 742 312306</span>
+          <span className="flex items-center gap-2">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-200"></span>
+            </span>
+            <span className="font-semibold">Open 24/7 - Order Anytime!</span>
+          </span>
           <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
         </div>
       </div>
@@ -72,15 +79,15 @@ export default function HomePage() {
                   <div className="font-semibold">Profile</div>
                 </div>
               </Link>
-              <Link href="/cart" className="flex items-center gap-2 text-gray-700 hover:text-green-600 relative">
-                <span className="text-2xl">🛒</span>
+              <Link href="/cart" className="group flex items-center gap-2 text-gray-700 hover:text-green-600 relative transition-colors">
+                <span className="text-2xl group-hover:scale-110 transition-transform duration-300">🛒</span>
                 {cart.length > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse-slow">
                     {cart.length}
                   </span>
                 )}
                 <div className="hidden md:block text-sm">
-                  <div className="text-xs text-gray-500">Cart</div>
+                  <div className="text-xs text-gray-500 group-hover:text-green-600 transition-colors">Cart</div>
                   <div className="font-semibold">{cart.length} items</div>
                 </div>
               </Link>
@@ -93,14 +100,18 @@ export default function HomePage() {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {categories.map((cat) => (
+            {categories.map((cat, index) => (
               <Link
                 key={cat.name}
                 href={`/products?category=${cat.name}`}
-                className={`${cat.color} p-6 rounded-lg text-center hover:shadow-lg transition-all transform hover:scale-105`}
+                className={`group ${cat.color} p-6 rounded-lg text-center card-hover relative overflow-hidden animate-scale-in`}
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="text-5xl mb-3">{cat.icon}</div>
-                <div className="text-lg font-bold text-gray-800">{cat.name}</div>
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative z-10">
+                  <div className="text-5xl mb-3 group-hover:animate-bounce-slow inline-block">{cat.icon}</div>
+                  <div className="text-lg font-bold text-gray-800 group-hover:scale-110 transition-transform duration-300">{cat.name}</div>
+                </div>
               </Link>
             ))}
           </div>
@@ -108,24 +119,37 @@ export default function HomePage() {
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 py-16">
+      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white overflow-hidden relative">
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+        <div className="max-w-7xl mx-auto px-4 py-16 relative z-10">
           <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <div className="animate-fade-in-up">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-slide-in-left">
                 Quality Products & Services
               </h1>
-              <p className="text-xl mb-6 text-green-100">
+              <p className="text-xl mb-6 text-green-100 animate-slide-in-left animation-delay-200">
                 Seedling bags, electronics, and professional services for your needs!
               </p>
+              <div className="flex items-center gap-4 mb-6 animate-slide-in-left animation-delay-300">
+                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <span className="relative flex h-3 w-3">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-200"></span>
+                  </span>
+                  <span className="text-sm font-semibold">Available 24/7</span>
+                </div>
+              </div>
               <Link
                 href="/products"
-                className="inline-block bg-white text-green-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition"
+                className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-white to-green-50 text-green-700 px-8 py-4 rounded-lg font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-pulse-slow"
               >
-                Shop Now →
+                <span className="absolute inset-0 bg-gradient-to-r from-green-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">Shop Now</span>
+                <span className="relative z-10 text-2xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+                <span className="absolute inset-0 border-2 border-white/50 rounded-lg opacity-0 group-hover:opacity-100 animate-pulse-border"></span>
               </Link>
             </div>
-            <div className="text-6xl text-center">
+            <div className="text-6xl text-center animate-bounce-slow">
               🌱⚡🔧
             </div>
           </div>
@@ -134,41 +158,48 @@ export default function HomePage() {
 
       {/* Featured Products */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 animate-fade-in-up">
           <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
-          <Link href="/products" className="text-green-600 hover:text-green-700 font-semibold">
-            See All →
+          <Link href="/products" className="group text-green-600 hover:text-green-700 font-semibold flex items-center gap-1 transition-all">
+            See All 
+            <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
           </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((product, index) => (
             <Link
               key={product._id}
               href={`/products/${product._id}`}
-              className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition border"
+              className="group bg-white rounded-lg overflow-hidden border card-hover animate-scale-in"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="relative h-48 bg-gray-100">
+              <div className="relative h-48 bg-gray-100 overflow-hidden">
                 {product.images?.[0] ? (
                   <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
-                    className="object-cover"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full text-4xl">📦</div>
+                  <div className="flex items-center justify-center h-full text-4xl group-hover:scale-110 transition-transform duration-300">📦</div>
+                )}
+                {product.stock < 20 && (
+                  <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold animate-pulse-slow">
+                    Low Stock
+                  </div>
                 )}
               </div>
               <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm">
+                <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 text-sm group-hover:text-green-600 transition-colors">
                   {product.name}
                 </h3>
                 <div className="text-xl font-bold text-gray-900 mb-1">
                   KSh {product.price?.toLocaleString()}
                 </div>
                 {product.stock < 20 && (
-                  <div className="text-xs text-red-600">Only {product.stock} left!</div>
+                  <div className="text-xs text-red-600 font-semibold">Only {product.stock} left!</div>
                 )}
               </div>
             </Link>
@@ -177,26 +208,26 @@ export default function HomePage() {
       </div>
 
       {/* Benefits Section */}
-      <div className="bg-white border-y py-12">
+      <div className="bg-gradient-to-r from-green-50 to-white border-y py-12">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-4xl mb-3">🚚</div>
+            <div className="text-center animate-fade-in-up">
+              <div className="text-4xl mb-3 animate-float">🚚</div>
               <h3 className="font-bold text-gray-900 mb-1">Fast Delivery</h3>
               <p className="text-sm text-gray-600">Nationwide shipping</p>
             </div>
-            <div className="text-center">
-              <div className="text-4xl mb-3">💳</div>
+            <div className="text-center animate-fade-in-up animation-delay-200">
+              <div className="text-4xl mb-3 animate-float" style={{ animationDelay: '0.5s' }}>💳</div>
               <h3 className="font-bold text-gray-900 mb-1">Secure Payment</h3>
               <p className="text-sm text-gray-600">M-Pesa & Card accepted</p>
             </div>
-            <div className="text-center">
-              <div className="text-4xl mb-3">🔒</div>
+            <div className="text-center animate-fade-in-up animation-delay-300">
+              <div className="text-4xl mb-3 animate-float" style={{ animationDelay: '1s' }}>🔒</div>
               <h3 className="font-bold text-gray-900 mb-1">100% Authentic</h3>
               <p className="text-sm text-gray-600">Genuine products only</p>
             </div>
-            <div className="text-center">
-              <div className="text-4xl mb-3">📞</div>
+            <div className="text-center animate-fade-in-up animation-delay-400">
+              <div className="text-4xl mb-3 animate-float" style={{ animationDelay: '1.5s' }}>📞</div>
               <h3 className="font-bold text-gray-900 mb-1">24/7 Support</h3>
               <p className="text-sm text-gray-600">Always here to help</p>
             </div>
