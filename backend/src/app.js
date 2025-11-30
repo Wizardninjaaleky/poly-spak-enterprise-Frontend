@@ -11,6 +11,7 @@ import paymentRoutes from './routes/paymentRoutes.js'; // New payment routes
 import websiteRoutes from './routes/websiteRoutes.js'; // New website routes
 import customSolutionRoutes from './routes/customSolutionRoutes.js'; // Custom solutions workflow
 import settingsRoutes from './routes/settingsRoutes.js'; // Website settings
+import heroSlideRoutes from './routes/heroSlideRoutes.js'; // Hero slides management
 import {
   apiLimiter,
   authLimiter,
@@ -42,6 +43,7 @@ app.use('/api/payments', authLimiter, paymentRoutes); // Strict rate limit for p
 app.use('/api/website', apiLimiter, websiteRoutes);
 app.use('/api/custom-solutions', authLimiter, customSolutionRoutes); // Custom solutions with strict rate limit
 app.use('/api/settings', settingsRoutes); // Website settings management
+app.use('/api/hero-slides', heroSlideRoutes); // Hero slides management
 
 // Health check
 app.get('/api/health', (req, res) => {

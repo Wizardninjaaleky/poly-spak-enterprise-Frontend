@@ -3,25 +3,75 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import TypingAnimation from '@/components/TypingAnimation';
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [cart, setCart] = useState([]);
+  const [heroSlides, setHeroSlides] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     fetchFeaturedProducts();
+    fetchHeroSlides();
     const savedCart = localStorage.getItem('cart');
     if (savedCart) setCart(JSON.parse(savedCart));
   }, []);
 
+  // Auto-slide effect
+  useEffect(() => {
+    if (heroSlides.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      }, 5000); // Change slide every 5 seconds
+      return () => clearInterval(interval);
+    }
+  }, [heroSlides.length]);
+
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await fetch('https://poly-spak-enterprise-backend-2.onrender.com/api/products');
+      const response = await fetch('http://localhost:5000/api/products');
       const data = await response.json();
       setFeaturedProducts((data.products || []).slice(0, 8));
     } catch (error) {
       console.error('Error fetching products:', error);
     }
+  };
+
+  const fetchHeroSlides = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/hero-slides/active');
+      const data = await response.json();
+      if (data.success && data.slides.length > 0) {
+        setHeroSlides(data.slides);
+      } else {
+        // Default slide if none exist
+        setHeroSlides([{
+          title: 'Quality Products & Services',
+          subtitle: 'Seedling bags, electronics, and professional services for your needs!',
+          buttonText: 'Shop Now',
+          buttonLink: '/products',
+          imageUrl: ''
+        }]);
+      }
+    } catch (error) {
+      console.error('Error fetching hero slides:', error);
+      setHeroSlides([{
+        title: 'Quality Products & Services',
+        subtitle: 'Seedling bags, electronics, and professional services for your needs!',
+        buttonText: 'Shop Now',
+        buttonLink: '/products',
+        imageUrl: ''
+      }]);
+    }
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
 
   const categories = [
@@ -53,7 +103,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="text-2xl font-bold text-green-700 whitespace-nowrap">
-              Polyspack
+              <TypingAnimation text="Polyspack Enterprises" speed={150} className="" />
             </Link>
 
             {/* Search Bar */}
@@ -118,42 +168,112 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Hero Banner */}
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white overflow-hidden relative">
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-        <div className="max-w-7xl mx-auto px-4 py-16 relative z-10">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="animate-fade-in-up">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-slide-in-left">
-                Quality Products & Services
-              </h1>
-              <p className="text-xl mb-6 text-green-100 animate-slide-in-left animation-delay-200">
-                Seedling bags, electronics, and professional services for your needs!
-              </p>
-              <div className="flex items-center gap-4 mb-6 animate-slide-in-left animation-delay-300">
-                <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                  <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-green-200"></span>
-                  </span>
-                  <span className="text-sm font-semibold">Available 24/7</span>
+      {/* Hero Banner Carousel */}
+      <div className="relative bg-gradient-to-r from-green-600 to-green-800 text-white overflow-hidden">
+        {/* Slides Container */}
+        <div className="relative h-[500px] md:h-[600px]">
+          {heroSlides.map((slide, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+            >
+              {/* Background Image */}
+              {slide.imageUrl && (
+                <div className="absolute inset-0">
+                  <Image
+                    src={slide.imageUrl}
+                    alt={slide.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-900/90 to-green-800/70"></div>
+                </div>
+              )}
+              
+              {/* Content */}
+              <div className="relative z-10 max-w-7xl mx-auto px-4 h-full flex items-center">
+                <div className="grid md:grid-cols-2 gap-8 items-center w-full">
+                  <div className="animate-fade-in-up">
+                    <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-slide-in-left">
+                      {slide.title}
+                    </h1>
+                    <p className="text-xl md:text-2xl mb-6 text-green-50 animate-slide-in-left animation-delay-200">
+                      {slide.subtitle}
+                    </p>
+                    <div className="flex items-center gap-4 mb-6 animate-slide-in-left animation-delay-300">
+                      <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                        <span className="relative flex h-3 w-3">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-3 w-3 bg-green-200"></span>
+                        </span>
+                        <span className="text-sm font-semibold">Available 24/7</span>
+                      </div>
+                    </div>
+                    <Link
+                      href={slide.buttonLink}
+                      className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-white to-green-50 text-green-700 px-8 py-4 rounded-lg font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-pulse-slow"
+                    >
+                      <span className="absolute inset-0 bg-gradient-to-r from-green-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                      <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">{slide.buttonText}</span>
+                      <span className="relative z-10 text-2xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+                      <span className="absolute inset-0 border-2 border-white/50 rounded-lg opacity-0 group-hover:opacity-100 animate-pulse-border"></span>
+                    </Link>
+                  </div>
+                  <div className="hidden md:flex justify-center items-center gap-4 animate-fade-in-up animation-delay-300">
+                    <div className="text-6xl animate-bounce-slow">🌱</div>
+                    <div className="text-6xl animate-bounce-slow" style={{ animationDelay: '0.5s' }}>⚡</div>
+                    <div className="text-6xl animate-bounce-slow" style={{ animationDelay: '1s' }}>🔧</div>
+                  </div>
                 </div>
               </div>
-              <Link
-                href="/products"
-                className="group relative inline-flex items-center gap-2 bg-gradient-to-r from-white to-green-50 text-green-700 px-8 py-4 rounded-lg font-bold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl animate-pulse-slow"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-green-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">Shop Now</span>
-                <span className="relative z-10 text-2xl group-hover:translate-x-2 transition-transform duration-300">→</span>
-                <span className="absolute inset-0 border-2 border-white/50 rounded-lg opacity-0 group-hover:opacity-100 animate-pulse-border"></span>
-              </Link>
             </div>
-            <div className="text-6xl text-center animate-bounce-slow">
-              🌱⚡🔧
-            </div>
-          </div>
+          ))}
         </div>
+
+        {/* Navigation Arrows */}
+        {heroSlides.length > 1 && (
+          <>
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+              aria-label="Previous slide"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-300 hover:scale-110"
+              aria-label="Next slide"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Dots Indicator */}
+        {heroSlides.length > 1 && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentSlide 
+                    ? 'bg-white w-8' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Featured Products */}
