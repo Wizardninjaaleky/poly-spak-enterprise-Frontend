@@ -73,7 +73,7 @@ function ProductsContent() {
     <div className="min-h-screen bg-gray-50">
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center">
           <span>📞 Call: +254 742 312306</span>
           <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
         </div>
@@ -81,7 +81,7 @@ function ProductsContent() {
 
       {/* Main Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-[1600px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             <Link href="/" className="text-2xl font-bold text-green-700 whitespace-nowrap">
               Polyspack
@@ -103,9 +103,15 @@ function ProductsContent() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Link href="/login" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
+              <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
+                Login
+              </Link>
+              <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                Sign Up
+              </Link>
+              <Link href="/profile" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
                 <span className="text-2xl">👤</span>
-                <div className="hidden md:block text-sm">
+                <div className="hidden lg:block text-sm">
                   <div className="font-semibold">Account</div>
                 </div>
               </Link>
@@ -127,7 +133,7 @@ function ProductsContent() {
 
       {/* Breadcrumb */}
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-3">
+        <div className="max-w-[1600px] mx-auto px-6 py-3">
           <div className="text-sm text-gray-600">
             <Link href="/" className="hover:text-green-600">Home</Link>
             <span className="mx-2">/</span>
@@ -136,10 +142,10 @@ function ProductsContent() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-6">
+      <div className="max-w-[1600px] mx-auto px-6 py-6">
+        <div className="flex gap-8">
           {/* Sidebar Filters */}
-          <div className="hidden lg:block w-64 flex-shrink-0">
+          <div className="hidden lg:block w-72 flex-shrink-0">
             <div className="bg-white rounded-lg p-6 sticky top-24">
               <h3 className="font-bold text-gray-900 mb-4 text-lg">Filters</h3>
               
@@ -257,7 +263,7 @@ function ProductsContent() {
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 {filteredProducts.map((product) => (
                   <div key={product._id} className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition border group">
                     <div className="relative h-48 bg-gray-100 overflow-hidden">

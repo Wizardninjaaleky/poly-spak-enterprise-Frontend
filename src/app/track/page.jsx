@@ -51,21 +51,29 @@ export default function TrackOrderPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-green-700 text-white text-xs py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
+        <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center">
           <span>📞 Call: +254 742 312306</span>
           <span>🚚 Track Your Order</span>
         </div>
       </div>
 
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-[1600px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-2xl font-bold text-green-700">
               Polyspack
             </Link>
-            <Link href="/products" className="text-gray-700 hover:text-green-600 font-medium">
-              Continue Shopping
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link href="/products" className="text-gray-700 hover:text-green-600 font-medium">
+                Products
+              </Link>
+              <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
+                Login
+              </Link>
+              <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </header>

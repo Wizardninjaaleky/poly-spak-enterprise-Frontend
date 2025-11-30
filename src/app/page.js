@@ -107,7 +107,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50">
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center flex-wrap gap-2">
+        <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center flex-wrap gap-2">
           <span>📞 Call: +254 742 312306</span>
           <span className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">
@@ -122,7 +122,7 @@ export default function HomePage() {
 
       {/* Main Header */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-[1600px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
@@ -152,9 +152,15 @@ export default function HomePage() {
 
             {/* Account & Cart */}
             <div className="flex items-center gap-4">
+              <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
+                Login
+              </Link>
+              <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                Sign Up
+              </Link>
               <Link href="/profile" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
                 <span className="text-2xl">👤</span>
-                <div className="hidden md:block text-sm">
+                <div className="hidden lg:block text-sm">
                   <div className="text-xs text-gray-500">Hello</div>
                   <div className="font-semibold">Profile</div>
                 </div>
@@ -176,25 +182,118 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Categories Bar */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {categories.map((cat, index) => (
-              <Link
-                key={cat.name}
-                href={`/products?category=${cat.name}`}
-                className={`group ${cat.color} p-6 rounded-lg text-center card-hover relative overflow-hidden animate-scale-in`}
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative z-10">
-                  <div className="text-5xl mb-3 group-hover:animate-bounce-slow inline-block">{cat.icon}</div>
-                  <div className="text-lg font-bold text-gray-800 group-hover:scale-110 transition-transform duration-300">{cat.name}</div>
+      {/* Categories Carousel - Full Width */}
+      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+        <div className="relative h-[400px] md:h-[500px]">
+          {categories.map((cat, index) => (
+            <div
+              key={cat.name}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === (currentSlide % categories.length) ? 'opacity-100 z-10' : 'opacity-0 z-0'
+              }`}
+            >
+              {/* Background Pattern/Image */}
+              <div className="absolute inset-0 bg-gradient-to-r from-green-900/95 to-green-800/90"></div>
+              <div className="absolute inset-0" style={{
+                backgroundImage: cat.name === 'Seedling Bags' 
+                  ? 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+                  : cat.name === 'Electronics'
+                  ? 'url("data:image/svg+xml,%3Csvg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.05" fill-rule="evenodd"%3E%3Cpath d="M0 40L40 0H20L0 20M40 40V20L20 40"/%3E%3C/g%3E%3C/svg%3E")'
+                  : 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.05" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E")'
+              }}></div>
+              
+              {/* Content */}
+              <div className="relative z-10 h-full flex items-center">
+                <div className="w-full max-w-[1600px] mx-auto px-6">
+                  <div className="grid md:grid-cols-2 gap-12 items-center">
+                    {/* Left: Text Content */}
+                    <div className="text-white space-y-6 animate-fade-in-up">
+                      <div className="inline-block">
+                        <div className={`inline-flex items-center gap-3 ${cat.color} bg-opacity-20 backdrop-blur-sm px-6 py-3 rounded-full border-2 border-white/30`}>
+                          <span className="text-6xl">{cat.icon}</span>
+                          <span className="text-2xl font-bold text-white">{cat.name}</span>
+                        </div>
+                      </div>
+                      
+                      <h2 className="text-4xl md:text-6xl font-bold leading-tight">
+                        {cat.name === 'Seedling Bags' && 'Premium Quality Seedling Bags'}
+                        {cat.name === 'Electronics' && 'Latest Electronics & Gadgets'}
+                        {cat.name === 'Services' && 'Professional Services'}
+                      </h2>
+                      
+                      <p className="text-xl md:text-2xl text-green-50 leading-relaxed">
+                        {cat.name === 'Seedling Bags' && 'Durable, eco-friendly bags for your nursery and farming needs. Various sizes available.'}
+                        {cat.name === 'Electronics' && 'High-quality electronic products and accessories for home and office use.'}
+                        {cat.name === 'Services' && 'Expert solutions tailored to your business requirements and technical needs.'}
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-4 pt-4">
+                        <Link
+                          href={`/products?category=${cat.name}`}
+                          className="group inline-flex items-center gap-3 bg-white text-green-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-green-50 transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+                        >
+                          <span>Shop {cat.name}</span>
+                          <span className="text-2xl group-hover:translate-x-2 transition-transform duration-300">→</span>
+                        </Link>
+                        <Link
+                          href="/products"
+                          className="inline-flex items-center gap-3 border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/10 backdrop-blur-sm transition-all duration-300"
+                        >
+                          View All Products
+                        </Link>
+                      </div>
+                    </div>
+
+                    {/* Right: Visual Element */}
+                    <div className="hidden md:flex justify-center items-center animate-fade-in-up animation-delay-300">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-white/10 rounded-full blur-3xl"></div>
+                        <div className="relative text-[180px] animate-float">
+                          {cat.icon}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </Link>
-            ))}
-          </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Navigation Arrows */}
+        <button
+          onClick={() => setCurrentSlide((prev) => (prev - 1 + categories.length) % categories.length)}
+          className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+          aria-label="Previous category"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        <button
+          onClick={() => setCurrentSlide((prev) => (prev + 1) % categories.length)}
+          className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white p-4 rounded-full transition-all duration-300 hover:scale-110"
+          aria-label="Next category"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        {/* Dots Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex gap-3">
+          {categories.map((cat, index) => (
+            <button
+              key={cat.name}
+              onClick={() => setCurrentSlide(index)}
+              className={`transition-all duration-300 rounded-full ${
+                index === (currentSlide % categories.length)
+                  ? 'bg-white w-12 h-3'
+                  : 'bg-white/50 hover:bg-white/75 w-3 h-3'
+              }`}
+              aria-label={`Go to ${cat.name}`}
+            />
+          ))}
         </div>
       </div>
 
@@ -224,7 +323,7 @@ export default function HomePage() {
               )}
               
               {/* Content */}
-              <div className="relative z-10 max-w-7xl mx-auto px-4 h-full flex items-center">
+              <div className="relative z-10 max-w-[1600px] mx-auto px-6 h-full flex items-center">
                 <div className="grid md:grid-cols-2 gap-8 items-center w-full">
                   <div className="animate-fade-in-up">
                     <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-slide-in-left">
@@ -307,7 +406,7 @@ export default function HomePage() {
       </div>
 
       {/* Featured Products */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="max-w-[1600px] mx-auto px-6 py-12">
         <div className="flex justify-between items-center mb-6 animate-fade-in-up">
           <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
           <Link href="/products" className="group text-green-600 hover:text-green-700 font-semibold flex items-center gap-1 transition-all">
@@ -316,7 +415,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
           {featuredProducts.map((product, index) => (
             <Link
               key={product._id}
@@ -359,7 +458,7 @@ export default function HomePage() {
 
       {/* Benefits Section */}
       <div className="bg-gradient-to-r from-green-50 to-white border-y py-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center animate-fade-in-up">
               <div className="text-4xl mb-3 animate-float">🚚</div>
@@ -387,7 +486,7 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="bg-gray-800 text-gray-300 py-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-[1600px] mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             {/* Need Help */}
             <div>

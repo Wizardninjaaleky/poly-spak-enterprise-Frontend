@@ -94,19 +94,24 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-[1600px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/" className="text-2xl font-bold text-green-700">
               Polyspack
             </Link>
-            <div className="text-sm text-gray-600">
-              Secure Checkout 🔒
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-600">
+                Secure Checkout 🔒
+              </div>
+              <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
+                Login
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-[1400px] mx-auto px-6 py-8">
         {step === 1 ? (
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Checkout Form */}
