@@ -1,11 +1,11 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
-export default function CustomSolutionsSuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const quoteId = searchParams.get('id');
   const [quoteDetails, setQuoteDetails] = useState(null);
@@ -235,5 +235,20 @@ export default function CustomSolutionsSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CustomSolutionsSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
