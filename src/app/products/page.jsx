@@ -302,17 +302,30 @@ function ProductsContent() {
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5">
                 {filteredProducts.map((product) => (
                   <div key={product._id} className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition border group">
-                    <div className="relative h-48 bg-gray-100 overflow-hidden">
+                    <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden flex items-center justify-center">
                       {product.images?.[0] ? (
-                        <Image
-                          src={product.images[0]}
-                          alt={product.name}
-                          fill
-                          className="object-cover group-hover:scale-105 transition duration-300"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full text-5xl">📦</div>
-                      )}
+                        <>
+                          <Image
+                            src={product.images[0].startsWith('http') ? product.images[0] : `https://poly-spak-enterprise-backend-2.onrender.com${product.images[0]}`}
+                            alt={product.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition duration-300"
+                            unoptimized
+                          />
+                        </>
+                      ) : null}
+                      {/* Always show product icon as fallback/overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20 pointer-events-none">
+                        {product.name.toLowerCase().includes('solar') ? '☀️' : 
+                         product.name.toLowerCase().includes('jump') ? '🔋' :
+                         product.name.toLowerCase().includes('shaver') || product.name.toLowerCase().includes('trimmer') ? '✂️' :
+                         product.name.toLowerCase().includes('blood') || product.name.toLowerCase().includes('medical') ? '🩺' :
+                         product.name.toLowerCase().includes('bag') ? '🎒' :
+                         product.name.toLowerCase().includes('shade') ? '🌿' :
+                         product.name.toLowerCase().includes('garbage') ? '🗑️' :
+                         product.name.toLowerCase().includes('dumbbell') ? '💪' :
+                         '📦'}
+                      </div>
                       {product.stock < 20 && (
                         <div className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
                           Low Stock
