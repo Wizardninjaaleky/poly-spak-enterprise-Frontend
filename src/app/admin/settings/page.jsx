@@ -166,6 +166,26 @@ export default function AdminSettings() {
         </div>
       </header>
 
+      {/* Settings Navigation */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-lg shadow-sm border">
+          <nav className="flex border-b">
+            <Link
+              href="/admin/settings"
+              className="px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+            >
+              General Settings
+            </Link>
+            <Link
+              href="/admin/settings/branding"
+              className="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              Branding
+            </Link>
+          </nav>
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Message Alert */}

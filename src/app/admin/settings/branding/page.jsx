@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function BrandingSettings() {
   const router = useRouter();
@@ -135,11 +136,47 @@ export default function BrandingSettings() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Branding Settings</h1>
-        <p className="text-gray-600">Manage your website logo and favicon</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Branding Settings</h1>
+              <p className="text-sm text-gray-600 mt-1">Manage your website logo and favicon</p>
+            </div>
+            <button
+              onClick={() => router.push('/admin/dashboard')}
+              className="px-4 py-2 text-gray-700 hover:text-gray-900 font-medium"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Settings Navigation */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-lg shadow-sm border">
+          <nav className="flex border-b">
+            <Link
+              href="/admin/settings"
+              className="px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              General Settings
+            </Link>
+            <Link
+              href="/admin/settings/branding"
+              className="px-6 py-3 text-sm font-medium text-blue-600 border-b-2 border-blue-600"
+            >
+              Branding
+            </Link>
+          </nav>
+        </div>
       </div>
+
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
       {/* Logo Section */}
       <div className="bg-white rounded-lg shadow p-6">
@@ -291,18 +328,19 @@ export default function BrandingSettings() {
         </div>
       </div>
 
-      {/* Info Box */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-900 mb-2">📝 Branding Guidelines</h3>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Logo: Use PNG format with transparent background for best results</li>
-          <li>• Logo: Recommended dimensions: 200-400px width</li>
-          <li>• Favicon: Use 32x32px or 64x64px square image</li>
-          <li>• Favicon: ICO or PNG format recommended</li>
-          <li>• All images must be under 2MB in size</li>
-          <li>• Changes will be reflected immediately across the website</li>
-        </ul>
-      </div>
+        {/* Info Box */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 className="font-semibold text-blue-900 mb-2">📝 Branding Guidelines</h3>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Logo: Use PNG format with transparent background for best results</li>
+            <li>• Logo: Recommended dimensions: 200-400px width</li>
+            <li>• Favicon: Use 32x32px or 64x64px square image</li>
+            <li>• Favicon: ICO or PNG format recommended</li>
+            <li>• All images must be under 2MB in size</li>
+            <li>• Changes will be reflected immediately across the website</li>
+          </ul>
+        </div>
+      </main>
     </div>
   );
 }
