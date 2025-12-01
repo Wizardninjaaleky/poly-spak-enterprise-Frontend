@@ -126,9 +126,11 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('[LOGIN] Attempt for email:', email);
 
     // Validation
     if (!email || !password) {
+      console.log('[LOGIN] Missing email or password');
       return res.status(400).json({
         success: false,
         message: 'Please provide email and password',
@@ -136,16 +138,36 @@ export const login = async (req, res) => {
     }
 
     // Get user with password
-    const userWithPassword = await User.findOne({ email: email.toLowerCase() }).select('+passwordHash');
+    console.log('[LOGIN] Querying for user...');
+    let userWithPassword;
+    try {
+      userWithPassword = await User.findOne({ email: email.toLowerCase() }).select('+passwordHash');
+      console.log('[LOGIN] Query completed, user found:', !!userWithPassword);
+    } catch (queryError) {
+      console.error('[LOGIN] Query error:', queryError);
+      return res.status(500).json({
+        success: false,
+        message: 'Database error',
+        error: queryError.message
+      });
+    }
+    
     if (!userWithPassword) {
+      console.log('[LOGIN] User not found:', email);
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password',
       });
     }
 
+    console.log('[LOGIN] User found, checking password');
+    console.log('[LOGIN] Has passwordHash:', !!userWithPassword.passwordHash);
+    console.log('[LOGIN] isActive:', userWithPassword.isActive);
+
     // Check password
     const isPasswordValid = await bcrypt.compare(password, userWithPassword.passwordHash);
+    console.log('[LOGIN] Password valid:', isPasswordValid);
+    
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -155,6 +177,7 @@ export const login = async (req, res) => {
 
     // Check if account is active
     if (!userWithPassword.isActive) {
+      console.log('[LOGIN] Account is not active');
       return res.status(403).json({
         success: false,
         message: 'Your account has been deactivated. Please contact support.',

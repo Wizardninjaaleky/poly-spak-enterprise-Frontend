@@ -6,7 +6,7 @@ import {
   updateHeroSlide, 
   deleteHeroSlide 
 } from '../controllers/heroSlideController.js';
-import { authMiddleware, adminMiddleware } from '../middleware/auth.js';
+import { authMiddleware, adminMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

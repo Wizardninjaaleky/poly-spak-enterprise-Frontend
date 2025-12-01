@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   lastName: String,
   email: { type: String, unique: true },
   phone: String,
-  password: String,
+  passwordHash: String,
   role: { type: String, enum: ['customer', 'admin', 'sales', 'super_admin'], default: 'customer' },
   isVerified: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now },
@@ -58,7 +58,7 @@ async function createAdmins() {
               firstName: admin.firstName,
               lastName: admin.lastName,
               phone: admin.phone,
-              password: hashedPassword,
+              passwordHash: hashedPassword,
               role: admin.role,
               isVerified: true,
             },
@@ -68,9 +68,11 @@ async function createAdmins() {
       } else {
         // Create new user
         const hashedPassword = await bcrypt.hash(admin.password, 10);
+        const newAdmin = { ...admin };
+        delete newAdmin.password;
         await User.create({
-          ...admin,
-          password: hashedPassword,
+          ...newAdmin,
+          passwordHash: hashedPassword,
         });
         console.log(`✅ Created admin: ${admin.email} (${admin.role})`);
       }

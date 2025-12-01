@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true, select: false },
   phone: { type: String, required: false },
   company: { type: String, trim: true },
-  accountType: { type: String, enum: ['individual', 'business'], default: 'individual' },
+  accountType: { type: String, enum: ['individual', 'business', 'personal'], default: 'individual' },
   isVerified: { type: Boolean, default: false },
   isActive: { type: Boolean, default: true },
   agreeToMarketing: { type: Boolean, default: false },
