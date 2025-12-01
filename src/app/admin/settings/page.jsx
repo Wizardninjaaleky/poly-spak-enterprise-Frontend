@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { API_ENDPOINTS } from '@/config/api';
+import Link from 'next/link';
+import { API_ENDPOINTS, API_BASE_URL } from '@/config/api';
 
 export default function AdminSettings() {
   const router = useRouter();
