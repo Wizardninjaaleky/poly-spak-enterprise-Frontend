@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { API_ENDPOINTS } from '@/config/api';
+import { setCredentials } from '@/store/slices/authSlice';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -40,10 +43,13 @@ export default function AdminLoginPage() {
           return;
         }
 
-        // Store token and user data
+        // Store token and user data in localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('userData', JSON.stringify(data.user));
+
+        // Update Redux store with both user and token
+        dispatch(setCredentials({ user: data.user, token: data.token }));
 
         // Redirect to admin dashboard
         router.push('/admin/dashboard');
