@@ -11,6 +11,7 @@ import productRoutes from './routes/productRoutes.js'; // Assuming this exists
 import adminRoutes from './routes/adminRoutes.js'; // New admin routes
 import orderRoutes from './routes/orderRoutes.js'; // New order routes
 import paymentRoutes from './routes/paymentRoutes.js'; // New payment routes
+import mpesaRoutes from './routes/mpesaRoutes.js'; // M-PESA STK Push integration
 import websiteRoutes from './routes/websiteRoutes.js'; // New website routes
 import customSolutionRoutes from './routes/customSolutionRoutes.js'; // Custom solutions workflow
 import settingsRoutes from './routes/settingsRoutes.js'; // Website settings
@@ -49,6 +50,7 @@ app.use('/api/products', apiLimiter, productRoutes);
 app.use('/api/admin', authLimiter, adminRoutes); // Strict rate limit for admin
 app.use('/api/orders', apiLimiter, orderRoutes);
 app.use('/api/payments', authLimiter, paymentRoutes); // Strict rate limit for payments
+app.use('/api/payments/mpesa', authLimiter, mpesaRoutes); // M-PESA STK Push integration
 app.use('/api/website', apiLimiter, websiteRoutes);
 app.use('/api/custom-solutions', authLimiter, customSolutionRoutes); // Custom solutions with strict rate limit
 app.use('/api/settings', settingsRoutes); // Website settings management

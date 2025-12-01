@@ -320,50 +320,85 @@ export default function CheckoutPage() {
               </p>
 
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6 text-left">
-                <h3 className="font-bold text-gray-900 mb-4 text-lg">Payment Instructions</h3>
+                <h3 className="font-bold text-gray-900 mb-4 text-lg flex items-center gap-2">
+                  💳 PAYMENT DETAILS
+                </h3>
 
                 {paymentMethod === 'mpesa' && (
-                  <div className="space-y-3 text-sm">
-                    <p className="font-semibold text-gray-900">M-PESA Payment Details:</p>
-                    <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                      <li>Go to M-PESA menu on your phone</li>
-                      <li>Select "Lipa na M-PESA"</li>
-                      <li>Select "Pay Bill"</li>
-                      <li>Enter Business Number: <span className="font-bold">123456</span></li>
-                      <li>Enter Account Number: <span className="font-bold">Your Phone Number</span></li>
-                      <li>Enter Amount: <span className="font-bold text-green-600">KSh {total.toLocaleString()}</span></li>
-                      <li>Enter your M-PESA PIN and confirm</li>
-                      <li>You will receive an M-PESA confirmation message</li>
-                      <li className="text-red-600 font-semibold">Send the M-PESA confirmation code to +254 742 312306 via WhatsApp or SMS</li>
-                    </ol>
+                  <div className="space-y-4">
+                    <div className="bg-white border-2 border-green-600 rounded-lg p-5 space-y-3">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-2">Pay to:</p>
+                        <p className="text-2xl font-bold text-green-700">Paybill: 522533</p>
+                        <p className="text-xl font-bold text-gray-900 mt-2">Account Number: 8011202</p>
+                        <p className="text-sm font-semibold text-gray-700 mt-1">Polyspack Enterprises</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <p className="font-semibold text-gray-900">Step-by-Step Instructions:</p>
+                      <ol className="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                        <li>Go to M-PESA menu on your phone</li>
+                        <li>Select "Lipa na M-PESA"</li>
+                        <li>Select "Pay Bill"</li>
+                        <li>Enter Business Number: <span className="font-bold text-green-700">522533</span></li>
+                        <li>Enter Account Number: <span className="font-bold text-green-700">8011202</span></li>
+                        <li>Enter Amount: <span className="font-bold text-green-600">KSh {total.toLocaleString()}</span></li>
+                        <li>Enter your M-PESA PIN and confirm</li>
+                        <li className="font-semibold text-red-600">Save the M-PESA confirmation code (e.g., RBK1A2B3C4)</li>
+                        <li className="font-semibold text-red-600">Contact us at +254 742 312306 with your payment code for verification</li>
+                      </ol>
+                    </div>
                   </div>
                 )}
 
                 {paymentMethod === 'bank' && (
-                  <div className="space-y-3 text-sm">
-                    <p className="font-semibold text-gray-900">Bank Transfer Details:</p>
-                    <div className="bg-white p-4 rounded border space-y-2">
-                      <div><span className="font-semibold">Bank:</span> Equity Bank</div>
-                      <div><span className="font-semibold">Account Name:</span> Polyspack Enterprises Ltd</div>
-                      <div><span className="font-semibold">Account Number:</span> 0123456789</div>
-                      <div><span className="font-semibold">Branch:</span> Nairobi</div>
-                      <div><span className="font-semibold">Amount:</span> <span className="text-green-600 font-bold">KSh {total.toLocaleString()}</span></div>
+                  <div className="space-y-4">
+                    <div className="bg-white border-2 border-green-600 rounded-lg p-5 space-y-3">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 mb-2">Alternative Payment:</p>
+                        <p className="text-2xl font-bold text-green-700">Paybill: 522533</p>
+                        <p className="text-xl font-bold text-gray-900 mt-2">Account Number: 8011202</p>
+                        <p className="text-sm font-semibold text-gray-700 mt-1">Polyspack Enterprises</p>
+                      </div>
                     </div>
-                    <p className="text-red-600 font-semibold mt-4">
-                      After payment, send transaction slip/receipt to info@polyspack.co.ke or WhatsApp +254 742 312306
-                    </p>
+                    
+                    <div className="space-y-2 text-sm">
+                      <p className="font-semibold text-gray-900">Bank Transfer Instructions:</p>
+                      <div className="bg-white p-4 rounded border space-y-2">
+                        <div><span className="font-semibold">Amount:</span> <span className="text-green-600 font-bold">KSh {total.toLocaleString()}</span></div>
+                        <div className="text-gray-600">Use the M-PESA Paybill details above or contact us for bank account details</div>
+                      </div>
+                      <p className="text-red-600 font-semibold mt-3">
+                        📱 After payment, send your payment code to +254 742 312306 for verification
+                      </p>
+                    </div>
                   </div>
                 )}
 
                 {paymentMethod === 'cash' && (
-                  <div className="space-y-3 text-sm">
-                    <p className="font-semibold text-gray-900">Cash on Delivery:</p>
-                    <ul className="list-disc list-inside space-y-2 text-gray-700">
-                      <li>Prepare exact amount: <span className="font-bold text-green-600">KSh {total.toLocaleString()}</span></li>
-                      <li>Our delivery agent will contact you before delivery</li>
-                      <li>Payment will be collected upon delivery</li>
-                      <li>Please have cash ready to avoid delays</li>
-                    </ul>
+                  <div className="space-y-4">
+                    <div className="bg-white border-2 border-green-600 rounded-lg p-5">
+                      <p className="text-center text-sm text-gray-600 mb-2">For faster processing, you can pay via:</p>
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-green-700">Paybill: 522533</p>
+                        <p className="text-xl font-bold text-gray-900 mt-2">Account Number: 8011202</p>
+                        <p className="text-sm font-semibold text-gray-700 mt-1">Polyspack Enterprises</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2 text-sm">
+                      <p className="font-semibold text-gray-900">Cash on Delivery Option:</p>
+                      <ul className="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Amount to prepare: <span className="font-bold text-green-600">KSh {total.toLocaleString()}</span></li>
+                        <li>Our delivery agent will contact you before delivery</li>
+                        <li>Payment will be collected upon delivery</li>
+                        <li>Please have cash ready to avoid delays</li>
+                      </ul>
+                      <p className="text-blue-600 font-semibold mt-3">
+                        💡 Tip: Pay via M-PESA (Paybill above) for instant order processing!
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>

@@ -27,22 +27,50 @@ const paymentSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'completed', 'failed', 'refunded'],
-    default: 'pending',
+    enum: ['Pending', 'Verified', 'Failed', 'Refunded', 'pending', 'completed', 'failed', 'refunded'],
+    default: 'Pending',
+  },
+  transactionStatus: {
+    type: String,
+    enum: ['initiated', 'pending', 'completed', 'failed', 'cancelled'],
+    default: 'initiated',
   },
   transactionId: {
     type: String,
     unique: true,
     sparse: true,
   },
+  mpesaCode: {
+    type: String,
+    sparse: true,
+  },
   mpesaReceiptNumber: {
     type: String,
+    sparse: true,
+  },
+  checkoutRequestId: {
+    type: String,
+    sparse: true,
+  },
+  merchantRequestId: {
+    type: String,
+    sparse: true,
   },
   phoneNumber: {
     type: String,
   },
+  transactionDate: {
+    type: Date,
+  },
   paymentDate: {
     type: Date,
+  },
+  verifiedAt: {
+    type: Date,
+  },
+  verifiedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   },
   failureReason: {
     type: String,

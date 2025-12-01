@@ -15,7 +15,10 @@ const transporter = nodemailer.createTransport({
 
 // Generate JWT token
 const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET || 'polyspack_secret_key_2024', {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined in environment variables');
+  }
+  return jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
 };

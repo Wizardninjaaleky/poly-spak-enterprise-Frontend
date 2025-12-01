@@ -1,11 +1,52 @@
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
+import rateLimit from 'express-rate-limit';
 
-// Temporary: Simplified rate limiters (no-op middleware)
-// TODO: Re-enable express-rate-limit once deployment issues are resolved
-export const apiLimiter = (req, res, next) => next();
-export const authLimiter = (req, res, next) => next();
-export const passwordResetLimiter = (req, res, next) => next();
+// API Rate Limiter - General endpoints (100 requests per 15 min)
+export const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Rate limit exceeded. Please try again later.',
+      retryAfter: Math.ceil(req.rateLimit.resetTime / 1000)
+    });
+  }
+});
+
+// Authentication Rate Limiter - Strict for login/register (5 attempts per 15 min)
+export const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  skipSuccessfulRequests: false,
+  message: 'Too many login attempts, please try again after 15 minutes',
+  handler: (req, res) => {
+    console.warn(`Rate limit exceeded for IP: ${req.ip}, Path: ${req.path}`);
+    res.status(429).json({
+      success: false,
+      message: 'Too many authentication attempts. Account temporarily locked.',
+      retryAfter: Math.ceil(req.rateLimit.resetTime / 1000)
+    });
+  }
+});
+
+// Password Reset Rate Limiter - Very strict (3 attempts per hour)
+export const passwordResetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 3,
+  message: 'Too many password reset attempts',
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      message: 'Too many password reset attempts. Please try again later.',
+      retryAfter: Math.ceil(req.rateLimit.resetTime / 1000)
+    });
+  }
+});
 
 // MongoDB query sanitization - prevents NoSQL injection
 export const sanitizeInput = mongoSanitize({
