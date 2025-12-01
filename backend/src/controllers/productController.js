@@ -24,7 +24,7 @@ export const getProducts = async (req, res) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // Finding resource
-    query = Product.find(JSON.parse(queryStr)).populate('flashSale');
+    query = Product.find(JSON.parse(queryStr));
 
     // Select Fields
     if (req.query.select) {
