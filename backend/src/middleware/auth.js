@@ -15,7 +15,14 @@ export const protect = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findById(decoded.id).select('-passwordHash'); // Attach user to request
+    // Support both 'id' (old auth) and 'userId' (new auth-v2)
+    const userId = decoded.id || decoded.userId;
+    req.user = await User.findById(userId).select('-passwordHash'); // Attach user to request
+    
+    if (!req.user) {
+      return res.status(401).json({ message: 'User not found' });
+    }
+    
     next();
   } catch (error) {
     console.error('Auth middleware error:', error.message);
