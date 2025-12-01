@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['admin', 'customer', 'sales'], default: 'customer' },
   passwordHash: { type: String, required: true, select: false },
   phone: { type: String, required: false },
+  profilePhoto: { type: String, default: null }, // Profile photo URL
   company: { type: String, trim: true },
   accountType: { type: String, enum: ['individual', 'business', 'personal'], default: 'individual' },
   isVerified: { type: Boolean, default: false },
