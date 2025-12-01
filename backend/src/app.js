@@ -2,6 +2,9 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import authRoutes from './routes/authRoutes.js';
 import newAuthRoutes from './routes/newAuthRoutes.js'; // New authentication system
 import productRoutes from './routes/productRoutes.js'; // Assuming this exists
@@ -22,6 +25,9 @@ import {
   secureErrorHandler
 } from './middleware/security.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const app = express();
 
 // Global security middleware
@@ -32,6 +38,9 @@ app.use(sanitizeInput); // Prevent NoSQL injection
 app.use(xssProtection); // Prevent XSS attacks
 app.use(securityHeaders); // Additional security headers
 app.use(requestLogger); // Log all requests
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // API routes with rate limiting
 app.use('/api/auth', authLimiter, authRoutes); // Strict rate limit for auth
