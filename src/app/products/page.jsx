@@ -15,11 +15,22 @@ function ProductsContent() {
   const [priceRange, setPriceRange] = useState('all');
   const [sortBy, setSortBy] = useState('featured');
   const [cart, setCart] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetchProducts();
     const savedCart = localStorage.getItem('cart');
     if (savedCart) setCart(JSON.parse(savedCart));
+    
+    // Check if user is logged in
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
+    }
   }, []);
 
   const fetchProducts = async () => {
@@ -104,16 +115,40 @@ function ProductsContent() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
-                Login
-              </Link>
-              <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
-                Sign Up
-              </Link>
+              {user ? (
+                <>
+                  <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+                    <span className="text-green-700 font-semibold">
+                      Welcome, {user.firstName || user.name || user.email}! 👋
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem('token');
+                      localStorage.removeItem('user');
+                      localStorage.removeItem('userData');
+                      setUser(null);
+                      router.push('/login');
+                    }}
+                    className="hidden md:inline-block px-4 py-2 text-red-600 hover:text-red-700 font-semibold border border-red-600 rounded-lg hover:bg-red-50 transition"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="hidden md:inline-block px-4 py-2 text-green-600 hover:text-green-700 font-semibold border border-green-600 rounded-lg hover:bg-green-50 transition">
+                    Login
+                  </Link>
+                  <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition">
+                    Sign Up
+                  </Link>
+                </>
+              )}
               <Link href="/profile" className="flex items-center gap-2 text-gray-700 hover:text-green-600">
                 <span className="text-2xl">👤</span>
                 <div className="hidden lg:block text-sm">
-                  <div className="font-semibold">Account</div>
+                  <div className="font-semibold">{user ? 'Profile' : 'Account'}</div>
                 </div>
               </Link>
               <Link href="/cart" className="flex items-center gap-2 text-gray-700 hover:text-green-600 relative">
