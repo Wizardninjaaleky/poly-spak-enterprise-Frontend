@@ -8,7 +8,10 @@ import { API_BASE_URL } from '@/config/api';
 export default function NewProductPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -18,7 +21,7 @@ export default function NewProductPage() {
     weight: '',
     dimensions: '',
     specifications: '',
-    images: [''],
+    images: [],
   });
 
   const getCategoryInfo = (category) => {
@@ -34,10 +37,66 @@ export default function NewProductPage() {
     return categories[category] || { icon: '📌', color: 'gray', description: '' };
   };
 
+  const handleFileSelect = (e) => {
+    const files = Array.from(e.target.files);
+    setSelectedFiles(files);
+    
+    // Create preview URLs
+    const previews = files.map(file => URL.createObjectURL(file));
+    setUploadedImages(previews);
+  };
+
+  const handleUploadImages = async () => {
+    if (selectedFiles.length === 0) {
+      setError('Please select images to upload');
+      return;
+    }
+
+    setIsUploading(true);
+    setError('');
+
+    const token = localStorage.getItem('token');
+    const formDataUpload = new FormData();
+
+    selectedFiles.forEach(file => {
+      formDataUpload.append('images', file);
+    });
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/products/upload-images`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formDataUpload,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormData({ ...formData, images: data.images });
+        alert(`${data.count} image(s) uploaded successfully!`);
+      } else {
+        setError(data.message || 'Failed to upload images');
+      }
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      setError('An error occurred while uploading images');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
+
+    if (formData.images.length === 0) {
+      setError('Please upload at least one product image');
+      setIsSubmitting(false);
+      return;
+    }
 
     const token = localStorage.getItem('token');
 
@@ -46,7 +105,6 @@ export default function NewProductPage() {
         ...formData,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock) || 0,
-        images: formData.images.filter(img => img.trim() !== ''),
       };
 
       const response = await fetch(`${API_BASE_URL}/api/products`, {
@@ -73,17 +131,7 @@ export default function NewProductPage() {
     }
   };
 
-  const handleImageChange = (index, value) => {
-    const newImages = [...formData.images];
-    newImages[index] = value;
-    setFormData({ ...formData, images: newImages });
-  };
-
-  const addImageField = () => {
-    setFormData({ ...formData, images: [...formData.images, ''] });
-  };
-
-  const removeImageField = (index) => {
+  const removeUploadedImage = (index) => {
     const newImages = formData.images.filter((_, i) => i !== index);
     setFormData({ ...formData, images: newImages });
   };
@@ -259,36 +307,81 @@ export default function NewProductPage() {
           {/* Product Images */}
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Product Images</h2>
-            <div className="space-y-3">
-              {formData.images.map((image, index) => (
-                <div key={index} className="flex gap-2">
+            
+            {/* File Upload Section */}
+            <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-6 mb-4">
+              <div className="text-center">
+                <div className="text-4xl mb-3">📸</div>
+                <label htmlFor="image-upload" className="cursor-pointer">
+                  <span className="text-green-600 font-semibold hover:text-green-700">
+                    Choose images from your device
+                  </span>
                   <input
-                    type="url"
-                    value={image}
-                    onChange={(e) => handleImageChange(index, e.target.value)}
-                    className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                    placeholder="https://example.com/image.jpg"
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
                   />
-                  {formData.images.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeImageField(index)}
-                      className="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50"
-                    >
-                      Remove
-                    </button>
-                  )}
+                </label>
+                <p className="text-xs text-gray-500 mt-2">
+                  JPG, PNG, GIF, WEBP (Max 5MB per image, up to 10 images)
+                </p>
+              </div>
+
+              {/* Preview Selected Files */}
+              {selectedFiles.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">
+                    {selectedFiles.length} file(s) selected
+                  </p>
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    {uploadedImages.map((preview, index) => (
+                      <img
+                        key={index}
+                        src={preview}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-24 object-cover rounded border"
+                      />
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleUploadImages}
+                    disabled={isUploading}
+                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  >
+                    {isUploading ? 'Uploading...' : '⬆️ Upload Images to Server'}
+                  </button>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addImageField}
-                className="text-green-600 hover:text-green-700 font-medium text-sm"
-              >
-                + Add Another Image URL
-              </button>
+              )}
             </div>
-            <p className="text-xs text-gray-500 mt-2">Enter direct URLs to product images</p>
+
+            {/* Show Uploaded Images */}
+            {formData.images.length > 0 && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h3 className="font-semibold text-green-900 mb-3">✅ Uploaded Images ({formData.images.length})</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  {formData.images.map((imageUrl, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={imageUrl}
+                        alt={`Product ${index + 1}`}
+                        className="w-full h-32 object-cover rounded border-2 border-green-300"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeUploadedImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Submit Buttons */}
