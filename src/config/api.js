@@ -1,6 +1,6 @@
 // API Configuration
-// Use environment variable if available, otherwise default to localhost
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+// Use environment variable if available, otherwise use production backend
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
 
 // API endpoints
 export const API_ENDPOINTS = {
