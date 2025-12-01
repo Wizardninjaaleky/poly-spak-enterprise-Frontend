@@ -5,7 +5,7 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: cd backend && npm install
+    buildCommand: cd backend && npm ci
     startCommand: cd backend && node server.js
     envVars:
       - key: NODE_VERSION
