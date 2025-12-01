@@ -21,6 +21,19 @@ export default function NewProductPage() {
     images: [''],
   });
 
+  const getCategoryInfo = (category) => {
+    const categories = {
+      'Seedling Bags': { icon: '🌱', color: 'green', description: 'Agricultural seedling bags' },
+      'Services': { icon: '🛠️', color: 'blue', description: 'Service offerings' },
+      'Electronics': { icon: '⚡', color: 'purple', description: 'Electronic products' },
+      'Packaging': { icon: '📦', color: 'orange', description: 'Packaging materials' },
+      'Fertilizers': { icon: '🌾', color: 'emerald', description: 'Agricultural fertilizers' },
+      'Agricultural': { icon: '🚜', color: 'lime', description: 'Agricultural equipment' },
+      'Industrial': { icon: '🏭', color: 'gray', description: 'Industrial supplies' },
+    };
+    return categories[category] || { icon: '📌', color: 'gray', description: '' };
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -146,11 +159,29 @@ export default function NewProductPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   >
                     <option value="">Select a category</option>
-                    <option value="Packaging">Packaging</option>
-                    <option value="Fertilizers">Fertilizers</option>
-                    <option value="Agricultural">Agricultural</option>
-                    <option value="Industrial">Industrial</option>
+                    <option value="Seedling Bags">🌱 Seedling Bags</option>
+                    <option value="Services">🛠️ Services</option>
+                    <option value="Electronics">⚡ Electronics</option>
+                    <option value="Packaging">📦 Packaging</option>
+                    <option value="Fertilizers">🌾 Fertilizers</option>
+                    <option value="Agricultural">🚜 Agricultural</option>
+                    <option value="Industrial">🏭 Industrial</option>
                   </select>
+                  {formData.category && (
+                    <div className={`mt-3 p-3 rounded-lg bg-${getCategoryInfo(formData.category).color}-50 border border-${getCategoryInfo(formData.category).color}-200`}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{getCategoryInfo(formData.category).icon}</span>
+                        <div>
+                          <p className={`font-semibold text-${getCategoryInfo(formData.category).color}-900`}>
+                            {formData.category}
+                          </p>
+                          <p className={`text-xs text-${getCategoryInfo(formData.category).color}-700`}>
+                            {getCategoryInfo(formData.category).description}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>

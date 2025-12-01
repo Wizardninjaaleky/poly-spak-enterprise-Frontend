@@ -129,9 +129,13 @@ const Products = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             >
               <option value="all">All Categories</option>
-              <option value="Seedlings">Seedlings</option>
+              <option value="Seedling Bags">Seedling Bags</option>
+              <option value="Services">Services</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Packaging">Packaging</option>
               <option value="Fertilizers">Fertilizers</option>
-              <option value="Equipment">Equipment</option>
+              <option value="Agricultural">Agricultural</option>
+              <option value="Industrial">Industrial</option>
             </select>
           </div>
         </div>
@@ -153,7 +157,14 @@ const Products = () => {
                   {product.status === 'active' ? 'Active' : 'Low Stock'}
                 </span>
               </div>
-              <p className="text-sm text-gray-600 mb-4">{product.category}</p>
+              <div className="mb-4">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                  </svg>
+                  {product.category}
+                </span>
+              </div>
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <p className="text-2xl font-bold text-gray-900">KSh {product.price.toLocaleString()}</p>
