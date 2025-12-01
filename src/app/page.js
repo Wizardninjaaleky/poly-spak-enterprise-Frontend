@@ -39,7 +39,7 @@ export default function HomePage() {
     try {
       const response = await fetch(API_ENDPOINTS.PRODUCTS);
       const data = await response.json();
-      setFeaturedProducts((data.products || []).slice(0, 8));
+      setFeaturedProducts((data.data || data.products || []).slice(0, 8));
     } catch (error) {
       console.error('Error fetching products:', error);
     }

@@ -26,7 +26,8 @@ function ProductsContent() {
     try {
       const response = await fetch('https://poly-spak-enterprise-backend-2.onrender.com/api/products');
       const data = await response.json();
-      setProducts(data.products || []);
+      console.log('API Response:', data); // Debug log
+      setProducts(data.data || data.products || []);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
