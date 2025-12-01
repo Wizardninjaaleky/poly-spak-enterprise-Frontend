@@ -7,14 +7,14 @@
   "scripts": {
     "dev:frontend": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start",
     "start:frontend": "next start",
     "lint": "next lint",
     "start:backend": "node backend/server.js",
     "dev:backend": "nodemon backend/server.js",
     "test": "jest --config backend/jest.config.js --runInBand",
     "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
-    "postinstall": "cd backend && npm install"
+    "postinstall": "test -d backend && cd backend && npm install || echo 'Skipping backend install'"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.0.1",
