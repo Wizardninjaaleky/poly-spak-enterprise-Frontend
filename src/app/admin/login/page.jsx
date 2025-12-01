@@ -25,6 +25,7 @@ export default function AdminLoginPage() {
     setIsLoading(true);
 
     try {
+      console.log('Attempting login to:', API_ENDPOINTS.LOGIN);
       const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {
@@ -33,7 +34,9 @@ export default function AdminLoginPage() {
         body: JSON.stringify(formData),
       });
 
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok && data.success) {
         // Check if user is admin or sales
@@ -58,7 +61,7 @@ export default function AdminLoginPage() {
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('An error occurred. Please try again.');
+      setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);
     }
