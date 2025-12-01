@@ -1,30 +1,11 @@
-import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
 import xss from 'xss-clean';
 
-// Rate limiting for API endpoints
-export const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.',
-  standardHeaders: true,
-  legacyHeaders: false,
-});
-
-// Stricter rate limiting for authentication endpoints
-export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // Limit each IP to 5 login/register attempts per windowMs
-  message: 'Too many authentication attempts, please try again after 15 minutes.',
-  skipSuccessfulRequests: true,
-});
-
-// Very strict rate limiting for password reset
-export const passwordResetLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // Limit each IP to 3 password reset requests per hour
-  message: 'Too many password reset attempts, please try again after an hour.',
-});
+// Temporary: Simplified rate limiters (no-op middleware)
+// TODO: Re-enable express-rate-limit once deployment issues are resolved
+export const apiLimiter = (req, res, next) => next();
+export const authLimiter = (req, res, next) => next();
+export const passwordResetLimiter = (req, res, next) => next();
 
 // MongoDB query sanitization - prevents NoSQL injection
 export const sanitizeInput = mongoSanitize({
