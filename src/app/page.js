@@ -170,13 +170,21 @@ export default function HomePage() {
               <TypingAnimation text="Polyspack Enterprises" speed={150} className="text-2xl font-bold text-green-700 whitespace-nowrap" />
             </Link>
 
+            {/* Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-6">
+              <Link href="/" className="text-gray-700 hover:text-green-600 font-medium">Home</Link>
+              <Link href="/products" className="text-gray-700 hover:text-green-600 font-medium">Products</Link>
+              <Link href="/about" className="text-gray-700 hover:text-green-600 font-medium">About Us</Link>
+              <Link href="/contact" className="text-gray-700 hover:text-green-600 font-medium">Contact</Link>
+            </nav>
+
             {/* Search Bar */}
-            <div className="flex-1 max-w-2xl">
-              <div className="relative">
+            <div className="hidden md:flex flex-1 max-w-xl">
+              <div className="relative w-full">
                 <input
                   type="text"
-                  placeholder="Search for products, brands and categories..."
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                  placeholder="Search for products..."
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900"
                 />
                 <button className="absolute right-0 top-0 h-full px-6 bg-green-600 text-white rounded-r-lg hover:bg-green-700">
                   🔍
@@ -729,6 +737,94 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Testimonials Section */}
+      <div className="bg-white py-16">
+        <div className="max-w-[1600px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Don't just take our word for it - hear from some of our satisfied customers across Kenya
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="bg-gradient-to-br from-green-50 to-white rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  J
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">James Mwangi</h4>
+                  <p className="text-sm text-gray-600">Tree Nursery Owner, Kiambu</p>
+                </div>
+              </div>
+              <div className="text-yellow-500 mb-3">⭐⭐⭐⭐⭐</div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                "Excellent quality seedling bags at great prices! I've been ordering from Polyspack for 2 years now. 
+                Fast delivery and the customer service is always helpful. Highly recommend for all nursery needs."
+              </p>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-gradient-to-br from-blue-50 to-white rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  M
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Mary Wanjiku</h4>
+                  <p className="text-sm text-gray-600">Farmer, Nakuru</p>
+                </div>
+              </div>
+              <div className="text-yellow-500 mb-3">⭐⭐⭐⭐⭐</div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                "Very reliable supplier! Ordered 5,000 seedling bags for my avocado farm and they arrived in perfect condition. 
+                The bags are strong and durable. Will definitely order again."
+              </p>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-gradient-to-br from-purple-50 to-white rounded-xl shadow-lg border p-6 hover:shadow-xl transition-shadow">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  P
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Peter Ochieng</h4>
+                  <p className="text-sm text-gray-600">Electronics Shop, Mombasa</p>
+                </div>
+              </div>
+              <div className="text-yellow-500 mb-3">⭐⭐⭐⭐⭐</div>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                "Great selection of solar lights and electronics. Competitive prices and genuine products. 
+                Customer support is responsive and delivery was faster than expected. A trusted partner for my business."
+              </p>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-12 border-t">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">500+</div>
+              <p className="text-gray-600 text-sm">Happy Customers</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">1000+</div>
+              <p className="text-gray-600 text-sm">Orders Delivered</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">4.9/5</div>
+              <p className="text-gray-600 text-sm">Average Rating</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-600 mb-2">24/7</div>
+              <p className="text-gray-600 text-sm">Customer Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Benefits Section */}
       <div className="bg-gradient-to-r from-green-50 to-white border-y py-12">
         <div className="max-w-[1600px] mx-auto px-6">
@@ -796,18 +892,60 @@ export default function HomePage() {
 
             {/* Join Us */}
             <div>
-              <h4 className="text-white font-bold mb-4 text-sm uppercase">Join Us On</h4>
-              <div className="flex gap-4 mb-6">
-                <a href="#" className="text-2xl hover:text-white">📘</a>
-                <a href="#" className="text-2xl hover:text-white">📷</a>
-                <a href="#" className="text-2xl hover:text-white">🐦</a>
-                <a href="#" className="text-2xl hover:text-white">▶️</a>
+              <h4 className="text-white font-bold mb-4 text-sm uppercase">Connect With Us</h4>
+              <div className="flex gap-3 mb-6">
+                <a 
+                  href="https://facebook.com/polyspackenterprises" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+                  aria-label="Facebook"
+                >
+                  📘
+                </a>
+                <a 
+                  href="https://instagram.com/polyspackenterprises" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center hover:opacity-90 transition-opacity"
+                  aria-label="Instagram"
+                >
+                  📷
+                </a>
+                <a 
+                  href="https://twitter.com/polyspackke" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
+                  aria-label="Twitter"
+                >
+                  🐦
+                </a>
+                <a 
+                  href={`https://wa.me/${settings.contactPhone.replace(/\s/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center hover:bg-green-600 transition-colors"
+                  aria-label="WhatsApp"
+                >
+                  📞
+                </a>
               </div>
-              <h4 className="text-white font-bold mb-3 text-sm uppercase">Payment Methods</h4>
-              <div className="flex flex-wrap gap-2">
-                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">M-PESA</div>
-                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">Bank</div>
-                <div className="bg-white px-3 py-1 rounded text-xs font-semibold text-gray-800">Cash</div>
+              <h4 className="text-white font-bold mb-3 text-sm uppercase">Secure Payments</h4>
+              <div className="flex flex-wrap gap-2 mb-4">
+                <div className="bg-green-600 px-3 py-2 rounded text-xs font-bold text-white flex items-center gap-1">
+                  📱 M-PESA
+                </div>
+                <div className="bg-blue-600 px-3 py-2 rounded text-xs font-bold text-white flex items-center gap-1">
+                  🏦 Bank
+                </div>
+                <div className="bg-gray-600 px-3 py-2 rounded text-xs font-bold text-white flex items-center gap-1">
+                  💵 Cash
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-xs text-gray-400">
+                <span className="text-green-400">🔒</span>
+                <span>SSL Secured</span>
               </div>
             </div>
           </div>
