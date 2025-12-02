@@ -212,7 +212,7 @@ export default function AdminSettings() {
                   type="text"
                   value={settings.contactPhone}
                   onChange={(e) => handleInputChange('contactPhone', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="+254 742 312306"
                 />
                 <p className="text-xs text-gray-500 mt-1">This number will appear on the website and in WhatsApp links</p>
@@ -226,7 +226,7 @@ export default function AdminSettings() {
                   type="email"
                   value={settings.contactEmail}
                   onChange={(e) => handleInputChange('contactEmail', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="polyspackenterprise@gmail.com"
                 />
               </div>
@@ -298,7 +298,7 @@ export default function AdminSettings() {
                   type="url"
                   value={settings.socialMedia.facebook}
                   onChange={(e) => handleSocialMediaChange('facebook', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="https://facebook.com/yourpage"
                 />
               </div>
@@ -315,7 +315,7 @@ export default function AdminSettings() {
                   type="url"
                   value={settings.socialMedia.instagram}
                   onChange={(e) => handleSocialMediaChange('instagram', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="https://instagram.com/yourprofile"
                 />
               </div>
@@ -332,7 +332,7 @@ export default function AdminSettings() {
                   type="url"
                   value={settings.socialMedia.twitter}
                   onChange={(e) => handleSocialMediaChange('twitter', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="https://x.com/yourhandle or https://twitter.com/yourhandle"
                 />
               </div>
@@ -349,7 +349,7 @@ export default function AdminSettings() {
                   type="url"
                   value={settings.socialMedia.linkedin}
                   onChange={(e) => handleSocialMediaChange('linkedin', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="https://linkedin.com/company/yourcompany"
                 />
               </div>
@@ -366,7 +366,7 @@ export default function AdminSettings() {
                   type="url"
                   value={settings.socialMedia.tiktok}
                   onChange={(e) => handleSocialMediaChange('tiktok', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="https://tiktok.com/@yourhandle"
                 />
               </div>
@@ -383,7 +383,7 @@ export default function AdminSettings() {
                   type="text"
                   value={settings.socialMedia.whatsapp}
                   onChange={(e) => handleSocialMediaChange('whatsapp', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                   placeholder="254742312306 (without + or spaces)"
                 />
                 <p className="text-xs text-gray-500 mt-1">Enter the number in format: 254742312306 (country code + number, no + sign or spaces)</p>

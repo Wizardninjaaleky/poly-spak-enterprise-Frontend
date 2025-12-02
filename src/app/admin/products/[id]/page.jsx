@@ -236,7 +236,7 @@ export default function EditProduct() {
             required
             value={formData.name}
             onChange={(e) => setFormData({...formData, name: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
             placeholder="Enter product name"
           />
         </div>
@@ -250,7 +250,7 @@ export default function EditProduct() {
             required
             value={formData.category}
             onChange={(e) => setFormData({...formData, category: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
           >
             <option value="">Select a category</option>
             {categories.map(cat => (
@@ -272,7 +272,7 @@ export default function EditProduct() {
               step="0.01"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
               placeholder="0.00"
             />
           </div>
@@ -286,7 +286,7 @@ export default function EditProduct() {
               min="0"
               value={formData.stock}
               onChange={(e) => setFormData({...formData, stock: e.target.value})}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
               placeholder="0"
             />
           </div>
@@ -301,7 +301,7 @@ export default function EditProduct() {
             rows="4"
             value={formData.description}
             onChange={(e) => setFormData({...formData, description: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
             placeholder="Product description..."
           />
         </div>
@@ -315,7 +315,7 @@ export default function EditProduct() {
             rows="3"
             value={formData.specifications}
             onChange={(e) => setFormData({...formData, specifications: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
             placeholder="Product specifications..."
           />
         </div>
@@ -329,7 +329,7 @@ export default function EditProduct() {
             rows="4"
             value={formData.features}
             onChange={(e) => setFormData({...formData, features: e.target.value})}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 placeholder-gray-400"
             placeholder="Enter features, one per line..."
           />
         </div>
