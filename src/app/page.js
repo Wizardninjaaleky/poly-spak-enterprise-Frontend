@@ -127,7 +127,7 @@ export default function HomePage() {
             </span>
             <span className="font-semibold">Open 24/7 - Order Anytime!</span>
           </span>
-          <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
+          <span>🚚 Delivery Done Countrywide</span>
         </div>
       </div>
 

@@ -50,7 +50,7 @@ export default function CartPage() {
       <div className="bg-green-700 text-white text-xs py-2">
         <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center">
           <span>📞 Call: +254 742 312306</span>
-          <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
+          <span>🚚 Delivery Done Countrywide</span>
         </div>
       </div>
 
@@ -184,21 +184,16 @@ export default function CartPage() {
                     <span>Subtotal:</span>
                     <span className="font-semibold">KSh {subtotal.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between text-gray-700">
+                  <div className="flex justify-between text-gray-700 mb-3">
                     <span>Delivery:</span>
-                    <span className="font-semibold">
+                    <span>
                       {delivery === 0 ? (
-                        <span className="text-green-600">FREE</span>
+                        <span className="text-gray-600">Calculated at checkout</span>
                       ) : (
                         `KSh ${delivery.toLocaleString()}`
                       )}
                     </span>
                   </div>
-                  {delivery > 0 && (
-                    <div className="text-xs text-gray-600">
-                      Add KSh {(5000 - subtotal).toLocaleString()} more for free delivery
-                    </div>
-                  )}
                 </div>
                 
                 <div className="flex justify-between text-xl font-bold text-gray-900 mb-6">

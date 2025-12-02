@@ -87,7 +87,7 @@ function ProductsContent() {
       <div className="bg-green-700 text-white text-xs py-2">
         <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center">
           <span>📞 Call: +254 742 312306</span>
-          <span>🚚 Free Delivery on Orders Over KSh 5,000</span>
+          <span>🚚 Delivery Done Countrywide</span>
         </div>
       </div>
 
