@@ -51,33 +51,39 @@ export default function BrandingSettings() {
         return;
       }
 
-      if (type === 'logo') {
-        setLogoFile(file);
-        setLogoPreview(URL.createObjectURL(file));
-      } else {
-        setFaviconFile(file);
-        setFaviconPreview(URL.createObjectURL(file));
-      }
+      // Convert to base64 and upload immediately
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result;
+        if (type === 'logo') {
+          setLogoPreview(base64String);
+          handleUpload('logo', base64String);
+        } else {
+          setFaviconPreview(base64String);
+          handleUpload('favicon', base64String);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleUpload = async (type) => {
-    const file = type === 'logo' ? logoFile : faviconFile;
-    if (!file) return;
-
+  const handleUpload = async (type, base64Data) => {
     setUploading(true);
     try {
       const token = localStorage.getItem('token');
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('type', type);
+      
+      // Update settings with base64 image
+      const updateData = type === 'logo' 
+        ? { logo: base64Data }
+        : { favicon: base64Data };
 
-      const response = await fetch(`${API_BASE_URL}/api/settings/upload`, {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/api/settings`, {
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: formData,
+        body: JSON.stringify(updateData),
       });
 
       const data = await response.json();
@@ -87,17 +93,15 @@ export default function BrandingSettings() {
         fetchSettings();
         if (type === 'logo') {
           setLogoFile(null);
-          setLogoPreview(null);
         } else {
           setFaviconFile(null);
-          setFaviconPreview(null);
         }
       } else {
         alert(data.message || 'Upload failed');
       }
     } catch (error) {
       console.error('Upload error:', error);
-      alert('Failed to upload image');
+      alert('Failed to upload image. Please try again.');
     } finally {
       setUploading(false);
     }
