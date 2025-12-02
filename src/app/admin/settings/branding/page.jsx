@@ -10,8 +10,10 @@ export default function BrandingSettings() {
   const [settings, setSettings] = useState(null);
   const [logoFile, setLogoFile] = useState(null);
   const [faviconFile, setFaviconFile] = useState(null);
+  const [heroBannerFile, setHeroBannerFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState(null);
   const [faviconPreview, setFaviconPreview] = useState(null);
+  const [heroBannerPreview, setHeroBannerPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
@@ -46,8 +48,9 @@ export default function BrandingSettings() {
   const handleFileChange = (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        alert('File size must be less than 2MB');
+      const maxSize = type === 'heroBanner' ? 5 * 1024 * 1024 : 2 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert(`File size must be less than ${type === 'heroBanner' ? '5MB' : '2MB'}`);
         return;
       }
 
@@ -58,6 +61,9 @@ export default function BrandingSettings() {
         if (type === 'logo') {
           setLogoPreview(base64String);
           handleUpload('logo', base64String);
+        } else if (type === 'heroBanner') {
+          setHeroBannerPreview(base64String);
+          handleUpload('heroBanner', base64String);
         } else {
           setFaviconPreview(base64String);
           handleUpload('favicon', base64String);
@@ -332,6 +338,74 @@ export default function BrandingSettings() {
         </div>
       </div>
 
+      {/* Hero Banner Section */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-2">Homepage Hero Banner</h2>
+        <p className="text-sm text-gray-600 mb-4">Upload a banner image for the agriculture/farming section (Alibaba-style hero)</p>
+        
+        <div className="grid grid-cols-1 gap-6">
+          {/* Current Banner */}
+          <div>
+            <h3 className="font-semibold text-gray-700 mb-2">Current Hero Banner</h3>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center bg-gray-50 h-64">
+              {settings?.heroBanner ? (
+                <img
+                  src={settings.heroBanner}
+                  alt="Current Hero Banner"
+                  className="max-h-full max-w-full object-cover rounded"
+                />
+              ) : (
+                <div className="text-center text-gray-400">
+                  <svg className="mx-auto h-16 w-16 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p>No hero banner uploaded</p>
+                </div>
+              )}
+            </div>
+            {settings?.heroBanner && (
+              <button
+                onClick={() => handleDelete('heroBanner')}
+                className="mt-3 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg font-semibold"
+              >
+                Delete Hero Banner
+              </button>
+            )}
+          </div>
+
+          {/* Upload New Banner */}
+          <div>
+            <h3 className="font-semibold text-gray-700 mb-2">Upload New Hero Banner</h3>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 flex items-center justify-center bg-gray-50 h-64">
+              {heroBannerPreview ? (
+                <img
+                  src={heroBannerPreview}
+                  alt="Preview"
+                  className="max-h-full max-w-full object-cover rounded"
+                />
+              ) : (
+                <div className="text-center text-gray-400">
+                  <svg className="mx-auto h-16 w-16 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                  </svg>
+                  <p>Select image to preview</p>
+                  <p className="text-xs mt-1">Recommended: 1920x600px landscape</p>
+                </div>
+              )}
+            </div>
+            <div className="mt-3 space-y-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e, 'heroBanner')}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900"
+              />
+              <p className="text-sm text-gray-600">Max size: 5MB | Recommended: 1920x600px JPG/PNG (agriculture/farming scene)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
         {/* Info Box */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h3 className="font-semibold text-blue-900 mb-2">📝 Branding Guidelines</h3>
@@ -340,7 +414,8 @@ export default function BrandingSettings() {
             <li>• Logo: Recommended dimensions: 200-400px width</li>
             <li>• Favicon: Use 32x32px or 64x64px square image</li>
             <li>• Favicon: ICO or PNG format recommended</li>
-            <li>• All images must be under 2MB in size</li>
+            <li>• Hero Banner: Use 1920x600px landscape image (agriculture/farming theme)</li>
+            <li>• Logo/Favicon: Max 2MB | Hero Banner: Max 5MB</li>
             <li>• Changes will be reflected immediately across the website</li>
           </ul>
         </div>

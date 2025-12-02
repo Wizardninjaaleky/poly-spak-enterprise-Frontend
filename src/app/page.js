@@ -14,6 +14,7 @@ export default function HomePage() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [settings, setSettings] = useState({
     logo: '',
+    heroBanner: '',
     contactPhone: '+254 742 312306',
     contactEmail: 'polyspackenterprise@gmail.com'
   });
@@ -217,18 +218,99 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Modern 3-Box Categories Section */}
+      {/* Hero Banner Section - Alibaba Style */}
+      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white overflow-hidden">
+        {/* Background Image or Pattern */}
+        {settings.heroBanner ? (
+          <div className="absolute inset-0">
+            <img 
+              src={settings.heroBanner}
+              alt="Hero Banner"
+              className="w-full h-full object-cover opacity-30"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent"></div>
+          </div>
+        ) : (
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.4"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
+            }}></div>
+          </div>
+        )}
+        
+        <div className="relative max-w-7xl mx-auto px-6 py-20">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+            <span className="text-sm uppercase tracking-wider text-gray-300">Learn about Polyspack</span>
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            The leading B2B ecommerce platform for<br />global trade
+          </h1>
+          
+          <div className="max-w-2xl mb-8">
+            <div className="bg-white rounded-full p-2 flex items-center gap-2 shadow-2xl">
+              <input
+                type="text"
+                placeholder="Search for products..."
+                className="flex-1 px-6 py-3 rounded-full focus:outline-none text-gray-900 text-lg"
+              />
+              <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all">
+                🔍 Search
+              </button>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 text-sm text-gray-300">
+            <span>Frequently searched:</span>
+            <div className="flex flex-wrap gap-2">
+              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">seedling bags</span>
+              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">solar lights</span>
+              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">packaging</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Features Section */}
+        <div className="relative bg-gradient-to-b from-transparent to-black/30 border-t border-white/10">
+          <div className="max-w-7xl mx-auto px-6 py-12">
+            <div className="grid md:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">📦</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Millions of business offerings</h3>
+                <p className="text-sm text-gray-400">Explore products and suppliers for your business from millions of offerings worldwide.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">🛡️</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Assured quality and transactions</h3>
+                <p className="text-sm text-gray-400">Ensure production quality from verified suppliers, with your orders protected from payment to delivery.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">🛒</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">One-stop trading solution</h3>
+                <p className="text-sm text-gray-400">Order seamlessly from product/supplier search to order management, payment, and fulfillment.</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <span className="text-3xl">🎯</span>
+                </div>
+                <h3 className="font-bold text-lg mb-2">Tailored trading experience</h3>
+                <p className="text-sm text-gray-400">Get curated benefits, such as exclusive discounts, enhanced buyer protection, and extra support.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3-Box Categories Section */}
       <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-6">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Quality Products & Services
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Seedling bags, electronics, and professional services for your needs!
-            </p>
-          </div>
 
           {/* 3 Category Boxes */}
           <div className="grid md:grid-cols-3 gap-8">
@@ -345,19 +427,6 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-          </div>
-
-          {/* Call to Action Button */}
-          <div className="text-center mt-16">
-            <Link
-              href="/products"
-              className="inline-flex items-center gap-3 bg-green-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
-              <span>Shop Now</span>
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
           </div>
         </div>
       </section>
