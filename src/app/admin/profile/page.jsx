@@ -71,30 +71,35 @@ export default function AdminProfile() {
       const token = localStorage.getItem('token');
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://poly-spak-enterprise-backend-2.onrender.com';
       
-      const submitData = new FormData();
-      submitData.append('name', formData.name);
-      submitData.append('email', formData.email);
-      submitData.append('phone', formData.phone);
-      submitData.append('bio', formData.bio);
+      // Use JSON format with base64 image
+      const submitData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        bio: formData.bio
+      };
       
+      // Convert image to base64 if exists
       if (imageFile) {
-        submitData.append('profileImage', imageFile);
+        submitData.profileImage = profileImage; // Already converted to base64 in handleImageChange
       }
       
-      const response = await fetch(`${API_URL}/api/admin/profile`, {
+      const response = await fetch(`${API_URL}/api/admin/users/${user._id || user.id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        body: submitData
+        body: JSON.stringify(submitData)
       });
       
       const data = await response.json();
       
       if (response.ok) {
         // Update localStorage
-        const updatedUser = { ...user, ...formData, profileImage: data.profileImage || profileImage };
+        const updatedUser = { ...user, ...formData, profileImage: submitData.profileImage || profileImage };
         localStorage.setItem('userData', JSON.stringify(updatedUser));
+        localStorage.setItem('user', JSON.stringify(updatedUser));
         setUser(updatedUser);
         
         setMessage({ type: 'success', text: 'Profile updated successfully!' });

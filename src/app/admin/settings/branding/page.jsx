@@ -54,34 +54,46 @@ export default function BrandingSettings() {
         return;
       }
 
-      // Convert to base64 and upload immediately
+      // Convert to base64 for preview
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result;
         if (type === 'logo') {
+          setLogoFile(file);
           setLogoPreview(base64String);
-          handleUpload('logo', base64String);
         } else if (type === 'heroBanner') {
+          setHeroBannerFile(file);
           setHeroBannerPreview(base64String);
-          handleUpload('heroBanner', base64String);
         } else {
+          setFaviconFile(file);
           setFaviconPreview(base64String);
-          handleUpload('favicon', base64String);
         }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleUpload = async (type, base64Data) => {
+  const handleUpload = async (type) => {
     setUploading(true);
     try {
       const token = localStorage.getItem('token');
       
+      let base64Data;
+      if (type === 'logo' && logoPreview) {
+        base64Data = logoPreview;
+      } else if (type === 'favicon' && faviconPreview) {
+        base64Data = faviconPreview;
+      } else if (type === 'heroBanner' && heroBannerPreview) {
+        base64Data = heroBannerPreview;
+      } else {
+        alert('Please select a file first');
+        setUploading(false);
+        return;
+      }
+      
       // Update settings with base64 image
-      const updateData = type === 'logo' 
-        ? { logo: base64Data }
-        : { favicon: base64Data };
+      const updateData = {};
+      updateData[type] = base64Data;
 
       const response = await fetch(`${API_BASE_URL}/api/settings`, {
         method: 'PUT',
@@ -95,12 +107,20 @@ export default function BrandingSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        alert(`${type === 'logo' ? 'Logo' : 'Favicon'} uploaded successfully!`);
+        const typeName = type === 'logo' ? 'Logo' : type === 'favicon' ? 'Favicon' : 'Hero Banner';
+        alert(`${typeName} uploaded successfully!`);
         fetchSettings();
+        
+        // Clear file states
         if (type === 'logo') {
           setLogoFile(null);
-        } else {
+          setLogoPreview(null);
+        } else if (type === 'favicon') {
           setFaviconFile(null);
+          setFaviconPreview(null);
+        } else {
+          setHeroBannerFile(null);
+          setHeroBannerPreview(null);
         }
       } else {
         alert(data.message || 'Upload failed');
@@ -401,6 +421,15 @@ export default function BrandingSettings() {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-900"
               />
               <p className="text-sm text-gray-600">Max size: 5MB | Recommended: 1920x600px JPG/PNG (agriculture/farming scene)</p>
+              {heroBannerFile && (
+                <button
+                  onClick={() => handleUpload('heroBanner')}
+                  disabled={uploading}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold disabled:opacity-50"
+                >
+                  {uploading ? 'Uploading...' : 'Save Hero Banner'}
+                </button>
+              )}
             </div>
           </div>
         </div>

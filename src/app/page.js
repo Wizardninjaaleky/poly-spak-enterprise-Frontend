@@ -18,6 +18,7 @@ export default function HomePage() {
     contactPhone: '+254 742 312306',
     contactEmail: 'polyspackenterprise@gmail.com'
   });
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -92,6 +93,7 @@ export default function HomePage() {
       if (data.success && data.data) {
         setSettings({
           logo: data.data.logo || '',
+          heroBanner: data.data.heroBanner || '',
           contactPhone: data.data.contactPhone || '+254 742 312306',
           contactEmail: data.data.contactEmail || 'polyspackenterprise@gmail.com'
         });
@@ -99,6 +101,17 @@ export default function HomePage() {
     } catch (error) {
       console.error('Error fetching settings:', error);
     }
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
+    }
+  };
+
+  const handleQuickSearch = (term) => {
+    window.location.href = `/products?search=${encodeURIComponent(term)}`;
   };
 
   const nextSlide = () => {
@@ -120,7 +133,16 @@ export default function HomePage() {
       {/* Top Header */}
       <div className="bg-green-700 text-white text-xs py-2">
         <div className="max-w-[1600px] mx-auto px-6 flex justify-between items-center flex-wrap gap-2">
-          <span>📞 Call: +254 742 312306</span>
+          <div className="flex items-center gap-2">
+            {settings.logo && (
+              <img 
+                src={settings.logo} 
+                alt="Polyspack Logo" 
+                className="h-5 w-5 object-contain"
+              />
+            )}
+            <span>📞 Call: +254 742 312306</span>
+          </div>
           <span className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
@@ -136,13 +158,13 @@ export default function HomePage() {
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-[1600px] mx-auto px-6 py-4">
           <div className="flex items-center justify-between gap-4">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
+            {/* Logo & Brand */}
+            <Link href="/" className="flex items-center gap-3">
               {settings.logo && (
                 <img 
                   src={settings.logo} 
                   alt="Polyspack Enterprises" 
-                  className="h-10 object-contain"
+                  className="h-12 w-12 object-contain"
                 />
               )}
               <TypingAnimation text="Polyspack Enterprises" speed={150} className="text-2xl font-bold text-green-700 whitespace-nowrap" />
@@ -241,32 +263,34 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-6 py-20">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
-            <span className="text-sm uppercase tracking-wider text-gray-300">Learn about Polyspack</span>
+            <span className="text-sm uppercase tracking-wider text-gray-300">Welcome to Polyspack</span>
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-            The leading B2B ecommerce platform for<br />global trade
+            Quality Agricultural Products<br />& Professional Services
           </h1>
           
           <div className="max-w-2xl mb-8">
-            <div className="bg-white rounded-full p-2 flex items-center gap-2 shadow-2xl">
+            <form onSubmit={handleSearch} className="bg-white rounded-full p-2 flex items-center gap-2 shadow-2xl">
               <input
                 type="text"
                 placeholder="Search for products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="flex-1 px-6 py-3 rounded-full focus:outline-none text-gray-900 text-lg"
               />
-              <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all">
+              <button type="submit" className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-3 rounded-full font-semibold flex items-center gap-2 transition-all">
                 🔍 Search
               </button>
-            </div>
+            </form>
           </div>
           
           <div className="flex items-center gap-4 text-sm text-gray-300">
-            <span>Frequently searched:</span>
+            <span>Popular products:</span>
             <div className="flex flex-wrap gap-2">
-              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">seedling bags</span>
-              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">solar lights</span>
-              <span className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">packaging</span>
+              <span onClick={() => handleQuickSearch('seedling bags')} className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">seedling bags</span>
+              <span onClick={() => handleQuickSearch('solar lights')} className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">solar lights</span>
+              <span onClick={() => handleQuickSearch('packaging')} className="px-4 py-2 bg-white/10 rounded-full hover:bg-white/20 cursor-pointer transition">packaging</span>
             </div>
           </div>
         </div>
@@ -279,29 +303,29 @@ export default function HomePage() {
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">📦</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Millions of business offerings</h3>
-                <p className="text-sm text-gray-400">Explore products and suppliers for your business from millions of offerings worldwide.</p>
+                <h3 className="font-bold text-lg mb-2">Wide Product Range</h3>
+                <p className="text-sm text-gray-400">Browse through our diverse catalog of agricultural supplies and electronics.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <span className="text-3xl">🛡️</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Assured quality and transactions</h3>
-                <p className="text-sm text-gray-400">Ensure production quality from verified suppliers, with your orders protected from payment to delivery.</p>
+                <h3 className="font-bold text-lg mb-2">Quality Guaranteed</h3>
+                <p className="text-sm text-gray-400">All products are sourced from verified suppliers with quality assurance.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">🛒</span>
+                  <span className="text-3xl">🚚</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">One-stop trading solution</h3>
-                <p className="text-sm text-gray-400">Order seamlessly from product/supplier search to order management, payment, and fulfillment.</p>
+                <h3 className="font-bold text-lg mb-2">Nationwide Delivery</h3>
+                <p className="text-sm text-gray-400">Fast and reliable delivery service across the entire country.</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <span className="text-3xl">🎯</span>
+                  <span className="text-3xl">💰</span>
                 </div>
-                <h3 className="font-bold text-lg mb-2">Tailored trading experience</h3>
-                <p className="text-sm text-gray-400">Get curated benefits, such as exclusive discounts, enhanced buyer protection, and extra support.</p>
+                <h3 className="font-bold text-lg mb-2">Competitive Prices</h3>
+                <p className="text-sm text-gray-400">Get the best value for your money with our affordable pricing.</p>
               </div>
             </div>
           </div>
