@@ -172,9 +172,12 @@ const Products = () => {
                 </div>
               </div>
               <div className="flex gap-2">
-                <button className="flex-1 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors font-medium">
+                <a
+                  href={`/admin/products/${product.id}`}
+                  className="flex-1 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors font-medium text-center"
+                >
                   Edit
-                </button>
+                </a>
                 <button
                   onClick={() => handleDelete(product.id)}
                   className="flex-1 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg transition-colors font-medium"

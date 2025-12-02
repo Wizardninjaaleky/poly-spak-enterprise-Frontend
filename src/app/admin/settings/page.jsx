@@ -240,16 +240,24 @@ export default function AdminSettings() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Logo URL
+                  Upload Logo
                 </label>
                 <input
-                  type="url"
-                  value={settings.logo}
-                  onChange={(e) => handleInputChange('logo', e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="https://example.com/logo.png"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        handleInputChange('logo', reader.result);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                 />
-                <p className="text-xs text-gray-500 mt-1">Enter the URL of your logo image (recommended: 200x60px, PNG with transparent background)</p>
+                <p className="text-xs text-gray-500 mt-1">Upload from your device (PNG, JPG - recommended: 200x60px, transparent background)</p>
               </div>
 
               {/* Logo Preview */}
@@ -263,7 +271,7 @@ export default function AdminSettings() {
                       className="h-12 object-contain"
                       onError={(e) => {
                         e.target.style.display = 'none';
-                        e.target.parentElement.innerHTML = '<p class="text-red-600 text-sm">Invalid image URL</p>';
+                        e.target.parentElement.innerHTML = '<p class="text-red-600 text-sm">Invalid image</p>';
                       }}
                     />
                   </div>
