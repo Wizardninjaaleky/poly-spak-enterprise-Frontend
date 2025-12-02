@@ -217,8 +217,153 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Categories Carousel - Full Width */}
-      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden">
+      {/* Modern 3-Box Categories Section */}
+      <section className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Quality Products & Services
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Seedling bags, electronics, and professional services for your needs!
+            </p>
+          </div>
+
+          {/* 3 Category Boxes */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Seedling Bags Box */}
+            <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="relative h-64 overflow-hidden bg-gradient-to-br from-green-50 to-green-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img
+                    src="/images/seedling-bags-hero.jpg"
+                    alt="Seedling Bags"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden absolute inset-0 bg-gradient-to-br from-green-500 to-green-700 items-center justify-center">
+                    <span className="text-9xl">🌱</span>
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  Farming
+                </div>
+              </div>
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Seedling Bags</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Premium eco-friendly bags for nurseries. Durable and available in various sizes.
+                </p>
+                <Link
+                  href="/products?category=Seedling Bags"
+                  className="inline-flex items-center gap-2 text-green-600 font-semibold hover:text-green-700 group-hover:gap-4 transition-all"
+                >
+                  Explore Collection
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Electronics Box */}
+            <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="relative h-64 overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img
+                    src="/images/electronics-hero.jpg"
+                    alt="Electronics"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700 items-center justify-center">
+                    <span className="text-9xl">⚡</span>
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  Technology
+                </div>
+              </div>
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Electronics</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Latest gadgets and electronics for home and office. Quality guaranteed.
+                </p>
+                <Link
+                  href="/products?category=Electronics"
+                  className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 group-hover:gap-4 transition-all"
+                >
+                  View Products
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* Services Box */}
+            <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2">
+              <div className="relative h-64 overflow-hidden bg-gradient-to-br from-purple-50 to-purple-100">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <img
+                    src="/images/services-hero.jpg"
+                    alt="Professional Services"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                  <div className="hidden absolute inset-0 bg-gradient-to-br from-purple-500 to-purple-700 items-center justify-center">
+                    <span className="text-9xl">🔧</span>
+                  </div>
+                </div>
+                <div className="absolute top-4 right-4 bg-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  Professional
+                </div>
+              </div>
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Services</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Expert solutions tailored to your business and technical requirements.
+                </p>
+                <Link
+                  href="/products?category=Services"
+                  className="inline-flex items-center gap-2 text-purple-600 font-semibold hover:text-purple-700 group-hover:gap-4 transition-all"
+                >
+                  Learn More
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Call to Action Button */}
+          <div className="text-center mt-16">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-3 bg-green-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:bg-green-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              <span>Shop Now</span>
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* REMOVE OLD CAROUSEL - Keep Hero Banner below if you want */}
+      <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 overflow-hidden hidden">
         <div className="relative h-[400px] md:h-[500px]">
           {categories.map((cat, index) => (
             <div
